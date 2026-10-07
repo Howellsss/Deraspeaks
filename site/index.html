@@ -730,16 +730,18 @@ nav.main a { font-size: 15px; letter-spacing: .04em; }
 .sound[aria-pressed="false"] { animation: soundcall 1.8s ease-in-out infinite; border-color: #fff; }
 @keyframes soundcall { 0%, 100% { box-shadow: 0 0 0 0 rgba(70,119,69,.7); } 50% { box-shadow: 0 0 0 10px rgba(70,119,69,0); } }
 
-/* about: big biography portrait */
-.room.bio-room { padding: 0; }
-.bio-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
-.bio-split figure { margin: 0; position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #111; }
-.bio-split figure img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; }
-.bio-split .prose { padding: clamp(96px, 11vw, 150px) var(--gutter) clamp(80px, 9vw, 130px) clamp(40px, 6vw, 96px); max-width: 680px; align-self: center; }
-@media (max-width: 900px) {
+/* about: a large framed photo beside the biography, like a feature spread */
+.room.bio-room { padding-block: clamp(72px, 8vw, 120px); }
+.bio-split { width: min(1320px, calc(100% - 2 * var(--gutter))); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: clamp(32px, 4vw, 60px); align-items: center; }
+.bio-split figure { margin: 0; position: relative; aspect-ratio: 4 / 3.3; overflow: hidden; border-radius: 6px; background: #111; }
+.bio-split figure img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 24%; }
+.bio-split .prose { display: grid; gap: 18px; align-content: start; }
+.bio-split .prose .h2 { margin-bottom: 4px; }
+.bio-split .prose p { font-size: 16px; line-height: 1.85; }
+.bio-split .prose p.first { font-size: 18px; line-height: 1.7; }
+@media (max-width: 1000px) {
   .bio-split { grid-template-columns: 1fr; }
-  .bio-split figure { position: relative; height: 82vh; height: 82svh; }
-  .bio-split .prose { padding: 48px var(--gutter) 72px; }
+  .bio-split figure { position: relative; top: 0; aspect-ratio: 4 / 4.4; }
 }
 
 /* scroll reveal: content rises into place, one piece after another */
@@ -930,6 +932,7 @@ nav.main a { font-size: 15px; letter-spacing: .04em; }
       <figure><img loading="lazy" src="img/p-green.jpg" alt="Dera Speaks ministering"></figure>
       <div class="prose">
         <p class="eyebrow">Biography</p>
+        <h2 class="h2">Who is <em>Dera Speaks?</em></h2>
         <p class="first">Chidera Favour Ogbonnaya, professionally known as Dera Speaks, is a Nigerian Christian spoken-word minister and songwriter whose work uses words, music, worship, and performance to draw people toward authentic faith and the reality of God.</p>
         <p>Her work is marked by a direct, emotionally honest approach to Christian expression. Through spoken word and music, she explores themes of gratitude, faith, identity, worship, salvation, restoration, and the inner life of the believer. Her voice has developed a distinctive place within a generation seeking a faith that is honest, expressive, and deeply rooted in Christ.</p>
         <p>Described by the press as an unapologetic, “warrior-militant” minister, she treats ministry as a full-time calling that spans speaking, writing, singing and acting.</p>
