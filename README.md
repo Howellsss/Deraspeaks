@@ -1,15 +1,15 @@
 # Dera Speaks
 
-Website built with Vite, React, TypeScript and Tailwind CSS, hosted on Vercel, with Supabase as the backend.
+The current site is the approved design mockup in `site/`: one HTML page (`site/index.html`) with its photos and videos in `site/img/`. Vercel copies `site/` into `dist/` and serves it as a static site (see `vercel.json`); there is nothing to install or compile.
 
-## Local development
+## Preview locally
 
 ```bash
-npm install
-cp .env.example .env   # fill in the Supabase values
-npm run dev
+cd site && python3 -m http.server 8000
 ```
 
-## Deploy
+Then open http://localhost:8000.
 
-Vercel builds with `npm run build` and serves `dist/`. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the Vercel project's environment variables.
+## Next step
+
+The Vite + React + TypeScript + Tailwind starter in `src/` (with the Supabase client) is kept for the full build: working booking form and newsletter, one address per page, and compressed images. Once that build is ready, `vercel.json` goes back to `npm run build` serving `dist/`, with `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` set in the Vercel project's environment variables.
