@@ -732,9 +732,9 @@ nav.main a { font-size: 15px; letter-spacing: .04em; }
 
 /* about: a large framed photo beside the biography, like a feature spread */
 .room.bio-room { padding-block: clamp(72px, 8vw, 120px); }
-.bio-split { width: min(1320px, calc(100% - 2 * var(--gutter))); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: clamp(32px, 4vw, 60px); align-items: center; }
-.bio-split figure { margin: 0; position: relative; aspect-ratio: 4 / 3.3; overflow: hidden; border-radius: 6px; background: #111; }
-.bio-split figure img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 24%; }
+.bio-split { width: min(1400px, calc(100% - 2 * var(--gutter))); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.95fr) minmax(0, 1fr); gap: clamp(32px, 4vw, 60px); align-items: center; }
+.bio-split figure { margin: 0; position: relative; aspect-ratio: 4 / 3.6; overflow: hidden; border-radius: 6px; background: #111; }
+.bio-split figure img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 24%; filter: grayscale(1) contrast(1.06); }
 .bio-split .prose { display: grid; gap: 18px; align-content: start; }
 .bio-split .prose .h2 { margin-bottom: 4px; }
 .bio-split .prose p { font-size: 16px; line-height: 1.85; }
