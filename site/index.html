@@ -45,7 +45,7 @@ h2 em, h1 em { font-style: italic; font-weight: 400; }
 
 .wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: var(--gutter); }
 .eyebrow { display: inline-flex; align-items: center; gap: 14px; font: 600 11px/1.4 var(--label); letter-spacing: .32em; text-transform: uppercase; color: var(--sage); }
-.eyebrow::before { content: ""; width: 32px; height: 1.5px; background: currentColor; }
+.eyebrow::before, .eyebrow::after, .typo-art::before { content: none !important; display: none !important; }
 .lede { font-size: 18px; line-height: 1.75; color: var(--muted); max-width: 38em; }
 .h2 { font-size: clamp(34px, 4.4vw, 56px); line-height: 1.06; }
 .h2 em { color: var(--sage); }
@@ -56,7 +56,6 @@ h2 em, h1 em { font-style: italic; font-weight: 400; }
 .btn.outline { background: transparent; color: inherit; box-shadow: inset 0 0 0 1.5px currentColor; }
 .btn.outline:hover { background: rgba(127,127,127,.12); }
 .btn.white { background: #fff; color: var(--sage-dk); }
-.btn .arr { font-size: 16px; }
 .textlink { display: inline-flex; gap: 8px; align-items: center; font: 600 14px/1 var(--sans); text-decoration: none; padding-bottom: 5px; border-bottom: 1.5px solid var(--sage); }
 
 section.room { padding-block: clamp(48px, 5vw, 80px); }
@@ -859,7 +858,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
       <a href="#media">Media</a>
       <a href="#words">Words</a>
     </nav>
-    <a class="btn nav-cta" href="#bookings">Bookings <span class="arr">→</span></a>
+    <a class="btn nav-cta" href="#bookings">Bookings</a>
     <button class="burger" id="burger" aria-controls="drawer" aria-expanded="false">Menu<i></i></button>
   </div>
 </header>
@@ -880,7 +879,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
         <h1 class="statement"><span class="w w1">A voice.</span> <span class="w w2">A sound.</span> <em class="w w3">A movement.</em></h1>
         <p class="lines">Words for what the soul cannot say. Sound for what God is stirring. Spirit for what is yet to emerge.</p>
         <div class="actions">
-          <a class="btn" href="#bookings">Book Dera <span class="arr">→</span></a>
+          <a class="btn" href="#bookings">Book Dera</a>
           <a class="btn outline" href="#media">Watch &amp; Listen</a>
         </div>
       </div>
@@ -904,14 +903,14 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
             <li><span>Reach</span>Nigeria · Kenya · United Kingdom</li>
             <li><span>Home</span>Dera Speaks Studios · Ample Room</li>
           </ul>
-          <a class="textlink m-more" href="#about">Read her story <span class="arr">→</span></a>
+          <a class="textlink m-more" href="#about">Read her story</a>
     </div></div>
   </section>
   <section class="room r-white meet-paths"><div class="wrap">
       <div class="paths">
-        <a class="path" href="#media"><span class="k">For listeners</span><h3>Hear the word</h3><p>Spoken word, songs and live ministry, newest first.</p><span class="go">Enter the archive →</span></a>
-        <a class="path" href="#bookings"><span class="k">For hosts</span><h3>Invite Dera</h3><p>Churches, conferences, campuses and creative events.</p><span class="go">Start a booking request →</span></a>
-        <a class="path" href="#partner"><span class="k">For partners</span><h3>Partner with the movement</h3><p>Support editions, releases and the next generation of creatives.</p><span class="go">See partnership options →</span></a>
+        <a class="path" href="#media"><span class="k">For listeners</span><h3>Hear the word</h3><p>Spoken word, songs and live ministry, newest first.</p><span class="go">Enter the archive</span></a>
+        <a class="path" href="#bookings"><span class="k">For hosts</span><h3>Invite Dera</h3><p>Churches, conferences, campuses and creative events.</p><span class="go">Start a booking request</span></a>
+        <a class="path" href="#partner"><span class="k">For partners</span><h3>Partner with the movement</h3><p>Support editions, releases and the next generation of creatives.</p><span class="go">See partnership options</span></a>
       </div>
     </div>
   </section>
@@ -936,7 +935,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
       <div class="head"><div><p class="eyebrow">Encounters</p><h2 class="h2">Upcoming &amp; past <em>encounters.</em></h2></div><a class="btn outline" href="#events">All encounters</a></div>
       <p class="enc-label">Upcoming</p>
       <div class="enc-list">
-        <div class="enc empty"><div><h3>Now booking for 2027</h3><p>Conferences, worship experiences, campuses and creative events. Invite Dera to minister at your gathering.</p></div><a class="pill live" href="#bookings">Invite Dera →</a></div>
+        <div class="enc empty"><div><h3>Now booking for 2027</h3><p>Conferences, worship experiences, campuses and creative events. Invite Dera to minister at your gathering.</p></div><a class="pill live" href="#bookings">Invite Dera</a></div>
       </div>
       <p class="enc-label">Past encounters</p>
       <div class="enc-list">
@@ -996,7 +995,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
         <div class="offer"><b>Campus &amp; youth outreach</b><p>Bring the word to students and young people who rarely step into a church.</p></div>
         <div class="offer"><b>Creative mentorship</b><p>Help raise Christian writers, poets and digital ministers.</p></div>
       </div>
-      <div class="offer-cta"><a class="btn white" href="mailto:bookingsderaspeaksstudios@gmail.com?subject=Partnership%20enquiry">Request the partnership pack <span class="arr">→</span></a><span>bookingsderaspeaksstudios@gmail.com · <a href="tel:+2347048831427">+234 704 883 1427</a></span></div>
+      <div class="offer-cta"><a class="btn white" href="mailto:bookingsderaspeaksstudios@gmail.com?subject=Partnership%20enquiry">Request the partnership pack</a><span>bookingsderaspeaksstudios@gmail.com · <a href="tel:+2347048831427">+234 704 883 1427</a></span></div>
     </div>
   </section>
 
@@ -1006,7 +1005,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
       <h2 class="h2">Bring the encounter <em>to your altar.</em></h2>
       <div class="side">
         <p>Conferences, worship experiences, campuses, creative events and faith-centred conversations. Every invitation is reviewed for alignment with the ministry's mandate.</p>
-        <div><a class="btn" href="#bookings">Book Dera <span class="arr">→</span></a></div>
+        <div><a class="btn" href="#bookings">Book Dera</a></div>
       </div>
     </div>
   </section>
@@ -1068,9 +1067,9 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
     <div class="wrap">
       <div class="head"><div><p class="eyebrow">In the press</p><h2 class="h2">What they <em>have written.</em></h2></div></div>
       <div class="press">
-        <a class="pr" href="https://businessday.ng/bd-weekender/article/how-deraspeaks-new-spokenword-single-illuminates-minds/" rel="noopener"><small>BusinessDay · December 2023</small><b>How Deraspeaks' new spoken word single illuminates minds</b><span>Read →</span></a>
-        <a class="pr" href="https://www.vanguardngr.com/2023/11/spoken-word-act-deraspeaks-releases-new-single/" rel="noopener"><small>Vanguard · November 2023</small><b>Spoken word act, Deraspeaks releases new single</b><span>Read →</span></a>
-        <a class="pr" href="https://articles.connectnigeria.com/artiste-spotlight-deraspeaks/" rel="noopener"><small>ConnectNigeria</small><b>Artiste Spotlight: Deraspeaks</b><span>Read →</span></a>
+        <a class="pr" href="https://businessday.ng/bd-weekender/article/how-deraspeaks-new-spokenword-single-illuminates-minds/" rel="noopener"><small>BusinessDay · December 2023</small><b>How Deraspeaks' new spoken word single illuminates minds</b><span>Read</span></a>
+        <a class="pr" href="https://www.vanguardngr.com/2023/11/spoken-word-act-deraspeaks-releases-new-single/" rel="noopener"><small>Vanguard · November 2023</small><b>Spoken word act, Deraspeaks releases new single</b><span>Read</span></a>
+        <a class="pr" href="https://articles.connectnigeria.com/artiste-spotlight-deraspeaks/" rel="noopener"><small>ConnectNigeria</small><b>Artiste Spotlight: Deraspeaks</b><span>Read</span></a>
       </div>
     </div>
   </section>
@@ -1102,7 +1101,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
   <section class="room r-moss dark">
     <div class="wrap cta">
       <h2 class="h2">Invite the voice <em>to your gathering.</em></h2>
-      <div class="side"><p>Every invitation is carefully reviewed for alignment with the ministry's mandate, event vision, and logistics.</p><div><a class="btn" href="#bookings">Book Dera <span class="arr">→</span></a></div></div>
+      <div class="side"><p>Every invitation is carefully reviewed for alignment with the ministry's mandate, event vision, and logistics.</p><div><a class="btn" href="#bookings">Book Dera</a></div></div>
     </div>
   </section>
 </div>
@@ -1126,7 +1125,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
       </div>
       <div class="txt">
         <p>Dera Speaks is associated with @ample_roomm, described as a creative production and mentorship umbrella. Its gatherings bring spoken word, worship and encouragement together, and its wider purpose is to raise Christian creative writers, poets, and digital ministers.</p>
-        <div><a class="textlink" href="https://www.instagram.com/ample_roomm/" rel="noopener">Follow @ample_roomm →</a></div>
+        <div><a class="textlink" href="https://www.instagram.com/ample_roomm/" rel="noopener">Follow @ample_roomm</a></div>
       </div>
     </div>
   </section>
@@ -1162,7 +1161,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
   <section class="room r-moss dark">
     <div class="wrap cta">
       <h2 class="h2">Bring Ample Room <em>to your city.</em></h2>
-      <div class="side"><p>Every invitation is carefully reviewed for alignment with the ministry's mandate, event vision, and logistics.</p><div><a class="btn" href="#bookings">Book Dera <span class="arr">→</span></a></div></div>
+      <div class="side"><p>Every invitation is carefully reviewed for alignment with the ministry's mandate, event vision, and logistics.</p><div><a class="btn" href="#bookings">Book Dera</a></div></div>
     </div>
   </section>
 </div>
@@ -1182,7 +1181,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
     <div class="wrap">
       <p class="enc-label">Upcoming</p>
       <div class="enc-list">
-        <div class="enc empty"><div><h3>Now booking for 2027</h3><p>Conferences, worship experiences, campuses and creative events. Invite Dera to minister at your gathering.</p></div><a class="pill live" href="#bookings">Invite Dera →</a></div>
+        <div class="enc empty"><div><h3>Now booking for 2027</h3><p>Conferences, worship experiences, campuses and creative events. Invite Dera to minister at your gathering.</p></div><a class="pill live" href="#bookings">Invite Dera</a></div>
       </div>
       <p class="enc-label">Past encounters</p>
       <div class="enc-list">
@@ -1196,7 +1195,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
   <section class="room r-moss dark">
     <div class="wrap cta">
       <h2 class="h2">Invite Dera <em>to your gathering.</em></h2>
-      <div class="side"><p>Every invitation is carefully reviewed for alignment with the ministry's mandate, event vision, and logistics.</p><div><a class="btn" href="#bookings">Book Dera <span class="arr">→</span></a></div></div>
+      <div class="side"><p>Every invitation is carefully reviewed for alignment with the ministry's mandate, event vision, and logistics.</p><div><a class="btn" href="#bookings">Book Dera</a></div></div>
     </div>
   </section>
 </div>
@@ -1354,7 +1353,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
         <p class="eyebrow">The written poetry vault</p>
         <h2 class="h2">Read it. Quote it. <em>Study it.</em></h2>
         <p class="lede">Selected written scripts and prose transcripts for pastors, youth leaders, study groups, students and creatives.</p>
-        <div><a class="btn" href="#media">Open the vault <span class="arr">→</span></a></div>
+        <div><a class="btn" href="#media">Open the vault</a></div>
       </div>
       <article class="page-sheet">
         <p class="eyebrow">Excerpt</p>
@@ -1367,7 +1366,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
   <section class="room r-moss dark">
     <div class="wrap cta">
       <h2 class="h2">Carry the word <em>to your people.</em></h2>
-      <div class="side"><p>Every invitation is carefully reviewed for alignment with the ministry's mandate, event vision, and logistics.</p><div><a class="btn" href="#bookings">Book Dera <span class="arr">→</span></a></div></div>
+      <div class="side"><p>Every invitation is carefully reviewed for alignment with the ministry's mandate, event vision, and logistics.</p><div><a class="btn" href="#bookings">Book Dera</a></div></div>
     </div>
   </section>
 </div>
@@ -1390,7 +1389,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
       <div class="head"><div><p class="eyebrow">The Screening Room</p><h2 class="h2">Watch the word <em>move.</em></h2></div><p class="lede" style="max-width:420px">Performances, live ministry and spoken-word films. Press play and turn the sound up.</p></div>
       <div class="screen">
         <div class="player"><video id="sr-video" controls playsinline preload="none" poster="img/film-move.jpg" src="img/film-move.mp4"></video></div>
-        <div class="now"><small>Now showing</small><h3 id="sr-title">Apocalypse: The Move</h3><p id="sr-meta">Live ministry. Dera in full flight: word, worship and sound in one room.</p><a class="textlink" id="sr-out" href="https://www.youtube.com/channel/UCr1RxYxTixr64f-O2IYuq_A" rel="noopener" target="_blank">More on YouTube →</a></div>
+        <div class="now"><small>Now showing</small><h3 id="sr-title">Apocalypse: The Move</h3><p id="sr-meta">Live ministry. Dera in full flight: word, worship and sound in one room.</p><a class="textlink" id="sr-out" href="https://www.youtube.com/channel/UCr1RxYxTixr64f-O2IYuq_A" rel="noopener" target="_blank">More on YouTube</a></div>
       </div>
       <div class="reel" id="sr-reel">
         <button class="on" data-src="img/film-move.mp4" data-title="Apocalypse: The Move" data-meta="Live ministry. Dera in full flight: word, worship and sound in one room."><div class="th"><img loading="lazy" src="img/film-move.jpg" alt=""></div><span>Live ministry</span><b>Apocalypse: The Move</b></button>
@@ -1443,11 +1442,11 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
     <div class="wrap">
       <div class="head"><div><p class="eyebrow">Earlier &amp; featured works</p><h2 class="h2">The archive <em>remembers.</em></h2></div></div>
       <div class="works">
-        <div class="work"><span class="n">01</span><div><h3>I need help, I messed up</h3><p>EP · November 2023. Spoken word centred on gratitude, surrender, faith, and redirecting attention toward God.</p></div><a class="textlink" href="#media">Listen →</a></div>
+        <div class="work"><span class="n">01</span><div><h3>I need help, I messed up</h3><p>EP · November 2023. Spoken word centred on gratitude, surrender, faith, and redirecting attention toward God.</p></div><a class="textlink" href="#media">Listen</a></div>
         <div class="work"><span class="n">02</span><div><h3>I Feel Flames</h3><p>Spoken-word piece from the Dera Speaks catalogue.</p></div><span class="pill">Archive</span></div>
         <div class="work"><span class="n">03</span><div><h3>Confession</h3><p>Spoken-word piece from the Dera Speaks catalogue.</p></div><span class="pill">Archive</span></div>
         <div class="work"><span class="n">04</span><div><h3>My Reality (Who He Is)</h3><p>Spoken-word piece from the Dera Speaks catalogue.</p></div><span class="pill">Archive</span></div>
-        <div class="work"><span class="n">05</span><div><h3>Mercy Found Me</h3><p>Spoken-word performance video.</p></div><a class="textlink" href="https://www.youtube.com/watch?v=ZDvYmssPJqk" rel="noopener">Watch →</a></div>
+        <div class="work"><span class="n">05</span><div><h3>Mercy Found Me</h3><p>Spoken-word performance video.</p></div><a class="textlink" href="https://www.youtube.com/watch?v=ZDvYmssPJqk" rel="noopener">Watch</a></div>
       </div>
     </div>
   </section>
@@ -1482,7 +1481,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
   <section class="room r-moss dark">
     <div class="wrap cta">
       <h2 class="h2">Hear it <em>live.</em></h2>
-      <div class="side"><p>Bring spoken word, worship and the Word to your next gathering.</p><div><a class="btn" href="#bookings">Book Dera <span class="arr">→</span></a></div></div>
+      <div class="side"><p>Bring spoken word, worship and the Word to your next gathering.</p><div><a class="btn" href="#bookings">Book Dera</a></div></div>
     </div>
   </section>
 </div>
@@ -1584,7 +1583,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
           </div>
         </div>
         <div class="submit-row">
-          <button class="btn" type="submit">Submit Booking Request <span class="arr">→</span></button>
+          <button class="btn" type="submit">Submit Booking Request</button>
           <p>Submitting sends a request for review. It is not an automatic confirmation.</p>
         </div>
         <p class="done" id="intake-done" hidden>Mockup only, so nothing was sent. On the live site the request is saved securely and the Dera Speaks Studios team is notified.</p>
@@ -1735,10 +1734,10 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
       if (heroVideo) { heroVideo.muted = true; }
       if (b.dataset.yt) {
         player.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + b.dataset.yt + '?autoplay=1&rel=0" title="' + b.dataset.title + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
-        out.href = 'https://www.youtube.com/watch?v=' + b.dataset.yt; out.textContent = 'Watch on YouTube →';
+        out.href = 'https://www.youtube.com/watch?v=' + b.dataset.yt; out.textContent = 'Watch on YouTube';
       } else {
         player.innerHTML = '<video id="sr-video" controls playsinline autoplay src="' + b.dataset.src + '"></video>';
-        out.href = channel; out.textContent = 'More on YouTube →';
+        out.href = channel; out.textContent = 'More on YouTube';
       }
       player.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
