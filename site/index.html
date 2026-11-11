@@ -262,14 +262,14 @@ nav.main .btn { padding: 14px 22px; }
 .art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(20,8,26,.8) 0%, rgba(20,8,26,0) 50%); pointer-events: none; }
 .art .t { position: absolute; left: 18px; right: 18px; bottom: 16px; z-index: 1; color: #fff; font: 700 20px/1.15 var(--serif); }
 .art .t small { display: block; margin-top: 6px; font: 600 10px/1.4 var(--label); letter-spacing: .24em; text-transform: uppercase; color: var(--sage-lt); }
-.releases { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+.releases { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
 .rel { display: grid; gap: 12px; text-decoration: none; align-content: start; }
 .rel h4 { font: 700 18px/1.2 var(--serif); color: #fff; }
 .rel p { font-size: 13px; color: rgba(255,255,255,.72); }
 .typo-art { position: absolute; inset: 0; display: grid; align-content: end; padding: 16px; background: linear-gradient(160deg, #3a1a45 0%, #1a0a20 100%); }
 .typo-art::before { content: ""; position: absolute; left: 16px; top: 16px; width: 26px; height: 2px; background: var(--sage-lt); }
 .typo-art b { position: relative; z-index: 1; font: italic 400 22px/1.15 var(--serif); color: #fff; }
-@media (max-width: 1000px) { .releases { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 1000px) { .releases { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 900px) { .latest { grid-template-columns: 1fr; } }
 @media (max-width: 560px) { .releases { grid-template-columns: 1fr 1fr; } }
 
@@ -289,7 +289,12 @@ nav.main .btn { padding: 14px 22px; }
 .film .play::before { content: ""; border-left: 12px solid #fff; border-block: 8px solid transparent; margin-left: 4px; }
 .film h3 { font-size: 24px; color: #fff; }
 .film p { font-size: 14px; color: rgba(255,255,255,.75); }
-@media (max-width: 900px) { .films { grid-template-columns: 1fr; } }
+.film-list { grid-column: span 2; align-self: center; padding-left: clamp(0px, 3vw, 40px); }
+.film-list ul { list-style: none; margin: 18px 0 22px; padding: 0; border-top: 1px solid rgba(255,255,255,.16); }
+.film-list li { font: 500 clamp(22px, 2.2vw, 30px)/1.2 var(--serif); padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.16); }
+.film-list li small { font: 600 11px/1 var(--label); letter-spacing: .25em; text-transform: uppercase; color: var(--sage); margin-left: 10px; }
+.film-list > p:last-child { color: rgba(255,255,255,.75); }
+@media (max-width: 900px) { .films { grid-template-columns: 1fr; } .film-list { grid-column: auto; padding-left: 0; } }
 
 .vault { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(32px, 6vw, 88px); align-items: start; }
 .vault .copy { display: grid; gap: 22px; }
@@ -886,7 +891,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
       <div class="vhero-meta">
         <button class="sound" id="sound" aria-pressed="false"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="sound-label" class="sr">Sound on</span></button>
         <p class="sound-hint">Tap for sound</p>
-        <p class="now">Apocalypse: The Move</p>
+        <p class="now">Heaven is not only in worship songs</p>
       </div>
     </div>
   </section>
@@ -897,10 +902,10 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
     <div class="wrap"><div class="m-copy mB-copy">
           <p class="eyebrow">Meet Dera Speaks</p>
           <h2 class="h2">A spoken-word minister <em>for a generation that wants it real.</em></h2>
-          <p class="lede">Dera Speaks is a Nigerian Christian spoken-word minister and songwriter. Since 2018 her words have moved from phone screens to some of the largest altars in Nigeria and to stages in Kenya and the United Kingdom, carrying a message that is direct, honest and deeply rooted in Christ.</p>
+          <p class="lede">Dera Speaks is a Nigerian Christian spoken-word minister and songwriter. Since 2018 her words have moved from phone screens to some of the largest altars in Nigeria and to audiences in England, Scotland, Ghana and Kenya, carrying a message that is direct, honest and deeply rooted in Christ.</p>
           <ul class="m-facts">
             <li><span>Crafts</span>Spoken word · Song · Film</li>
-            <li><span>Reach</span>Nigeria · Kenya · United Kingdom</li>
+            <li><span>Reach</span>Nigeria · England · Scotland · Ghana · Kenya</li>
             <li><span>Home</span>Dera Speaks Studios · Ample Room</li>
           </ul>
           <a class="textlink m-more" href="#about">Read her story</a>
@@ -917,14 +922,14 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
   <!-- Featured work · MOSS -->
   <section class="room r-moss dark feat-room">
     <div class="wrap feature">
-      <figure class="feat-art"><img loading="lazy" src="img/feat-c-m.jpg" alt="Dera Speaks ministering on stage in a white blazer"></figure>
+      <figure class="feat-art"><img loading="lazy" src="img/n2712.jpg" alt="Dera Speaks ministering under blue stage light, hand raised"></figure>
       <div class="copy">
-        <p class="eyebrow">Featured work · EP · November 2023</p>
-        <h2 class="h2">I need help, <em>I messed up.</em></h2>
-        <p class="sub">A spoken-word work on gratitude, surrender, faith, and learning to focus on the many positives rather than the few negatives.</p>
-        <dl class="feat-facts"><div><dt>Format</dt><dd>EP</dd></div><div><dt>Released</dt><dd>November 2023</dd></div><div><dt>Themes</dt><dd>Gratitude, surrender, faith</dd></div></dl>
-        <p class="lede">Born from a deeply personal place of reflection, the piece calls listeners back to gratitude and to the reality of God regardless of circumstance. Dera describes her work as an attempt to restore and elevate spiritual imagination, creating an atmosphere of calm, comfort, and belief.</p>
-        <div class="stream"><a href="https://open.spotify.com/artist/00XxK5J6kj5oSGUK76IEoy" rel="noopener"><img class="ico brand" src="img/brand/spotify.png" alt="" aria-hidden="true">Spotify</a><a href="https://music.apple.com/gh/album/i-need-help-i-messed-up-ep/1716087939" rel="noopener"><img class="ico brand" src="img/brand/applemusic.png" alt="" aria-hidden="true">Apple Music</a><a href="https://audiomack.com/search?q=deraspeaks" rel="noopener"><img class="ico brand" src="img/brand/audiomack.png" alt="" aria-hidden="true">Audiomack</a></div>
+        <p class="eyebrow">Latest release · Single · September 2026</p>
+        <h2 class="h2">She will <em>rise.</em></h2>
+        <p class="sub">The newest word from Dera Speaks, out now on every platform.</p>
+        <dl class="feat-facts"><div><dt>Format</dt><dd>Single</dd></div><div><dt>Released</dt><dd>5 September 2026</dd></div><div><dt>Also listen</dt><dd>Not Alone · Still Faithful · Breathe</dd></div></dl>
+        <p class="lede">Since 2018 Dera Speaks has used poetry, music, storytelling and biblical truth to create moments of reflection, healing, worship and deep spiritual encounter. She Will Rise carries that same word into a new season.</p>
+        <div class="stream"><a href="https://open.spotify.com/artist/00XxK5J6kj5oSGUK76IEoy" rel="noopener"><img class="ico brand" src="img/brand/spotify.png" alt="" aria-hidden="true">Spotify</a><a href="https://music.apple.com/us/search?term=deraspeaks" rel="noopener"><img class="ico brand" src="img/brand/applemusic.png" alt="" aria-hidden="true">Apple Music</a><a href="https://audiomack.com/search?q=deraspeaks" rel="noopener"><img class="ico brand" src="img/brand/audiomack.png" alt="" aria-hidden="true">Audiomack</a></div>
       </div>
     </div>
   </section>
@@ -950,10 +955,10 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
     <div class="wrap">
       <div class="head"><div><p class="eyebrow">In pictures</p><h2 class="h2">Moments <em>from the altar.</em></h2></div><a class="btn outline" href="#media">Full archive</a></div>
       <div class="gallery-row fall">
-        <figure><img loading="lazy" src="img/g-gold.jpg" alt="Dera ministering in gold"></figure>
-        <figure><img loading="lazy" src="img/g-teal.jpg" alt="Dera ministering under blue light"></figure>
-        <figure><img loading="lazy" src="img/g-yellow.jpg" alt="Dera Speaks portrait in yellow"></figure>
-        <figure><img loading="lazy" src="img/g-glasses.jpg" alt="Dera ministering under stage light"></figure>
+        <figure><img loading="lazy" src="img/n2713.jpg" alt="Dera ministering under gold light"></figure>
+        <figure><img loading="lazy" src="img/n2709.jpg" alt="Dera Speaks in prayerful reflection"></figure>
+        <figure><img loading="lazy" src="img/n3619.jpg" alt="Dera Speaks ministering in red"></figure>
+        <figure><img loading="lazy" src="img/n2714.jpg" alt="Dera ministering under stage light"></figure>
       </div>
     </div>
   </section>
@@ -963,7 +968,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
     <div class="wrap">
       <div class="head"><div><p class="eyebrow">Watch her minister</p><h2 class="h2">On stage, <em>unfiltered.</em></h2></div><a class="btn outline" href="https://www.youtube.com/channel/UCr1RxYxTixr64f-O2IYuq_A" rel="noopener"><img class="ico brand" src="img/brand/youtube.png" alt="" aria-hidden="true">YouTube channel</a></div>
       <div class="watch">
-        <a class="clip big" href="#screening"><img loading="lazy" src="img/s-1.jpg" alt=""><span class="play"></span><div class="cap"><small>Live ministry</small><b>Apocalypse: The Move</b></div></a>
+        <a class="clip big" href="#screening"><img loading="lazy" src="img/film-move.jpg" alt=""><span class="play"></span><div class="cap"><small>Live ministry</small><b>Apocalypse: The Move</b></div></a>
         <a class="clip" href="https://www.youtube.com/watch?v=GjHg6kG9hv0" rel="noopener"><img loading="lazy" src="img/s-3.jpg" alt=""><span class="play"></span><div class="cap"><small>Live · Intense 4.0</small><b>An electrifying moment</b></div></a>
         <a class="clip" href="https://www.youtube.com/watch?v=ZDvYmssPJqk" rel="noopener"><img loading="lazy" src="img/s-4.jpg" alt=""><span class="play"></span><div class="cap"><small>Spoken word</small><b>Mercy Found Me</b></div></a>
         <a class="clip" href="https://www.tiktok.com/@deraspeaks/video/7422646208235146501" rel="noopener"><img loading="lazy" src="img/s-2.jpg" alt=""><span class="play"></span><div class="cap"><small>Bournemouth, UK · 2024</small><b>Gratitude to God</b></div></a>
@@ -1014,24 +1019,23 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
 <!-- =============================== ABOUT =============================== -->
 <div class="page" data-page="about" hidden>
   <section class="phero">
-    <img loading="lazy" src="img/h-red.jpg" alt="">
+    <img loading="lazy" src="img/n2715.jpg" alt="">
     <div class="wrap">
       <p class="eyebrow">About</p>
-      <h1>The <em>Oracle.</em></h1>
-      <p class="lede">A Nigerian Christian spoken-word minister and songwriter, drawing people toward authentic faith and the reality of God.</p>
+      <h1>Dera <em>Speaks.</em></h1>
+      <p class="lede">Worship poet, songwriter, storyteller, creative minister, and the visionary behind Deraspeaks Studios.</p>
     </div>
   </section>
 
   <section class="room bio-room dark">
     <div class="bio-split">
-      <figure><img loading="lazy" src="img/p-green.jpg" alt="Dera Speaks ministering"></figure>
+      <figure><img loading="lazy" src="img/n2706.jpg" alt="Dera Speaks ministering"></figure>
       <div class="prose">
         <p class="eyebrow">Biography</p>
         <h2 class="h2">Who is <em>Dera Speaks?</em></h2>
-        <p class="first">Chidera Favour Ogbonnaya, professionally known as Dera Speaks, is a Nigerian Christian spoken-word minister and songwriter whose work uses words, music, worship, and performance to draw people toward authentic faith and the reality of God.</p>
-        <p>Her work is marked by a direct, emotionally honest approach to Christian expression. Through spoken word and music, she explores themes of gratitude, faith, identity, worship, salvation, restoration, and the inner life of the believer. Her voice has developed a distinctive place within a generation seeking a faith that is honest, expressive, and deeply rooted in Christ.</p>
-        <p>Described by the press as an unapologetic, “warrior-militant” minister, she treats ministry as a full-time calling that spans speaking, writing, singing and acting.</p>
-        <p>Her public journey began gaining attention from around 2018, and her work has since taken her from digital platforms to major ministry and performance spaces, including Winners Canaanland, Salvation Ministries Headquarters, Mountain of Fire and Miracles Headquarters, RCCG Headquarters, The Future Awards Africa, and international ministry in Kenya and the United Kingdom.</p>
+        <p class="first">Dera Speaks is a worship poet, songwriter, storyteller, creative minister, and the visionary behind Deraspeaks Studios. Since 2018, she has used poetry, music, storytelling, and biblical truth to create moments of reflection, healing, worship, and deep spiritual encounter.</p>
+        <p>She is the convener of Ample Room, a vibrant movement creating safe spaces for young people to pray, have meaningful conversations, navigate life, and fellowship with the Holy Spirit: spaces where creative gifts find expression, stories find purpose, and becoming finds direction.</p>
+        <p>Her ministry has graced major platforms including Salvation Ministries Headquarters, Winners’ Chapel Canaanland, MFM Headquarters, RCCG Redemption Camp, The Future Awards Africa hosted by Microsoft, Pentecostal Fellowship of Nigeria events, and Festival of Life at The Light Nation Global. Her voice has also reached audiences in England, Scotland, Ghana, Kenya, and beyond, as she has ministered across faith, corporate, leadership, and creative platforms.</p>
       </div>
     </div>
   </section>
@@ -1040,10 +1044,10 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
     <div class="wrap">
       <div class="head"><div><p class="eyebrow">The ministry mandate &amp; philosophy</p><h2 class="h2">Not entertainment alone. <em>A vehicle for encounter.</em></h2></div></div>
       <div class="mandate">
-        <p class="big">Her purpose is to <b>restore and elevate</b> people's imagination spiritually, and create an atmosphere of <b>calm, comfort, and belief</b> in all circumstances.</p>
+        <p class="big">She does not speak enticing words of man’s wisdom, but the <b>demonstration of the Spirit and of power.</b></p>
         <div class="txt">
-          <p>Dera Speaks carries the Word of God with a voice that is direct, expressive, and difficult to ignore. Her spoken word is not presented as entertainment alone; it is a vehicle for reflection, worship, conviction, encouragement, and renewed spiritual imagination.</p>
-          <p>Her work often meets people in the places they rarely speak about: disappointment, isolation, personal struggle, questions of identity, and the tension between what they believe and what they are experiencing. Through words and sound, she points listeners back toward faith, grace, gratitude, and the reality of God.</p>
+          <p>In 2025, she became the CEO and visionary of Deraspeaks Studios, a gospel media production company committed to creating transformative content that communicates the message of Christ.</p>
+          <p>Through poetry, music, film, storytelling, and ministry, she continues to communicate God’s message of hope, healing, and restoration, including through Hebrew and Greek expressions of Scripture. As a storyteller and filmmaker she has produced gospel films including Beauty for Ashes, Bound by Silence, The Mirror, Faultless, and Breathe, as well as the Her Shadowed Truth series, and has featured on The Declassified Podcast led by Apostle Femi Lazarus.</p>
         </div>
       </div>
     </div>
@@ -1053,11 +1057,11 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
     <div class="wrap">
       <div class="head"><div><p class="eyebrow">Journey &amp; impact</p><h2 class="h2">From digital platforms <em>to the nations.</em></h2></div></div>
       <div class="timeline">
-        <div class="tl"><p class="when">From 2018</p><div><h3>The Digital Awakening</h3><p>Dera Speaks began building a public presence through raw, faith-centred spoken-word content across digital platforms, developing an audience around her distinctive Christian creative expression.</p></div></div>
-        <div class="tl"><p class="when">Expansion</p><div><h3>The Ministry &amp; Performance Expansion</h3><p>Her work moved beyond digital audiences into major evangelical and public performance spaces, including Winners Canaanland, Salvation Ministries Headquarters, Mountain of Fire and Miracles Headquarters, RCCG Headquarters, and The Future Awards Africa.</p></div></div>
-        <div class="tl"><p class="when">International</p><div><h3>International Reach</h3><p>Public coverage records an international performance in Kenya preceding her appearance at The Future Awards Africa's 17th edition in Lagos.</p></div></div>
-        <div class="tl"><p class="when">2024</p><div><h3>United Kingdom</h3><p>Spoken-word ministry in Bournemouth, United Kingdom, extending her reach to the diaspora.</p></div></div>
-        <div class="tl"><p class="when">2025 – 2026</p><div><h3>The Continuing Creative Journey</h3><p>Her work has expanded through spoken word, music, live performance, and other creative formats. Current music releases show the catalogue actively developing through 2025 and 2026.</p></div></div>
+        <div class="tl"><p class="when">Since 2018</p><div><h3>Word, sound and encounter</h3><p>Dera Speaks began using poetry, music, storytelling, and biblical truth to create moments of reflection, healing, worship, and deep spiritual encounter.</p></div></div>
+        <div class="tl"><p class="when">Altars &amp; stages</p><div><h3>Major platforms</h3><p>Salvation Ministries Headquarters, Winners’ Chapel Canaanland, MFM Headquarters, RCCG Redemption Camp, The Future Awards Africa hosted by Microsoft, Pentecostal Fellowship of Nigeria events, and Festival of Life at The Light Nation Global.</p></div></div>
+        <div class="tl"><p class="when">The nations</p><div><h3>England, Scotland, Ghana &amp; Kenya</h3><p>Her voice has reached audiences beyond Nigeria, ministering across faith, corporate, leadership, and creative platforms.</p></div></div>
+        <div class="tl"><p class="when">Ample Room</p><div><h3>A room for a generation</h3><p>As convener of Ample Room, she creates safe spaces for young people to pray, talk honestly, navigate life, and fellowship with the Holy Spirit.</p></div></div>
+        <div class="tl"><p class="when">2025</p><div><h3>Deraspeaks Studios</h3><p>She became CEO and visionary of Deraspeaks Studios, a gospel media production company creating transformative content that communicates the message of Christ.</p></div></div>
       </div>
     </div>
   </section>
@@ -1169,7 +1173,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
 <!-- =============================== EVENTS =============================== -->
 <div class="page" data-page="events" hidden>
   <section class="phero">
-    <img loading="lazy" src="img/h-band.jpg" alt="">
+    <img loading="lazy" src="img/n3618.jpg" alt="">
     <div class="wrap">
       <p class="eyebrow">Events</p>
       <h1>Upcoming &amp; past <em>encounters.</em></h1>
@@ -1241,79 +1245,92 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
   <section class="room r-white">
     <div class="wrap">
       <div class="masonry" id="gallery-grid">
-        <button class="gi" type="button" data-i="0" aria-label="Open photo 1 of 73"><img loading="lazy" src="img/gallery/thumb/d9827.jpg" width="720" height="846" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="1" aria-label="Open photo 2 of 73"><img loading="lazy" src="img/gallery/thumb/d9832.jpg" width="720" height="951" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="2" aria-label="Open photo 3 of 73"><img loading="lazy" src="img/gallery/thumb/d9833.jpg" width="720" height="908" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="3" aria-label="Open photo 4 of 73"><img loading="lazy" src="img/gallery/thumb/d9834.jpg" width="720" height="930" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="4" aria-label="Open photo 5 of 73"><img loading="lazy" src="img/gallery/thumb/d9835.jpg" width="720" height="403" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="5" aria-label="Open photo 6 of 73"><img loading="lazy" src="img/gallery/thumb/d9836.jpg" width="624" height="336" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="6" aria-label="Open photo 7 of 73"><img loading="lazy" src="img/gallery/thumb/d9837.jpg" width="720" height="630" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="7" aria-label="Open photo 8 of 73"><img loading="lazy" src="img/gallery/thumb/d9838.jpg" width="720" height="853" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="8" aria-label="Open photo 9 of 73"><img loading="lazy" src="img/gallery/thumb/d9839.jpg" width="720" height="960" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="9" aria-label="Open photo 10 of 73"><img loading="lazy" src="img/gallery/thumb/d9840.jpg" width="720" height="480" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="10" aria-label="Open photo 11 of 73"><img loading="lazy" src="img/gallery/thumb/d9841.jpg" width="554" height="1200" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="11" aria-label="Open photo 12 of 73"><img loading="lazy" src="img/gallery/thumb/d9842.jpg" width="720" height="810" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="12" aria-label="Open photo 13 of 73"><img loading="lazy" src="img/gallery/thumb/d9843.jpg" width="720" height="384" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="13" aria-label="Open photo 14 of 73"><img loading="lazy" src="img/gallery/thumb/d9844.jpg" width="720" height="393" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="14" aria-label="Open photo 15 of 73"><img loading="lazy" src="img/gallery/thumb/d9845.jpg" width="683" height="1024" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="15" aria-label="Open photo 16 of 73"><img loading="lazy" src="img/gallery/thumb/d9846.jpg" width="720" height="786" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="16" aria-label="Open photo 17 of 73"><img loading="lazy" src="img/gallery/thumb/d9847.jpg" width="720" height="786" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="17" aria-label="Open photo 18 of 73"><img loading="lazy" src="img/gallery/thumb/d9848.jpg" width="720" height="908" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="18" aria-label="Open photo 19 of 73"><img loading="lazy" src="img/gallery/thumb/d9849.jpg" width="720" height="786" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="19" aria-label="Open photo 20 of 73"><img loading="lazy" src="img/gallery/thumb/d9850.jpg" width="720" height="890" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="20" aria-label="Open photo 21 of 73"><img loading="lazy" src="img/gallery/thumb/d9851.jpg" width="720" height="527" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="21" aria-label="Open photo 22 of 73"><img loading="lazy" src="img/gallery/thumb/d9852.jpg" width="720" height="960" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="22" aria-label="Open photo 23 of 73"><img loading="lazy" src="img/gallery/thumb/d9853.jpg" width="720" height="275" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="23" aria-label="Open photo 24 of 73"><img loading="lazy" src="img/gallery/thumb/d9854.jpg" width="720" height="540" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="24" aria-label="Open photo 25 of 73"><img loading="lazy" src="img/gallery/thumb/d9855.jpg" width="720" height="388" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="25" aria-label="Open photo 26 of 73"><img loading="lazy" src="img/gallery/thumb/d9856.jpg" width="720" height="540" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="26" aria-label="Open photo 27 of 73"><img loading="lazy" src="img/gallery/thumb/d9858.jpg" width="720" height="806" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="27" aria-label="Open photo 28 of 73"><img loading="lazy" src="img/gallery/thumb/d9859.jpg" width="720" height="1079" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="28" aria-label="Open photo 29 of 73"><img loading="lazy" src="img/gallery/thumb/d9861.jpg" width="720" height="836" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="29" aria-label="Open photo 30 of 73"><img loading="lazy" src="img/gallery/thumb/d9862.jpg" width="720" height="1011" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="30" aria-label="Open photo 31 of 73"><img loading="lazy" src="img/gallery/thumb/d9863.jpg" width="720" height="769" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="31" aria-label="Open photo 32 of 73"><img loading="lazy" src="img/gallery/thumb/d9864.jpg" width="720" height="778" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="32" aria-label="Open photo 33 of 73"><img loading="lazy" src="img/gallery/thumb/d9865.jpg" width="720" height="1080" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="33" aria-label="Open photo 34 of 73"><img loading="lazy" src="img/gallery/thumb/d9866.jpg" width="720" height="799" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="34" aria-label="Open photo 35 of 73"><img loading="lazy" src="img/gallery/thumb/d9867.jpg" width="720" height="982" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="35" aria-label="Open photo 36 of 73"><img loading="lazy" src="img/gallery/thumb/d9868.jpg" width="720" height="1076" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="36" aria-label="Open photo 37 of 73"><img loading="lazy" src="img/gallery/thumb/d9869.jpg" width="720" height="1081" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="37" aria-label="Open photo 38 of 73"><img loading="lazy" src="img/gallery/thumb/d9870.jpg" width="720" height="1081" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="38" aria-label="Open photo 39 of 73"><img loading="lazy" src="img/gallery/thumb/d9871.jpg" width="720" height="790" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="39" aria-label="Open photo 40 of 73"><img loading="lazy" src="img/gallery/thumb/d9872.jpg" width="720" height="847" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="40" aria-label="Open photo 41 of 73"><img loading="lazy" src="img/gallery/thumb/d9873.jpg" width="720" height="480" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="41" aria-label="Open photo 42 of 73"><img loading="lazy" src="img/gallery/thumb/d9874.jpg" width="720" height="480" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="42" aria-label="Open photo 43 of 73"><img loading="lazy" src="img/gallery/thumb/d9875.jpg" width="720" height="480" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="43" aria-label="Open photo 44 of 73"><img loading="lazy" src="img/gallery/thumb/d9876.jpg" width="720" height="480" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="44" aria-label="Open photo 45 of 73"><img loading="lazy" src="img/gallery/thumb/d9877.jpg" width="720" height="480" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="45" aria-label="Open photo 46 of 73"><img loading="lazy" src="img/gallery/thumb/d9878.jpg" width="720" height="450" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="46" aria-label="Open photo 47 of 73"><img loading="lazy" src="img/gallery/thumb/d9879.jpg" width="720" height="846" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="47" aria-label="Open photo 48 of 73"><img loading="lazy" src="img/gallery/thumb/d9880.jpg" width="720" height="581" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="48" aria-label="Open photo 49 of 73"><img loading="lazy" src="img/gallery/thumb/d9881.jpg" width="720" height="449" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="49" aria-label="Open photo 50 of 73"><img loading="lazy" src="img/gallery/thumb/d9882.jpg" width="720" height="757" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="50" aria-label="Open photo 51 of 73"><img loading="lazy" src="img/gallery/thumb/d9883.jpg" width="720" height="788" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="51" aria-label="Open photo 52 of 73"><img loading="lazy" src="img/gallery/thumb/d9884.jpg" width="720" height="786" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="52" aria-label="Open photo 53 of 73"><img loading="lazy" src="img/gallery/thumb/d9885.jpg" width="720" height="786" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="53" aria-label="Open photo 54 of 73"><img loading="lazy" src="img/gallery/thumb/d9886.jpg" width="720" height="788" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="54" aria-label="Open photo 55 of 73"><img loading="lazy" src="img/gallery/thumb/d9887.jpg" width="720" height="387" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="55" aria-label="Open photo 56 of 73"><img loading="lazy" src="img/gallery/thumb/d9888.jpg" width="720" height="387" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="56" aria-label="Open photo 57 of 73"><img loading="lazy" src="img/gallery/thumb/d9889.jpg" width="720" height="387" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="57" aria-label="Open photo 58 of 73"><img loading="lazy" src="img/gallery/thumb/d9890.jpg" width="720" height="387" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="58" aria-label="Open photo 59 of 73"><img loading="lazy" src="img/gallery/thumb/d9891.jpg" width="720" height="387" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="59" aria-label="Open photo 60 of 73"><img loading="lazy" src="img/gallery/thumb/d9892.jpg" width="720" height="387" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="60" aria-label="Open photo 61 of 73"><img loading="lazy" src="img/gallery/thumb/d9893.jpg" width="720" height="748" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="61" aria-label="Open photo 62 of 73"><img loading="lazy" src="img/gallery/thumb/d9894.jpg" width="720" height="770" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="62" aria-label="Open photo 63 of 73"><img loading="lazy" src="img/gallery/thumb/d9900.jpg" width="720" height="450" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="63" aria-label="Open photo 64 of 73"><img loading="lazy" src="img/gallery/thumb/d9901.jpg" width="720" height="1015" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="64" aria-label="Open photo 65 of 73"><img loading="lazy" src="img/gallery/thumb/d9902.jpg" width="720" height="971" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="65" aria-label="Open photo 66 of 73"><img loading="lazy" src="img/gallery/thumb/d9903.jpg" width="720" height="450" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="66" aria-label="Open photo 67 of 73"><img loading="lazy" src="img/gallery/thumb/d9904.jpg" width="720" height="450" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="67" aria-label="Open photo 68 of 73"><img loading="lazy" src="img/gallery/thumb/d9905.jpg" width="720" height="450" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="68" aria-label="Open photo 69 of 73"><img loading="lazy" src="img/gallery/thumb/d9906.jpg" width="720" height="450" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="69" aria-label="Open photo 70 of 73"><img loading="lazy" src="img/gallery/thumb/d9908.jpg" width="720" height="450" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="70" aria-label="Open photo 71 of 73"><img loading="lazy" src="img/gallery/thumb/d9909.jpg" width="720" height="450" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="71" aria-label="Open photo 72 of 73"><img loading="lazy" src="img/gallery/thumb/d9910.jpg" width="720" height="414" alt="Dera Speaks"></button>
-        <button class="gi" type="button" data-i="72" aria-label="Open photo 73 of 73"><img loading="lazy" src="img/gallery/thumb/d9911.jpg" width="720" height="450" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="0" aria-label="Open photo 1 of 86"><img loading="lazy" src="img/gallery/thumb/n2712.jpg" width="720" height="837" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="1" aria-label="Open photo 2 of 86"><img loading="lazy" src="img/gallery/thumb/n2713.jpg" width="720" height="837" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="2" aria-label="Open photo 3 of 86"><img loading="lazy" src="img/gallery/thumb/n2709.jpg" width="720" height="837" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="3" aria-label="Open photo 4 of 86"><img loading="lazy" src="img/gallery/thumb/n2714.jpg" width="720" height="837" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="4" aria-label="Open photo 5 of 86"><img loading="lazy" src="img/gallery/thumb/n2706.jpg" width="720" height="837" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="5" aria-label="Open photo 6 of 86"><img loading="lazy" src="img/gallery/thumb/n2715.jpg" width="720" height="527" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="6" aria-label="Open photo 7 of 86"><img loading="lazy" src="img/gallery/thumb/n3619.jpg" width="720" height="1081" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="7" aria-label="Open photo 8 of 86"><img loading="lazy" src="img/gallery/thumb/n3617.jpg" width="720" height="1076" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="8" aria-label="Open photo 9 of 86"><img loading="lazy" src="img/gallery/thumb/n3618.jpg" width="720" height="1081" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="9" aria-label="Open photo 10 of 86"><img loading="lazy" src="img/gallery/thumb/n4565.jpg" width="720" height="451" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="10" aria-label="Open photo 11 of 86"><img loading="lazy" src="img/gallery/thumb/n4566.jpg" width="720" height="451" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="11" aria-label="Open photo 12 of 86"><img loading="lazy" src="img/gallery/thumb/n4567.jpg" width="720" height="451" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="12" aria-label="Open photo 13 of 86"><img loading="lazy" src="img/gallery/thumb/n4568.jpg" width="720" height="451" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="13" aria-label="Open photo 14 of 86"><img loading="lazy" src="img/gallery/thumb/d9827.jpg" width="720" height="846" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="14" aria-label="Open photo 15 of 86"><img loading="lazy" src="img/gallery/thumb/d9832.jpg" width="720" height="951" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="15" aria-label="Open photo 16 of 86"><img loading="lazy" src="img/gallery/thumb/d9833.jpg" width="720" height="908" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="16" aria-label="Open photo 17 of 86"><img loading="lazy" src="img/gallery/thumb/d9834.jpg" width="720" height="930" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="17" aria-label="Open photo 18 of 86"><img loading="lazy" src="img/gallery/thumb/d9835.jpg" width="720" height="403" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="18" aria-label="Open photo 19 of 86"><img loading="lazy" src="img/gallery/thumb/d9836.jpg" width="624" height="336" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="19" aria-label="Open photo 20 of 86"><img loading="lazy" src="img/gallery/thumb/d9837.jpg" width="720" height="630" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="20" aria-label="Open photo 21 of 86"><img loading="lazy" src="img/gallery/thumb/d9838.jpg" width="720" height="853" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="21" aria-label="Open photo 22 of 86"><img loading="lazy" src="img/gallery/thumb/d9839.jpg" width="720" height="960" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="22" aria-label="Open photo 23 of 86"><img loading="lazy" src="img/gallery/thumb/d9840.jpg" width="720" height="480" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="23" aria-label="Open photo 24 of 86"><img loading="lazy" src="img/gallery/thumb/d9841.jpg" width="554" height="1200" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="24" aria-label="Open photo 25 of 86"><img loading="lazy" src="img/gallery/thumb/d9842.jpg" width="720" height="810" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="25" aria-label="Open photo 26 of 86"><img loading="lazy" src="img/gallery/thumb/d9843.jpg" width="720" height="384" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="26" aria-label="Open photo 27 of 86"><img loading="lazy" src="img/gallery/thumb/d9844.jpg" width="720" height="393" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="27" aria-label="Open photo 28 of 86"><img loading="lazy" src="img/gallery/thumb/d9845.jpg" width="683" height="1024" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="28" aria-label="Open photo 29 of 86"><img loading="lazy" src="img/gallery/thumb/d9846.jpg" width="720" height="786" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="29" aria-label="Open photo 30 of 86"><img loading="lazy" src="img/gallery/thumb/d9847.jpg" width="720" height="786" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="30" aria-label="Open photo 31 of 86"><img loading="lazy" src="img/gallery/thumb/d9848.jpg" width="720" height="908" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="31" aria-label="Open photo 32 of 86"><img loading="lazy" src="img/gallery/thumb/d9849.jpg" width="720" height="786" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="32" aria-label="Open photo 33 of 86"><img loading="lazy" src="img/gallery/thumb/d9850.jpg" width="720" height="890" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="33" aria-label="Open photo 34 of 86"><img loading="lazy" src="img/gallery/thumb/d9851.jpg" width="720" height="527" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="34" aria-label="Open photo 35 of 86"><img loading="lazy" src="img/gallery/thumb/d9852.jpg" width="720" height="960" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="35" aria-label="Open photo 36 of 86"><img loading="lazy" src="img/gallery/thumb/d9853.jpg" width="720" height="275" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="36" aria-label="Open photo 37 of 86"><img loading="lazy" src="img/gallery/thumb/d9854.jpg" width="720" height="540" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="37" aria-label="Open photo 38 of 86"><img loading="lazy" src="img/gallery/thumb/d9855.jpg" width="720" height="388" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="38" aria-label="Open photo 39 of 86"><img loading="lazy" src="img/gallery/thumb/d9856.jpg" width="720" height="540" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="39" aria-label="Open photo 40 of 86"><img loading="lazy" src="img/gallery/thumb/d9858.jpg" width="720" height="806" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="40" aria-label="Open photo 41 of 86"><img loading="lazy" src="img/gallery/thumb/d9859.jpg" width="720" height="1079" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="41" aria-label="Open photo 42 of 86"><img loading="lazy" src="img/gallery/thumb/d9861.jpg" width="720" height="836" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="42" aria-label="Open photo 43 of 86"><img loading="lazy" src="img/gallery/thumb/d9862.jpg" width="720" height="1011" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="43" aria-label="Open photo 44 of 86"><img loading="lazy" src="img/gallery/thumb/d9863.jpg" width="720" height="769" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="44" aria-label="Open photo 45 of 86"><img loading="lazy" src="img/gallery/thumb/d9864.jpg" width="720" height="778" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="45" aria-label="Open photo 46 of 86"><img loading="lazy" src="img/gallery/thumb/d9865.jpg" width="720" height="1080" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="46" aria-label="Open photo 47 of 86"><img loading="lazy" src="img/gallery/thumb/d9866.jpg" width="720" height="799" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="47" aria-label="Open photo 48 of 86"><img loading="lazy" src="img/gallery/thumb/d9867.jpg" width="720" height="982" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="48" aria-label="Open photo 49 of 86"><img loading="lazy" src="img/gallery/thumb/d9868.jpg" width="720" height="1076" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="49" aria-label="Open photo 50 of 86"><img loading="lazy" src="img/gallery/thumb/d9869.jpg" width="720" height="1081" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="50" aria-label="Open photo 51 of 86"><img loading="lazy" src="img/gallery/thumb/d9870.jpg" width="720" height="1081" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="51" aria-label="Open photo 52 of 86"><img loading="lazy" src="img/gallery/thumb/d9871.jpg" width="720" height="790" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="52" aria-label="Open photo 53 of 86"><img loading="lazy" src="img/gallery/thumb/d9872.jpg" width="720" height="847" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="53" aria-label="Open photo 54 of 86"><img loading="lazy" src="img/gallery/thumb/d9873.jpg" width="720" height="480" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="54" aria-label="Open photo 55 of 86"><img loading="lazy" src="img/gallery/thumb/d9874.jpg" width="720" height="480" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="55" aria-label="Open photo 56 of 86"><img loading="lazy" src="img/gallery/thumb/d9875.jpg" width="720" height="480" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="56" aria-label="Open photo 57 of 86"><img loading="lazy" src="img/gallery/thumb/d9876.jpg" width="720" height="480" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="57" aria-label="Open photo 58 of 86"><img loading="lazy" src="img/gallery/thumb/d9877.jpg" width="720" height="480" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="58" aria-label="Open photo 59 of 86"><img loading="lazy" src="img/gallery/thumb/d9878.jpg" width="720" height="450" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="59" aria-label="Open photo 60 of 86"><img loading="lazy" src="img/gallery/thumb/d9879.jpg" width="720" height="846" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="60" aria-label="Open photo 61 of 86"><img loading="lazy" src="img/gallery/thumb/d9880.jpg" width="720" height="581" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="61" aria-label="Open photo 62 of 86"><img loading="lazy" src="img/gallery/thumb/d9881.jpg" width="720" height="449" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="62" aria-label="Open photo 63 of 86"><img loading="lazy" src="img/gallery/thumb/d9882.jpg" width="720" height="757" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="63" aria-label="Open photo 64 of 86"><img loading="lazy" src="img/gallery/thumb/d9883.jpg" width="720" height="788" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="64" aria-label="Open photo 65 of 86"><img loading="lazy" src="img/gallery/thumb/d9884.jpg" width="720" height="786" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="65" aria-label="Open photo 66 of 86"><img loading="lazy" src="img/gallery/thumb/d9885.jpg" width="720" height="786" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="66" aria-label="Open photo 67 of 86"><img loading="lazy" src="img/gallery/thumb/d9886.jpg" width="720" height="788" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="67" aria-label="Open photo 68 of 86"><img loading="lazy" src="img/gallery/thumb/d9887.jpg" width="720" height="387" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="68" aria-label="Open photo 69 of 86"><img loading="lazy" src="img/gallery/thumb/d9888.jpg" width="720" height="387" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="69" aria-label="Open photo 70 of 86"><img loading="lazy" src="img/gallery/thumb/d9889.jpg" width="720" height="387" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="70" aria-label="Open photo 71 of 86"><img loading="lazy" src="img/gallery/thumb/d9890.jpg" width="720" height="387" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="71" aria-label="Open photo 72 of 86"><img loading="lazy" src="img/gallery/thumb/d9891.jpg" width="720" height="387" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="72" aria-label="Open photo 73 of 86"><img loading="lazy" src="img/gallery/thumb/d9892.jpg" width="720" height="387" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="73" aria-label="Open photo 74 of 86"><img loading="lazy" src="img/gallery/thumb/d9893.jpg" width="720" height="748" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="74" aria-label="Open photo 75 of 86"><img loading="lazy" src="img/gallery/thumb/d9894.jpg" width="720" height="770" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="75" aria-label="Open photo 76 of 86"><img loading="lazy" src="img/gallery/thumb/d9900.jpg" width="720" height="450" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="76" aria-label="Open photo 77 of 86"><img loading="lazy" src="img/gallery/thumb/d9901.jpg" width="720" height="1015" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="77" aria-label="Open photo 78 of 86"><img loading="lazy" src="img/gallery/thumb/d9902.jpg" width="720" height="971" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="78" aria-label="Open photo 79 of 86"><img loading="lazy" src="img/gallery/thumb/d9903.jpg" width="720" height="450" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="79" aria-label="Open photo 80 of 86"><img loading="lazy" src="img/gallery/thumb/d9904.jpg" width="720" height="450" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="80" aria-label="Open photo 81 of 86"><img loading="lazy" src="img/gallery/thumb/d9905.jpg" width="720" height="450" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="81" aria-label="Open photo 82 of 86"><img loading="lazy" src="img/gallery/thumb/d9906.jpg" width="720" height="450" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="82" aria-label="Open photo 83 of 86"><img loading="lazy" src="img/gallery/thumb/d9908.jpg" width="720" height="450" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="83" aria-label="Open photo 84 of 86"><img loading="lazy" src="img/gallery/thumb/d9909.jpg" width="720" height="450" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="84" aria-label="Open photo 85 of 86"><img loading="lazy" src="img/gallery/thumb/d9910.jpg" width="720" height="414" alt="Dera Speaks"></button>
+        <button class="gi" type="button" data-i="85" aria-label="Open photo 86 of 86"><img loading="lazy" src="img/gallery/thumb/d9911.jpg" width="720" height="450" alt="Dera Speaks"></button>
       </div>
     </div>
   </section>
@@ -1341,7 +1358,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
     <div class="wrap">
       <div class="films">
         <div class="film"><div class="frame" style="aspect-ratio:4/5;display:grid;align-content:end;padding:24px;background:linear-gradient(160deg,#26102e,#151912)"><b style="position:relative;z-index:1;font:700 56px/.9 var(--serif);color:#fff">October</b></div><h3 style="color:var(--ink)">This month's word</h3><p style="color:var(--muted)">October 2026 · coming 1 October</p></div>
-        <div class="film"><div class="frame" style="aspect-ratio:4/5"><img loading="lazy" src="img/p-white.jpg" alt="Dera Speaks" style="filter:none;object-position:50% 20%"></div><h3 style="color:var(--ink)">Another blessed month</h3><p style="color:var(--muted)">September 2026</p></div>
+        <div class="film"><div class="frame" style="aspect-ratio:4/5"><img loading="lazy" src="img/n3617.jpg" alt="Dera Speaks" style="filter:none;object-position:50% 20%"></div><h3 style="color:var(--ink)">Another blessed month</h3><p style="color:var(--muted)">September 2026</p></div>
         <div class="film"><div class="frame" style="aspect-ratio:4/5"><img loading="lazy" src="img/g-crowd.jpg" alt="Dera ministering" style="filter:none;object-position:50% 20%"></div><h3 style="color:var(--ink)">Welcome to August</h3><p style="color:var(--muted)">August 2026</p></div>
       </div>
     </div>
@@ -1409,16 +1426,15 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
           <span class="badge">Latest release</span>
           <h3>She Will Rise</h3>
           <p class="meta">Single · September 5, 2026</p>
-          <div class="stream"><a href="https://open.spotify.com/artist/00XxK5J6kj5oSGUK76IEoy" rel="noopener"><img class="ico brand" src="img/brand/spotify.png" alt="" aria-hidden="true">Spotify</a><a href="https://music.apple.com/gh/album/i-need-help-i-messed-up-ep/1716087939" rel="noopener"><img class="ico brand" src="img/brand/applemusic.png" alt="" aria-hidden="true">Apple Music</a><a href="https://audiomack.com/search?q=deraspeaks" rel="noopener"><img class="ico brand" src="img/brand/audiomack.png" alt="" aria-hidden="true">Audiomack</a></div>
+          <div class="stream"><a href="https://open.spotify.com/artist/00XxK5J6kj5oSGUK76IEoy" rel="noopener"><img class="ico brand" src="img/brand/spotify.png" alt="" aria-hidden="true">Spotify</a><a href="https://music.apple.com/us/search?term=deraspeaks" rel="noopener"><img class="ico brand" src="img/brand/applemusic.png" alt="" aria-hidden="true">Apple Music</a><a href="https://audiomack.com/search?q=deraspeaks" rel="noopener"><img class="ico brand" src="img/brand/audiomack.png" alt="" aria-hidden="true">Audiomack</a></div>
         </div>
         <div class="art"><img loading="lazy" src="img/r-latest.jpg" alt="Dera Speaks"></div>
       </div>
       <div class="head" style="margin-bottom:28px"><div><p class="eyebrow">Latest music &amp; releases</p></div></div>
       <div class="releases">
+        <a class="rel" href="#media"><div class="art"><img loading="lazy" src="img/r-latest.jpg" alt=""></div><div><h4>She Will Rise</h4><p>Single · September 5, 2026</p></div></a>
         <a class="rel" href="#media"><div class="art"><img loading="lazy" src="img/r-1.jpg" alt=""></div><div><h4>Not Alone</h4><p>Single · May 2, 2026</p></div></a>
         <a class="rel" href="#media"><div class="art"><img loading="lazy" src="img/r-2.jpg" alt=""></div><div><h4>Still Faithful</h4><p>Single · January 7, 2026</p></div></a>
-        <a class="rel" href="#media"><div class="art"><img loading="lazy" src="img/r-3.jpg" alt=""></div><div><h4>Ilorihe (Live)</h4><p>EP · Lilly Praise &amp; Dera Speaks · 2026</p></div></a>
-        <a class="rel" href="#media"><div class="art"><img loading="lazy" src="img/r-4.jpg" alt=""></div><div><h4>Kabiyesi Eledumare</h4><p>Single · feat. Dera Speaks · 2026</p></div></a>
         <a class="rel" href="#media"><div class="art"><img loading="lazy" src="img/r-5.jpg" alt=""></div><div><h4>Breathe</h4><p>Single · May 20, 2025</p></div></a>
       </div>
     </div>
@@ -1429,7 +1445,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
       <div class="head"><div><p class="eyebrow">Find Dera everywhere</p><h2 class="h2">Listen, watch, <em>follow.</em></h2></div></div>
       <div class="plats">
         <a class="plat" href="https://open.spotify.com/artist/00XxK5J6kj5oSGUK76IEoy" rel="noopener"><img class="ico brand" src="img/brand/spotify.png" alt="" aria-hidden="true"><b>Spotify</b><span>Listen</span></a>
-        <a class="plat" href="https://music.apple.com/gh/album/i-need-help-i-messed-up-ep/1716087939" rel="noopener"><img class="ico brand" src="img/brand/applemusic.png" alt="" aria-hidden="true"><b>Apple Music</b><span>Stream</span></a>
+        <a class="plat" href="https://music.apple.com/us/search?term=deraspeaks" rel="noopener"><img class="ico brand" src="img/brand/applemusic.png" alt="" aria-hidden="true"><b>Apple Music</b><span>Stream</span></a>
         <a class="plat" href="https://audiomack.com/search?q=deraspeaks" rel="noopener"><img class="ico brand" src="img/brand/audiomack.png" alt="" aria-hidden="true"><b>Audiomack</b><span>Play</span></a>
         <a class="plat" href="https://www.youtube.com/channel/UCr1RxYxTixr64f-O2IYuq_A" rel="noopener"><img class="ico brand" src="img/brand/youtube.png" alt="" aria-hidden="true"><b>YouTube</b><span>Watch</span></a>
         <a class="plat" href="https://www.tiktok.com/@deraspeaks" rel="noopener"><img class="ico brand" src="img/brand/tiktok.svg" alt="" aria-hidden="true"><b>TikTok</b><span>Follow</span></a>
@@ -1442,11 +1458,9 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
     <div class="wrap">
       <div class="head"><div><p class="eyebrow">Earlier &amp; featured works</p><h2 class="h2">The archive <em>remembers.</em></h2></div></div>
       <div class="works">
-        <div class="work"><span class="n">01</span><div><h3>I need help, I messed up</h3><p>EP · November 2023. Spoken word centred on gratitude, surrender, faith, and redirecting attention toward God.</p></div><a class="textlink" href="#media">Listen</a></div>
-        <div class="work"><span class="n">02</span><div><h3>I Feel Flames</h3><p>Spoken-word piece from the Dera Speaks catalogue.</p></div><span class="pill">Archive</span></div>
-        <div class="work"><span class="n">03</span><div><h3>Confession</h3><p>Spoken-word piece from the Dera Speaks catalogue.</p></div><span class="pill">Archive</span></div>
-        <div class="work"><span class="n">04</span><div><h3>My Reality (Who He Is)</h3><p>Spoken-word piece from the Dera Speaks catalogue.</p></div><span class="pill">Archive</span></div>
-        <div class="work"><span class="n">05</span><div><h3>Mercy Found Me</h3><p>Spoken-word performance video.</p></div><a class="textlink" href="https://www.youtube.com/watch?v=ZDvYmssPJqk" rel="noopener">Watch</a></div>
+        <div class="work"><span class="n">01</span><div><h3>I Feel Flames</h3><p>Spoken-word piece from the Dera Speaks catalogue.</p></div><span class="pill">Archive</span></div>
+        <div class="work"><span class="n">02</span><div><h3>My Reality (Who He Is)</h3><p>Spoken-word piece from the Dera Speaks catalogue.</p></div><span class="pill">Archive</span></div>
+        <div class="work"><span class="n">03</span><div><h3>Mercy Found Me</h3><p>Spoken-word performance video.</p></div><a class="textlink" href="https://www.youtube.com/watch?v=ZDvYmssPJqk" rel="noopener">Watch</a></div>
       </div>
     </div>
   </section>
@@ -1455,9 +1469,12 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
     <div class="wrap">
       <div class="head"><div><p class="eyebrow">Cinematic pieces &amp; acting</p><h2 class="h2">The word, <em>on screen.</em></h2></div></div>
       <div class="films">
-        <div class="film"><div class="frame"><img loading="lazy" src="img/f-1.jpg" alt=""><span class="play"></span></div><h3>God In This Catharsis</h3><p>Faith-based feature film. Dera as Preye.</p></div>
-        <div class="film"><div class="frame"><img loading="lazy" src="img/f-2.jpg" alt=""><span class="play"></span></div><h3>Bound by Silence</h3><p>Short spoken-word film, Dera Speaks Studios.</p></div>
-        <div class="film"><div class="frame"><img loading="lazy" src="img/f-3.jpg" alt=""><span class="play"></span></div><h3>Confession</h3><p>A visual spoken-word work.</p></div>
+        <div class="film"><div class="frame"><img loading="lazy" src="img/f-2.jpg" alt=""><span class="play"></span></div><h3>Bound by Silence</h3><p>Short spoken-word film, Deraspeaks Studios.</p></div>
+        <div class="film-list">
+          <p class="eyebrow">Gospel films from Deraspeaks Studios</p>
+          <ul><li>Beauty for Ashes</li><li>Bound by Silence</li><li>The Mirror</li><li>Faultless</li><li>Breathe</li><li>Her Shadowed Truth <small>series</small></li></ul>
+          <p>Stories that carry the message of Christ: hope, healing and restoration, told on screen.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -1489,7 +1506,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
 <!-- =============================== BOOKINGS =============================== -->
 <div class="page" data-page="bookings" hidden>
   <section class="phero">
-    <img loading="lazy" src="img/h-stage.jpg" alt="">
+    <img loading="lazy" src="img/n4565.jpg" alt="">
     <div class="wrap">
       <p class="eyebrow">Bookings</p>
       <h1>The Altar <em>Call.</em></h1>
@@ -1524,7 +1541,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
         <div class="offer"><b>Creative arts consultation</b><p>Guidance for creative teams, worship arts and content ministries.</p></div>
         <div class="offer"><b>Film screening &amp; panel</b><p>A screening of a Dera Speaks visual work followed by conversation.</p></div>
       </div>
-      <div class="proof"><span>She has ministered at</span><b>Winners Chapel, Canaanland</b><b>Salvation Ministries HQ</b><b>MFM HQ</b><b>RCCG HQ</b><b>The Future Awards Africa</b><b>Kenya</b><b>United Kingdom</b></div>
+      <div class="proof"><span>She has ministered at</span><b>Winners Chapel, Canaanland</b><b>Salvation Ministries HQ</b><b>MFM HQ</b><b>RCCG HQ</b><b>The Future Awards Africa</b><b>England</b><b>Scotland</b><b>Ghana</b><b>Kenya</b></div>
     </div>
   </section>
 
@@ -1631,7 +1648,7 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
     <div class="foot-mid">
       <div style="display:grid;gap:16px;align-content:start"><span class="logo"></span><p style="max-width:26em">Dera Speaks Studios. Words for what the soul cannot say.</p><ul class="foot-contact"><li><a href="tel:+2347048831427">+234 704 883 1427</a></li><li><a href="mailto:bookingsderaspeaksstudios@gmail.com">bookingsderaspeaksstudios@gmail.com</a></li></ul></div>
       <div><h4>Explore</h4><ul><li><a href="#home">Home</a></li><li><a href="#about">About</a></li><li><a href="#ample-room">Ample Room</a></li><li><a href="#events">Events</a></li><li><a href="#media">Media</a></li><li><a href="#snippets">Snippets</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#words">Words</a></li><li><a href="#bookings">Bookings</a></li></ul></div>
-      <div><h4>Listen</h4><ul><li><a href="https://open.spotify.com/artist/00XxK5J6kj5oSGUK76IEoy" rel="noopener"><img class="ico brand" src="img/brand/spotify.png" alt="" aria-hidden="true">Spotify</a></li><li><a href="https://music.apple.com/gh/album/i-need-help-i-messed-up-ep/1716087939" rel="noopener"><img class="ico brand" src="img/brand/applemusic.png" alt="" aria-hidden="true">Apple Music</a></li><li><a href="https://audiomack.com/search?q=deraspeaks" rel="noopener"><img class="ico brand" src="img/brand/audiomack.png" alt="" aria-hidden="true">Audiomack</a></li></ul></div>
+      <div><h4>Listen</h4><ul><li><a href="https://open.spotify.com/artist/00XxK5J6kj5oSGUK76IEoy" rel="noopener"><img class="ico brand" src="img/brand/spotify.png" alt="" aria-hidden="true">Spotify</a></li><li><a href="https://music.apple.com/us/search?term=deraspeaks" rel="noopener"><img class="ico brand" src="img/brand/applemusic.png" alt="" aria-hidden="true">Apple Music</a></li><li><a href="https://audiomack.com/search?q=deraspeaks" rel="noopener"><img class="ico brand" src="img/brand/audiomack.png" alt="" aria-hidden="true">Audiomack</a></li></ul></div>
       <div><h4>Follow</h4><ul><li><a href="https://www.instagram.com/deraspeaks/" rel="noopener"><img class="ico brand" src="img/brand/instagram.svg" alt="" aria-hidden="true">Instagram</a></li><li><a href="https://www.tiktok.com/@deraspeaks" rel="noopener"><img class="ico brand" src="img/brand/tiktok.svg" alt="" aria-hidden="true">TikTok</a></li><li><a href="https://www.youtube.com/channel/UCr1RxYxTixr64f-O2IYuq_A" rel="noopener"><img class="ico brand" src="img/brand/youtube.png" alt="" aria-hidden="true">YouTube</a></li><li><a href="https://www.facebook.com/deraspeaks/" rel="noopener"><img class="ico brand" src="img/brand/facebook.svg" alt="" aria-hidden="true">Facebook</a></li></ul></div>
     </div>
     <div class="foot-base"><span>© 2026 Dera Speaks Studios. All rights reserved.</span><span>Website mockup</span></div>
@@ -1670,12 +1687,11 @@ section.room.r-night + section.room.r-night { padding-top: 0; }
   // The mockup host caps each file at 15 MB, so the hero video is one stream cut into byte pieces,
   // joined back together in the browser so playback never reloads. On the live site it is one file.
   (function heroStream() {
-    // Phones get a light 720p cut (about 8 MB) so mobile data is spared. Desktops are never downgraded:
-    // large high-density screens get the AI-upscaled 4K master, everything else the sharp 1080p version.
+    // Phones get the portrait cut (one small file, played directly). Desktops get the 1080p widescreen
+    // cut, streamed in pieces so the first frames play while the rest is still arriving.
     const lite = Math.min(screen.width, screen.height) <= 600;
-    const big = !lite && Math.max(screen.width, screen.height) * (window.devicePixelRatio || 1) > 2200;
-    const parts = lite ? ['img/h720.mp4'] : big ? ['img/h4k-1.mp4', 'img/h4k-2.mp4', 'img/h4k-3.mp4', 'img/h4k-4.mp4', 'img/h4k-5.mp4', 'img/h4k-6.mp4'] : ['img/h1080-1.mp4', 'img/h1080-2.mp4', 'img/h1080-3.mp4'];
-    const mime = big ? 'video/mp4; codecs="avc1.640033, mp4a.40.2"' : 'video/mp4; codecs="avc1.640028, mp4a.40.2"';
+    const parts = lite ? ['img/hero-m.mp4'] : ['img/hero-1.mp4', 'img/hero-2.mp4', 'img/hero-3.mp4', 'img/hero-4.mp4'];
+    const mime = 'video/mp4; codecs="avc1.640028, mp4a.40.2"';
     const fetchPart = p => fetch(p).then(r => { if (!r.ok) throw new Error(p); return r.arrayBuffer(); });
     async function asOneFile() {
       const bufs = await Promise.all(parts.map(fetchPart));
