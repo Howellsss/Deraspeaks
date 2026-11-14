@@ -33,6 +33,9 @@
   .serif { font-family: Newsreader, Georgia, serif; }
   .hero { font-family: Newsreader, Georgia, serif; font-size: calc(var(--u) * 4); font-weight: 400; letter-spacing: -0.02em; line-height: 1.12; }
   .big { font-family: Newsreader, Georgia, serif; font-size: calc(var(--u) * 6); font-weight: 400; letter-spacing: -0.03em; }
+  .punch { text-shadow: 0 0 calc(var(--u) * 3) rgba(0,0,0,0.85), 0 0 calc(var(--u) * 1) rgba(0,0,0,0.6); font-family: Newsreader, Georgia, serif; font-size: calc(var(--u) * 11); font-weight: 400; letter-spacing: -0.045em; line-height: 1; transform-origin: 50% 50%; }
+  .meet { font-size: calc(var(--u) * 7); }
+  #flash { background: #fff; opacity: 0; }
   .col { left: 6%; width: 28%; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: calc(var(--u) * 1.4); }
   .col > .txt { position: relative; }
   .eyebrow { font-size: calc(var(--u) * 0.85); font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: var(--mute); }
@@ -74,12 +77,13 @@
       <img id="endTag" src="assets/tagline-ink.png" alt="Research, Learn, Draft">
     </div>
   </div>
+  <div class="layer" id="flash"></div>
   <div class="layer" id="vignette"></div>
   <canvas class="layer" id="grain" width="960" height="540"></canvas>
 </div>
 <div id="ui">
   <button id="play" aria-label="Play or pause">❚❚</button>
-  <input id="scrub" type="range" min="0" max="75" step="0.01" value="0" aria-label="Timeline">
+  <input id="scrub" type="range" min="0" max="72" step="0.01" value="0" aria-label="Timeline">
   <span id="clock">0.0s</span>
 </div>
 
@@ -95,13 +99,12 @@ const params = new URLSearchParams(location.search);
 const CLIPS = {
   research: params.get('research') || '',
   learn:    params.get('learn')    || '',
+  brief:    params.get('brief')    || '',
   draft:    params.get('draft')    || '',
   chat:     params.get('chat')     || '',
 };
 const RENDER = params.has('render');
-const DUR = 93;
-const TR = 73;            // trust section starts here
-const SH = TR - 55.4;      // offset applied to everything after the product scenes
+const DUR = 72;
 if (RENDER) document.body.classList.add('render');
 
 /* ---------------- helpers ---------------- */
@@ -182,24 +185,27 @@ const N = 150;
 const pageMat = new THREE.MeshStandardMaterial({ map: PAPER, roughness: 0.65, side: THREE.DoubleSide });
 const pages = new THREE.InstancedMesh(PAGE_GEO, pageMat, N);
 pages.frustumCulled = false; scene.add(pages);
-const seeds = Array.from({ length: N }, (_, i) => ({
-  a: rand() * Math.PI * 2, sp: 0.18 + rand() * 0.32, rad: 1.7 + rand() * 4.6, y: (rand() - 0.5) * 5.5, z: -9 + rand() * 10.5,
-  r1: rand() * 2 - 1, r2: rand() * 2 - 1, r3: rand() * 2 - 1, d: rand(),
-  fx: (rand() - 0.5) * 20, fy: (rand() - 0.5) * 11, fz: -15 + rand() * 7, ord: i,
-}));
+const seeds = Array.from({ length: N }, (_, i) => {
+  const a = rand() * Math.PI * 2, R = 2.2 + rand() * 5.5;
+  return {
+    k: i % 3, dx: Math.cos(a), dy: Math.sin(a) * 0.62, dz: rand() * 1.6 - 0.4, R,
+    r1: rand() * 2 - 1, r2: rand() * 2 - 1, r3: rand() * 2 - 1, d: rand(),
+    fx: (rand() - 0.5) * 20, fy: (rand() - 0.5) * 11, fz: -15 + rand() * 7, ord: i,
+  };
+});
 const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), E = new THREE.Euler(), P = new THREE.Vector3(), S = new THREE.Vector3();
-const vA = new THREE.Vector3(), vB = new THREE.Vector3();
+
+/* ---------------- timeline ---------------- */
+const HITS = [0.35, 1.15, 1.95];          // "Too many cases." / "Too many pages." / "Not enough time."
+const MEET = 5.6;                         // "Meet Lawdeck."
+const SC0 = 7.5, SCL = 8.5;               // five product scenes, 8.5 s each (four bars at ~113 bpm)
+const FT0 = SC0 + 5 * SCL;                // 50.0  feature ribbon
+const TR = FT0 + 6;                       // 56.0  trust
+const TE = TR + 5.6;                      // 61.6  close: pages gather, a page comes to camera, logo
 
 function heroState(t) {
-  // Opening: one page rises into the light. Closing: one page comes to camera and becomes the end card.
-  if (t < 8.5) {
-    const k = eo(seg(t, 0, 6.2)), away = io(seg(t, 5.8, 8.2));
-    hero.visible = true;
-    hero.position.set(lerp(0.5, 0, k), lerp(-2.4, 0.38, k) + Math.sin(t * 0.6) * 0.03 + away * 0.6, lerp(-3, 0.4, k) - away * 3.5);
-    hero.rotation.set(lerp(0.55, 0.06, k) + Math.sin(t * 0.5) * 0.02, lerp(-0.95, -0.18, k) + away * 1.4, lerp(0.22, -0.04, k));
-    hero.scale.setScalar(1 - io(seg(t, 7.2, 8.4)));
-  } else if (t > 62.2 + SH) {
-    const k = io(seg(t, 62.4 + SH, 64.9 + SH));
+  if (t > TE + 0.6) {
+    const k = io(seg(t, TE + 0.8, TE + 3.0));
     hero.visible = true; hero.scale.setScalar(1);
     hero.position.set(lerp(0.3, 0, k), lerp(-0.2, 0, k), lerp(-7, 5.75, k));
     hero.rotation.set(lerp(-0.35, 0, k), lerp(0.9, 0, k), lerp(-0.25, 0, k));
@@ -207,43 +213,35 @@ function heroState(t) {
 }
 
 function pagesState(t) {
-  const emerge = io(seg(t, 6.0, 8.2));      // pages unfold from the hero page
-  const stack = io(seg(t, 11.0, 12.9));     // they settle into one deck
-  const scatter = io(seg(t, 13.4, 15.6));   // the deck becomes a depth field
-  const gather = io(seg(t, 61.2 + SH, 63.2 + SH));    // and folds back for the close
-  const dim = seg(t, 13.6, 15.6) * (1 - seg(t, 61.2 + SH, 62.2 + SH));
-  pageMat.color.setScalar(lerp(1, 0.1, dim));
-  pages.visible = t > 5.9 && t < 63.4 + SH;
+  const dim = seg(t, 7.4, 9.0) * (1 - seg(t, TE, TE + 0.8));
+  pageMat.color.setScalar(lerp(1, 0.1, dim) * lerp(0.55, 1, seg(t, 2.7, 3.6)));
+  pages.visible = t > HITS[0] - 0.05 && t < TE + 1.9;
   if (!pages.visible) return;
+  const pulse = 1 + 0.07 * Math.exp(-Math.max(0, t - MEET) * 6) * (t >= MEET ? 1 : 0);
   for (let i = 0; i < N; i++) {
     const s = seeds[i];
-    // A: swirl
-    const a = s.a + t * s.sp;
-    vA.set(Math.cos(a) * s.rad, s.y + Math.sin(t * 0.4 + s.d * 6) * 0.25, s.z + Math.sin(a) * 1.2);
-    E.set(t * 0.5 * s.r1 + s.r2, t * 0.4 * s.r2 + a, t * 0.3 * s.r3);
-    // B: one deck, facing camera
-    const st = io(seg(t, 11.0 + s.d * 0.4, 12.6 + s.d * 0.4));
-    vB.set(s.ord * 0.0016 - 0.12, 0.25 + s.r1 * 0.004, -0.4 - s.ord * 0.014);
-    // emergence from the hero page
-    P.copy(hero.position).lerp(vA, emerge);
-    P.lerp(vB, st);
-    const ex1 = lerp(E.x, 0.06 + s.r1 * 0.01, st), ey1 = lerp(E.y, -0.18 + s.r2 * 0.015, st), ez1 = lerp(E.z, s.r3 * 0.03, st);
-    // C: field
-    const ft = t * 0.05;
-    const fx = s.fx + Math.sin(ft + s.d * 9) * 0.6, fy = s.fy + Math.cos(ft * 1.3 + s.d * 7) * 0.4, fz = s.fz;
-    const sc = io(seg(t, 13.4 + s.d * 0.8, 15.4 + s.d * 0.8));
-    P.set(lerp(P.x, fx, sc), lerp(P.y, fy, sc), lerp(P.z, fz, sc));
-    let rx = lerp(ex1, s.r1 * 0.8 + Math.sin(ft + s.d) * 0.3, sc), ry = lerp(ey1, s.r2 * 1.2 + ft, sc), rz = lerp(ez1, s.r3 * 0.6, sc);
-    // D: gather into the centre for the close
-    const g = io(seg(t, 61.2 + SH + s.d * 0.7, 62.6 + SH + s.d * 0.7));
-    P.set(lerp(P.x, 0, g), lerp(P.y, 0, g), lerp(P.z, -6.5, g));
-    rx = lerp(rx, 0, g); ry = lerp(ry, 0, g); rz = lerp(rz, 0, g);
-    const scale = emerge * (1 - g * 0.85) * (st > 0 && scatter < 1 ? 1 : 1);
-    E.set(rx, ry, rz); Q.setFromEuler(E); S.setScalar(Math.max(scale, 0.0001));
+    // 1. burst outward from the centre on each hit
+    const tb = HITS[s.k], u = Math.max(0, t - tb), r = s.R * (1 - Math.exp(-u * 2.4));
+    let x = s.dx * r, y = s.dy * r, z = -0.6 + Math.min(3.2, s.dz * r * 0.55);
+    let rx = s.r1 * u * 1.6 + s.r2, ry = s.r2 * u * 1.3 + s.r3, rz = s.r3 * u;
+    let sc = t < tb ? 0 : ex(seg(t, tb, tb + 0.12));
+    // 2. implode into one deck
+    const st = io(seg(t, 2.75 + s.d * 0.3, 3.65 + s.d * 0.3));
+    x = lerp(x, s.ord * 0.0016 - 0.12, st); y = lerp(y, 0.25 + s.r1 * 0.004 + Math.sin(t * 1.4) * 0.02 * st, st); z = lerp(z, -0.4 - s.ord * 0.014, st);
+    rx = lerp(rx, 0.06 + s.r1 * 0.01, st); ry = lerp(ry, -0.18 + s.r2 * 0.015 + Math.sin(t * 0.7) * 0.05 * st, st); rz = lerp(rz, s.r3 * 0.03, st);
+    sc *= st > 0.5 ? pulse : 1;
+    // 3. scatter into the depth field
+    const sct = io(seg(t, 7.2 + s.d * 0.5, 8.5 + s.d * 0.5)), ft = t * 0.05;
+    x = lerp(x, s.fx + Math.sin(ft + s.d * 9) * 0.6, sct); y = lerp(y, s.fy + Math.cos(ft * 1.3 + s.d * 7) * 0.4, sct); z = lerp(z, s.fz, sct);
+    rx = lerp(rx, s.r1 * 0.8 + Math.sin(ft + s.d) * 0.3, sct); ry = lerp(ry, s.r2 * 1.2 + ft, sct); rz = lerp(rz, s.r3 * 0.6, sct);
+    // 4. gather for the close
+    const g = io(seg(t, TE + s.d * 0.6, TE + 1.2 + s.d * 0.6));
+    x = lerp(x, 0, g); y = lerp(y, 0, g); z = lerp(z, -6.5, g); rx = lerp(rx, 0, g); ry = lerp(ry, 0, g); rz = lerp(rz, 0, g);
+    sc *= 1 - g * 0.85;
+    P.set(x, y, z); E.set(rx, ry, rz); Q.setFromEuler(E); S.setScalar(Math.max(sc, 0.0001));
     M.compose(P, Q, S); pages.setMatrixAt(i, M);
   }
   pages.instanceMatrix.needsUpdate = true;
-  void stack; void gather;
 }
 
 /* ---------------- interface panels ----------------
@@ -627,7 +625,10 @@ function drawChat(c, p, t) {
   else txt(c, 'Message #contract-law', mx + 22, H - 59, 16, 400, C.mute);
 }
 
-/* Panel objects: a floating app window with a soft shadow. */
+
+/* ---------------- product scenes ----------------
+   Each scene: a one-word title punch, the window slams in, the eyebrow and headline land,
+   the camera pushes into the key moment, then a whip to the next scene. */
 function shadowTex() {
   const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d');
   const gr = g.createRadialGradient(128, 128, 10, 128, 128, 128); gr.addColorStop(0, 'rgba(0,0,0,0.75)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
@@ -635,7 +636,14 @@ function shadowTex() {
 }
 const SHADOW = shadowTex();
 const PW = 3.6, PH = PW * H / W;
-function makePanel(name, draw, t0, t1) {
+const SCENES = [
+  { name: 'research', draw: drawResearch, word: 'Ask.',     n: '01', label: 'Research',    head: 'Ask anything.<br>Get cited answers.',          zoom: [MCX, 470], zs: 1.55 },
+  { name: 'learn',    draw: drawLearn,    word: 'Learn.',   n: '02', label: 'Learn',       head: 'Learn it.<br>Then keep it.',                   zoom: [MCX, 420], zs: 1.5 },
+  { name: 'brief',    draw: drawBrief,    word: 'Brief.',   n: '03', label: 'Briefs',      head: 'Brief any case<br>in moments.',                zoom: [MCX, 560], zs: 1.4 },
+  { name: 'draft',    draw: drawDraft,    word: 'Draft.',   n: '04', label: 'Draft',       head: 'From catalogue<br>to first draft.',            zoom: [880, 380], zs: 1.55 },
+  { name: 'chat',     draw: drawChat,     word: 'Connect.', n: '05', label: 'Campus chat', head: 'Your whole class.<br>One conversation.',       zoom: [940, 470], zs: 1.5 },
+];
+const PANELS = SCENES.map((sc, k) => {
   const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
   const ctx = cv.getContext('2d');
   const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -645,48 +653,42 @@ function makePanel(name, draw, t0, t1) {
   sh.position.set(0.12, -0.18, -0.25);
   const grp = new THREE.Group(); grp.add(sh, mesh); scene.add(grp);
   let video = null;
-  if (CLIPS[name]) { video = document.createElement('video'); video.src = CLIPS[name]; video.muted = true; video.playsInline = true; video.loop = true; video.preload = 'auto'; }
-  return { name, draw, t0, t1, grp, mesh, sh, mat, ctx, tex, video, last: -1 };
-}
+  if (CLIPS[sc.name]) { video = document.createElement('video'); video.src = CLIPS[sc.name]; video.muted = true; video.playsInline = true; video.preload = 'auto'; }
+  return { ...sc, t0: SC0 + k * SCL, grp, sh, mat, ctx, tex, video, last: -1 };
+});
 function drawClip(c, v) {
   c.clearRect(0, 0, W, H); c.save(); rr(c, 0, 0, W, H, 24); c.clip();
   c.fillStyle = '#111'; c.fillRect(0, 0, W, H);
   if (v.readyState >= 2) { const s = Math.max(W / v.videoWidth, H / v.videoHeight); c.drawImage(v, (W - v.videoWidth * s) / 2, (H - v.videoHeight * s) / 2, v.videoWidth * s, v.videoHeight * s); }
   c.restore();
 }
-const PANELS = [
-  makePanel('research', drawResearch, 13.6, 24.6),
-  makePanel('learn', drawLearn, 24.0, 34.6),
-  makePanel('brief', drawBrief, 34.0, 43.6),
-  makePanel('draft', drawDraft, 43.0, 53.6),
-  makePanel('chat', drawChat, 53.0, 64.4),
-];
 const GRID = [[-2.55, 1.05], [0, 1.05], [2.55, 1.05], [-1.28, -1.05], [1.28, -1.05]];
-
+const sceneLocal = (P_, t) => seg(t, P_.t0 + 0.9, P_.t0 + 7.9);
 function panelsState(t) {
   PANELS.forEach((P_, i) => {
-    const { t0, t1, grp } = P_;
-    const enter = ex(seg(t, t0, t0 + 1.7)), leave = io(seg(t, t1 - 1.2, t1 + 0.4));
-    const local = seg(t, t0 + 1.0, t1 - 1.3);
-    const trustIn = io(seg(t, TR + 0.2 + i * 0.15, TR + 2.0 + i * 0.15)), trustOut = io(seg(t, TR + 5.2, TR + 6.6));
+    const s0 = P_.t0, { grp } = P_;
     let x, y, z, ry, rx, op, s = 1;
     if (t < TR) {
-      x = lerp(6.5, 0.95, enter) + lerp(0, -7.5, leave) - local * 0.12;
-      y = lerp(-0.5, -0.02, enter) + Math.sin(t * 0.35 + i) * 0.03;
-      z = lerp(-3.5, 0, enter) + lerp(0, -2.5, leave) + local * 0.25;
-      ry = lerp(-0.75, -0.2, enter) + lerp(0, 0.6, leave) + local * 0.08;
-      rx = lerp(0.12, 0.02, enter);
-      op = Math.min(seg(t, t0, t0 + 0.6), 1 - seg(t, t1 - 0.3, t1 + 0.3));
+      const enter = ex(seg(t, s0 + 0.55, s0 + 1.45)), leave = io(seg(t, s0 + SCL - 0.5, s0 + SCL + 0.05));
+      const zk = io(seg(t, s0 + 4.2, s0 + 5.3)) * (1 - io(seg(t, s0 + 7.4, s0 + 8.05)));
+      x = lerp(6, 0.95, enter) - leave * 9; y = -0.02 + Math.sin(t * 0.5 + i) * 0.02;
+      z = lerp(-2.4, 0, enter) - leave * 0.6; ry = lerp(-0.7, -0.2, enter) * (1 - zk) + leave * 0.35; rx = lerp(0.18, 0.02, enter) * (1 - zk);
+      // push into the key moment: grow around the detail point and pull it toward frame centre-right
+      const dx = (P_.zoom[0] / W - 0.5) * PW, dy = (0.5 - P_.zoom[1] / H) * PH;
+      s = lerp(1, P_.zs, zk);
+      x += -dx * (s - 1) + (0.15 - (x + dx)) * zk * 0.55; y += -dy * (s - 1) + (-0.05 - (y + dy)) * zk * 0.55; z += zk * 0.35;
+      op = seg(t, s0 + 0.5, s0 + 0.75) * (1 - seg(t, s0 + SCL - 0.12, s0 + SCL + 0.05));
     } else {
+      const trustIn = io(seg(t, TR + 0.1 + i * 0.12, TR + 1.6 + i * 0.12)), trustOut = io(seg(t, TE - 0.4, TE + 0.8));
       const [gx, gy] = GRID[i];
       x = lerp(gx * 1.6, gx, trustIn); y = lerp(gy * 1.6, gy, trustIn) - 0.1; z = lerp(-6, -3.2, trustIn) - trustOut * 4;
       ry = lerp(0.3 * Math.sign(gx || 1), 0, trustIn); rx = 0; s = 0.66;
-      op = trustIn * lerp(1, 0.13, io(seg(t, TR + 1.0, TR + 2.2))) * (1 - trustOut);
+      op = trustIn * lerp(1, 0.12, io(seg(t, TR + 0.6, TR + 1.6))) * (1 - trustOut);
     }
     grp.position.set(x, y, z); grp.rotation.set(rx, ry, 0); grp.scale.setScalar(s);
     grp.visible = op > 0.001; P_.mat.opacity = op; P_.sh.material.opacity = op * 0.8;
     if (!grp.visible) return;
-    const p = t < TR ? local : 1;
+    const p = t < TR ? sceneLocal(P_, t) : 1;
     const key_ = P_.video ? t : Math.round(p * 600) / 600 + Math.floor(t * 6) / 1e4;
     if (key_ === P_.last) return;
     P_.last = key_;
@@ -700,8 +702,8 @@ function panelsState(t) {
 async function seekClips(t) {
   await Promise.all(PANELS.filter(p => p.video).map(p => new Promise(res => {
     const v = p.video, d = v.duration || 0;
-    if (!d || t < p.t0 - 0.5 || t > p.t1 + 0.5) return res();
-    const tt = Math.min(Math.max(0, t - p.t0), d - 0.05);
+    if (!d || t < p.t0 || t > p.t0 + SCL) return res();
+    const tt = Math.min(Math.max(0, t - p.t0 - 0.5), d - 0.05);
     if (Math.abs(v.currentTime - tt) < 0.001) return res();
     v.addEventListener('seeked', () => res(), { once: true }); v.currentTime = tt;
     setTimeout(res, 2000);
@@ -741,97 +743,110 @@ const feats = FEATURES.map(([ic, name, desc], i) => {
   return { m, mat, row: i % 2, col: Math.floor(i / 2) };
 });
 C = LIGHT;
-const FT0 = 64.0, FT1 = TR + 0.4;
+const FT1 = TR + 0.3;
 function featuresState(t) {
-  const on = t > FT0 && t < FT1;
-  feats.forEach((f, i) => {
+  const on = t > FT0 - 0.2 && t < FT1;
+  feats.forEach(f => {
     f.m.visible = on; if (!on) return;
-    const inn = ex(seg(t, FT0 + 0.3 + f.col * 0.12 + f.row * 0.1, FT0 + 1.6 + f.col * 0.12 + f.row * 0.1));
-    const out = io(seg(t, FT1 - 1.2 + f.col * 0.04, FT1 - 0.1));
-    const dir = f.row ? 1 : -1, drift = (t - FT0) * 0.32 * dir;
-    const x = (f.col - 3) * (CW3 + 0.22) + (f.row ? (CW3 + 0.22) / 2 : 0) + drift - dir * 1.1;
+    const a = FT0 - 0.1 + f.col * 0.08 + f.row * 0.05;
+    const inn = ex(seg(t, a, a + 0.8)), out = io(seg(t, FT1 - 0.9 + f.col * 0.03, FT1 - 0.05));
+    const dir = f.row ? 1 : -1, drift = (t - FT0) * 0.45 * dir;
+    const x = (f.col - 3) * (CW3 + 0.22) + (f.row ? (CW3 + 0.22) / 2 : 0) + drift - dir * 1.3;
     f.m.position.set(x, f.row ? -1.02 : 0.5, lerp(-5, -0.6, inn) - out * 3);
-    f.m.rotation.set(lerp(0.4, 0, inn), lerp(-0.5 * dir, 0, inn), 0);
+    f.m.rotation.set(0, lerp(1.2 * dir, 0, inn), 0);
     f.mat.opacity = inn * (1 - out);
   });
 }
 
 /* ---------------- kinetic type ---------------- */
 const TYPE = [];
-function T(html, a, b, cls, style = '', stagger = 0.07, parent = typeLayer) {
+function T(html, a, b, cls, style = '', stagger = 0.06, parent = typeLayer, punch = false) {
   const el = document.createElement('div'); el.className = 'txt ' + cls; el.style.cssText = style;
-  // Split into words, keeping <br> and inline tags.
   el.innerHTML = html.replace(/(<br>)|(<small>.*?<\/small>)|([^\s<]+)/g, (m, br, sm, w) => br ? br : sm ? sm : `<span class="w">${w}</span>`).replace(/\s+(?=<span)/g, ' ');
   parent.appendChild(el);
-  const words = [...el.querySelectorAll('.w, small')];
-  TYPE.push({ el, a, b, words, stagger });
+  TYPE.push({ el, a, b, words: [...el.querySelectorAll('.w, small')], stagger, punch });
+  return el;
 }
 function typeState(t) {
   for (const it of TYPE) {
     const vis = t > it.a - 0.05 && t < it.b + 0.05;
     it.el.style.visibility = vis ? 'visible' : 'hidden';
     if (!vis) continue;
-    const out = io(seg(t, it.b - 0.55, it.b));
+    if (it.punch) {   // slam: big to size, sharp in, quick blur out
+      const k = eo(seg(t, it.a, it.a + 0.22)), out = io(seg(t, it.b - 0.22, it.b));
+      it.el.style.opacity = (k * (1 - out)).toFixed(3);
+      it.el.style.transform = `scale(${(1.35 - 0.35 * k + out * 0.12).toFixed(4)})`;
+      it.el.style.filter = `blur(${((1 - k) * 14 + out * 12).toFixed(2)}px)`;
+      continue;
+    }
+    const out = io(seg(t, it.b - 0.4, it.b));
     it.words.forEach((w, j) => {
-      const k = eo(seg(t, it.a + j * it.stagger, it.a + j * it.stagger + 0.8));
+      const k = eo(seg(t, it.a + j * it.stagger, it.a + j * it.stagger + 0.55));
       w.style.opacity = (k * (1 - out)).toFixed(3);
-      w.style.transform = `translateY(${((1 - k) * 0.55 - out * 0.25).toFixed(3)}em)`;
+      w.style.transform = `translateY(${((1 - k) * 0.5 - out * 0.25).toFixed(3)}em)`;
       w.style.filter = `blur(${((1 - k) * 10 + out * 6).toFixed(2)}px)`;
     });
   }
 }
-// Act 1: the problem
-T('Every case begins<br>with a question.', 1.4, 5.9, 'center hero', 'top:70%');
-T('Statutes.', 7.0, 8.3, 'center big', 'top:42%');
-T('Judgments.', 8.1, 9.4, 'center big', 'top:42%');
-T('Lecture notes.', 9.2, 10.5, 'center big', 'top:42%');
-T('Deadlines.', 10.3, 11.4, 'center big', 'top:42%');
-T('Lawdeck brings it all<br>into one deck.', 11.6, 14.4, 'center hero', 'top:72%');
-// Act 2: the product
-const pillar = (n, name, head, body, a, b) => {
+// Cold open: the hook
+T('Too many cases.', HITS[0], HITS[1] - 0.02, 'center punch', 'top:38%', 0, typeLayer, true);
+T('Too many pages.', HITS[1], HITS[2] - 0.02, 'center punch', 'top:38%', 0, typeLayer, true);
+T('Not enough time.', HITS[2], 2.95, 'center punch', 'top:38%', 0, typeLayer, true);
+T('What if all of it lived<br>in one place?', 3.7, MEET - 0.05, 'center hero', 'top:70%', 0.05);
+T('Meet Lawdeck.', MEET, 7.3, 'center punch meet', 'top:68%', 0, typeLayer, true);
+// Product scenes
+PANELS.forEach(P_ => {
+  T(P_.word, P_.t0 - 0.05, P_.t0 + 0.75, 'center punch', 'top:38%', 0, typeLayer, true);
   const col = document.createElement('div'); col.className = 'txt col'; typeLayer.appendChild(col);
-  T(`${n}&nbsp;&nbsp;/&nbsp;&nbsp;${name}`, a, b, 'eyebrow', '', 0.03, col);
-  T(head, a + 0.25, b, 'head', '', 0.06, col);
-  T(body, a + 0.9, b, 'body', 'margin-top:calc(var(--u) * 0.4)', 0.025, col);
-};
-pillar('01', 'Research', 'Ask anything.<br>Get cited<br>answers.', 'Ask from the home screen. Lawdeck searches cases, statutes and your notes, and shows every authority it used.', 14.6, 24.2);
-pillar('02', 'Learn', 'Learn it.<br>Then keep it.', 'Courses and MCQs with instant explanations, and memory challenges that bring topics back before you forget them.', 25.0, 34.2);
-pillar('03', 'Briefs', 'Brief any case<br>in moments.', 'Facts, issue, held and ratio, saved to your Briefs and ready to quiz you on.', 35.0, 42.9);
-pillar('04', 'Draft', 'From the catalogue<br>to a first draft.', 'Pick a template from the Drafting catalogue, build it from your research, and review every clause.', 44.0, 52.9);
-pillar('05', 'Campus chat', 'Your class.<br>Your cohort.<br>One conversation.', 'Channels for every course and moot team, with Lawdeck in the thread when you need it.', 54.0, 63.6);
-// The rest of the sidebar
-T('And everything else your degree needs.', FT0 + 0.5, FT1 - 0.5, 'center hero', 'top:8.5%', 0.05);
-// Act 3: trust
-T('Built to be trusted.', TR + 1.0, TR + 5.9, 'center big', 'top:38%');
-T('Cited, always.<small>Every answer shows the authority it relies on.</small>', TR + 2.2, TR + 5.9, 'pillar', 'left:12%;top:60%');
-T('Your work, yours.<small>Your notes, drafts and chats stay private to you.</small>', TR + 2.6, TR + 5.9, 'pillar', 'left:38%;top:60%');
-T('You stay in control.<small>Lawdeck suggests. You review and decide.</small>', TR + 3.0, TR + 5.9, 'pillar', 'left:64%;top:60%');
+  T(`${P_.n}&nbsp;&nbsp;/&nbsp;&nbsp;${P_.label}`, P_.t0 + 1.0, P_.t0 + 4.4, 'eyebrow', '', 0.03, col);
+  T(P_.head, P_.t0 + 1.15, P_.t0 + 4.4, 'head', '', 0.07, col);
+});
+// Everything else
+T('And everything else your degree needs.', FT0 + 0.2, FT1 - 0.4, 'center hero', 'top:8.5%', 0.04);
+// Trust, one line at a time
+T('Every answer, cited.', TR + 0.4, TR + 2.2, 'center big', 'top:40%', 0.08);
+T('Your work, private.', TR + 2.2, TR + 3.9, 'center big', 'top:40%', 0.08);
+T('You, in control.', TR + 3.9, TE + 0.3, 'center big', 'top:40%', 0.08);
 
 /* ---------------- end card ---------------- */
 const endMark = document.getElementById('endMark'), endWord = document.getElementById('endWord'), endTag = document.getElementById('endTag');
+const LOGO = TE + 3.0;    // the logo lands here (on the hit)
 function endState(t) {
-  t -= SH;
-  endEl.style.opacity = seg(t, 64.5, 65.0).toFixed(3);
-  vignette.style.opacity = (1 - seg(t, 64.5, 65.0) * 0.85).toFixed(3);
-  const m = ex(seg(t, 65.2, 66.8)), w = io(seg(t, 66.0, 67.4)), g = eo(seg(t, 67.4, 68.6));
-  endMark.style.opacity = eo(seg(t, 65.2, 65.9)); endMark.style.transform = `scale(${lerp(0.86, 1, m)})`;
+  const on = seg(t, LOGO - 0.4, LOGO - 0.05);
+  endEl.style.opacity = on.toFixed(3);
+  vignette.style.opacity = (1 - on * 0.85).toFixed(3);
+  const m = ex(seg(t, LOGO, LOGO + 0.9)), w = io(seg(t, LOGO + 0.6, LOGO + 1.5)), g = eo(seg(t, LOGO + 1.6, LOGO + 2.4));
+  endMark.style.opacity = eo(seg(t, LOGO, LOGO + 0.35)); endMark.style.transform = `scale(${lerp(1.25, 1, m)})`;
   endWord.style.clipPath = `inset(0 ${(100 - w * 100).toFixed(2)}% 0 0)`;
   endWord.style.opacity = w > 0 ? 1 : 0;
   endTag.style.opacity = g; endTag.style.transform = `translateY(${(1 - g) * 10}px)`;
-  const fade = seg(t, 73.6, 75.4);
-  document.getElementById('endInner').style.opacity = 1 - fade;
+  document.getElementById('endInner').style.opacity = 1 - seg(t, DUR - 1.2, DUR);
+}
+
+/* ---------------- flashes, shake, motion blur ---------------- */
+const flashEl = document.getElementById('flash');
+const FLASHES = [...HITS.map(h => [h, 0.22]), [MEET, 0.4], ...PANELS.map(p => [p.t0, 0.08]), [LOGO, 0.0]];
+const impact = (t, list) => list.reduce((a, [h, s]) => a + (t >= h ? s * Math.exp(-(t - h) * 10) : 0), 0);
+function fxState(t) {
+  flashEl.style.opacity = Math.min(1, impact(t, FLASHES)).toFixed(3);
+  let b = 0;
+  PANELS.forEach(P_ => {
+    b = Math.max(b, Math.sin(Math.PI * seg(t, P_.t0 + SCL - 0.5, P_.t0 + SCL + 0.05)) * 7, Math.sin(Math.PI * seg(t, P_.t0 + 0.55, P_.t0 + 1.0)) * 4);
+  });
+  b = Math.max(b, Math.sin(Math.PI * seg(t, 7.2, 8.0)) * 4);
+  canvas.style.filter = b > 0.05 ? `blur(${b.toFixed(2)}px)` : 'none';
 }
 
 /* ---------------- camera ---------------- */
 function cameraState(t) {
-  const push = eo(seg(t, 0, 8));
-  let z = lerp(6.9, 6.2, push), x = Math.sin(t * 0.13) * 0.12, y = Math.sin(t * 0.11) * 0.06;
-  const swirl = seg(t, 6, 13) * (1 - seg(t, 12, 14));
-  x += Math.sin(t * 0.5) * 0.4 * swirl;
-  if (t > 62 + SH) { x *= 1 - seg(t, 62 + SH, 63 + SH); y *= 1 - seg(t, 62 + SH, 63 + SH); }
+  let z = 6.2 - 0.6 * io(seg(t, 3.0, 7.2)) + 0.6 * io(seg(t, 7.2, 8.4));
+  let x = Math.sin(t * 0.13) * 0.12, y = Math.sin(t * 0.11) * 0.06;
+  const shake = impact(t, [...HITS.map(h => [h, 0.06]), [MEET, 0.05], ...PANELS.map(p => [p.t0 + 0.6, 0.025])]);
+  x += Math.sin(t * 91) * shake; y += Math.cos(t * 77) * shake;
+  if (t > TE) { const k = 1 - seg(t, TE, TE + 1); x *= k; y *= k; }
   camera.position.set(x, y, z);
   camera.lookAt(x * 0.3, y * 0.3, 0);
-  spot.intensity = lerp(0, 60, eo(seg(t, 0.2, 3))) * (1 - seg(t, 7, 9)) + 40 * seg(t, 62.4 + SH, 64 + SH);
+  spot.intensity = 40 * seg(t, TE + 0.8, TE + 2.4) + 30 * (1 - seg(t, 2.6, 3.6)) * seg(t, 0.2, 0.4);
   spot.target.position.set(0, 0.3, 0);
 }
 
@@ -846,7 +861,7 @@ function grainState(frame) {
 
 /* ---------------- frame ---------------- */
 function frame(t) {
-  heroState(t); pagesState(t); panelsState(t); featuresState(t); cameraState(t); typeState(t); endState(t);
+  heroState(t); pagesState(t); panelsState(t); featuresState(t); cameraState(t); typeState(t); endState(t); fxState(t);
   grainState(Math.floor(t * 24));
   renderer.render(scene, camera);
 }
@@ -857,15 +872,19 @@ window.renderFrame = async t => { await seekClips(t); frame(t); return true; };
 if (!RENDER) {
   let t = 0, playing = true, last = performance.now(), idleTimer;
   const playBtn = document.getElementById('play'), scrub = document.getElementById('scrub'), clock = document.getElementById('clock');
+  const audio = new Audio('audio/soundtrack.m4a'); audio.preload = 'auto';
   scrub.max = DUR;
-  const setPlaying = v => { playing = v; playBtn.textContent = v ? '❚❚' : '▶'; PANELS.forEach(p => p.video && (v ? p.video.play().catch(() => {}) : p.video.pause())); };
+  const syncAudio = () => { if (Math.abs(audio.currentTime - t) > 0.15) audio.currentTime = t; };
+  const setPlaying = v => { playing = v; playBtn.textContent = v ? '❚❚' : '▶'; if (v) { syncAudio(); audio.play().catch(() => {}); } else audio.pause(); PANELS.forEach(p => p.video && (v ? p.video.play().catch(() => {}) : p.video.pause())); };
   playBtn.onclick = () => setPlaying(!playing);
-  scrub.oninput = () => { t = +scrub.value; PANELS.forEach(p => { if (p.video) p.video.currentTime = Math.max(0, t - p.t0); }); };
+  scrub.oninput = () => { t = +scrub.value; syncAudio(); PANELS.forEach(p => { if (p.video) p.video.currentTime = Math.max(0, t - p.t0 - 0.5); }); };
   addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); setPlaying(!playing); } });
   const wake = () => { document.body.classList.remove('idle'); clearTimeout(idleTimer); idleTimer = setTimeout(() => document.body.classList.add('idle'), 2500); };
   addEventListener('pointermove', wake); wake();
+  // Browsers block sound until a click: start paused with the play button showing.
+  setPlaying(false);
   const loop = now => {
-    if (playing) { t += Math.min(0.1, (now - last) / 1000); if (t >= DUR) { t = 0; PANELS.forEach(p => p.video && (p.video.currentTime = 0)); } }
+    if (playing) { t += Math.min(0.1, (now - last) / 1000); if (t >= DUR) { t = 0; audio.currentTime = 0; } if (!audio.paused && Math.abs(audio.currentTime - t) > 0.25) t = audio.currentTime; }
     last = now; scrub.value = t; clock.textContent = t.toFixed(1) + 's';
     frame(t); requestAnimationFrame(loop);
   };

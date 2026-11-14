@@ -1,26 +1,34 @@
-# Lawdeck film: voice-over script
+# Lawdeck film: voice-over script (72-second cut)
 
-Read calmly and confidently, slightly slower than conversation (about 2.3 words a second). Leave the pauses; the picture carries them. Timings are where each line starts in the 93-second cut.
+Delivery: confident and warm, with energy. Think of a premium tech launch rather than a lecture. The first three lines are short and hit with the music. After "Meet Lawdeck" the pace is brisk, and the trust lines are slow and deliberate. The last two lines are calm.
 
-| Start | Scene | Line |
-|---|---|---|
-| 0:01 | A single page in the light | Every case begins with a question. |
-| 0:07 | Pages swirl | But the answers are scattered. Statutes. Judgments. Lecture notes. Deadlines. |
-| 0:11.5 | The pages become one deck | Lawdeck brings it all into one deck. |
-| 0:15 | 01 Research | Ask anything, in plain language. Lawdeck searches cases, statutes and your own notes, and shows you every authority it relied on. |
-| 0:25 | 02 Learn | Then make it stick. Courses and MCQs with instant explanations, and memory challenges that bring topics back just before you forget them. |
-| 0:35 | 03 Briefs | Brief any case in moments: the facts, the issue, what was held, and why. |
-| 0:44 | 04 Draft | When it's time to write, start from the Drafting catalogue, build from your research, and review every clause yourself. |
-| 0:54 | 05 Campus chat | And you never study alone. Campus chat brings your class together, with Lawdeck right there in the thread. |
-| 1:05 | Feature ribbon | Your Study Diary. Your progress. Projects, documents and uploads. Search, voice, and a dark mode for the late nights. |
-| 1:14 | Trust | Every answer is cited. Your work stays yours. And you stay in control. |
-| 1:22 | Logo reveal (after the silence) | Lawdeck. |
-| 1:24 | Tagline | Research. Learn. Draft. |
+| # | Cue | Scene | Line |
+|---|---|---|---|
+| 01 | 0:00.35 | Impact, pages burst | Too many cases. |
+| 02 | 0:01.15 | Impact | Too many pages. |
+| 03 | 0:01.95 | Impact | Not enough time. |
+| 04 | 0:03.75 | Pages become one deck | What if all of it lived in one place? |
+| 05 | 0:05.65 | Impact, title | Meet Lawdeck. |
+| 06 | 0:08.3 | Ask. / Research | Ask anything, and get answers cited to the cases and statutes behind them. |
+| 07 | 0:16.8 | Learn. / MCQ | Learn with courses and MCQs. Keep it with memory challenges that bring topics back before you forget. |
+| 08 | 0:25.3 | Brief. / Briefs | Brief any case in moments: facts, issue, held, ratio. |
+| 09 | 0:33.8 | Draft. / Drafting catalogue | Draft from a catalogue of templates, built on your own research. |
+| 10 | 0:42.3 | Connect. / Campus chat | And bring your whole class together in Campus chat, with Lawdeck in the thread. |
+| 11 | 0:50.3 | Feature ribbon | Study Diary. Progress. Projects. Uploads. Voice. Day or night. |
+| 12 | 0:56.4 | Trust | Every answer, cited. |
+| 13 | 0:58.2 | Trust | Your work, private. |
+| 14 | 0:59.9 | Trust | You, in control. |
+| 15 | 1:04.8 | Logo hit | Lawdeck. |
+| 16 | 1:06.3 | Tagline | Research. Learn. Draft. |
 
-About 190 words.
+About 120 words.
 
-## Recording
+## Recording and mixing
 
-- Record one take per line as WAV, 48 kHz, in a quiet room, with about half a second of silence either side of each line.
-- Name the files `01.wav` to `12.wav` in this folder, in the order above.
-- Run `bash audio/mix.sh` to place each line at its start time, duck the music under the voice, and write `out/lawdeck-final.mp4`.
+Record each line as its own WAV file (48 kHz, quiet room, a little silence either side), named `01.wav` to `16.wav` in this folder. Then run:
+
+```bash
+bash audio/mix.sh
+```
+
+The script trims leading silence, places each line on its cue, ducks the music under the voice, and writes `out/lawdeck-final.mp4`.

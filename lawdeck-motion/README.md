@@ -1,19 +1,21 @@
 # Lawdeck brand film
 
-A 93-second motion piece built with three.js. The camera moves through paper, the Lawdeck interface and type, from a single page to the Lawdeck mark.
+A 72-second motion piece built with three.js and cut to an original ~113 bpm score. Every 8.5-second product scene is exactly four bars, so each scene change lands on a downbeat.
 
 | Time | Scene |
 |---|---|
-| 0–6s | One page rises into the light. *Every case begins with a question.* |
-| 6–14s | Pages swirl (statutes, judgments, lecture notes, deadlines), then settle into one deck. |
-| 14–24s | **01 Research.** Home screen: a question is typed into the composer, and the answer streams in with three cited authorities. |
-| 24–34s | **02 Learn.** An MCQ answered correctly, the memory challenge, and My progress. |
-| 34–43s | **03 Briefs.** Nash v Inman briefed as facts, issue, held and ratio, then *Save to Briefs* or *Quiz me*. |
-| 43–53s | **04 Draft.** The Drafting catalogue, with a tenancy agreement drafted clause by clause. |
-| 53–64s | **05 Campus chat** (dark theme). A class channel, where `@Lawdeck` summarises the lecture. |
-| 64–73s | **Everything else.** Two moving rows of feature cards: Courses, MCQ, Briefs, Study Diary, Memory challenge, My progress, Projects, Documents, My uploads, Drafting catalogue, Campus chat, Search, Voice, Light and dark. |
-| 73–80s | **Trust.** Cited, always. Your work, yours. You stay in control. |
-| 80–93s | A page comes to camera and becomes the paper end card: mark, wordmark, tagline. |
+| 0–3s | **Hook.** "Too many cases. Too many pages. Not enough time." Each line slams in on an impact, with a burst of paper. |
+| 3–7.5s | The pages implode into one deck: "What if all of it lived in one place?" Then a flash and a hit on **"Meet Lawdeck."** The beat drops. |
+| 7.5–16s | **Ask.** Research: the home-screen composer, then a cited answer. The camera pushes into the sources. |
+| 16–24.5s | **Learn.** MCQ answered correctly, memory challenge, My progress. The camera pushes into the correct answer. |
+| 24.5–33s | **Brief.** Nash v Inman as facts, issue, held and ratio. |
+| 33–41.5s | **Draft.** Drafting catalogue, with a tenancy agreement drafted clause by clause. |
+| 41.5–50s | **Connect.** Campus chat (dark theme), with `@Lawdeck` in the thread. |
+| 50–56s | **Everything else.** Two rows of 14 feature cards fly in. |
+| 56–61.6s | **Trust**, one line at a time: Every answer, cited. Your work, private. You, in control. |
+| 61.6–72s | The pages gather, a page comes to camera, a beat of silence, then the logo lands on the hit. |
+
+Every scene has a one-word title punch, a whip transition with motion blur, flashes and camera shake on the impacts.
 
 The interface is drawn in code from the real app's layout and palette: sidebar, serif greeting, composer, chips and memory-challenge card. A placeholder student, "Tolu", is used instead of a real account.
 
@@ -29,10 +31,16 @@ npx serve .
 
 ```bash
 npm install
-node render.mjs                      # out/lawdeck.mp4, 1920x1080 at 30fps (about 10 min)
+node render.mjs                      # out/lawdeck.mp4, 1920x1080 at 30fps (about 30 min)
 node render.mjs --fps 60 --scale 2   # 3840x2160 at 60fps
 node render.mjs --stills 3,20,68     # single frames for checking
 ```
+
+## Sound
+
+- `audio/score.py` generates the original score and sound design (no samples): `python3 audio/score.py`, which writes `audio/score.wav`.
+- `audio/voiceover.md` is the voice-over script, with a cue time for each line.
+- `audio/mix.sh` places the recorded lines (`audio/01.wav` to `16.wav`) on their cues, ducks the music under the voice, and writes `out/lawdeck-final.mp4`.
 
 ## Using real screen recordings
 
