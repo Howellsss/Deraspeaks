@@ -1,2 +1,4 @@
 node_modules/
 out/
+audio/score.wav
+audio/[0-9][0-9].wav
