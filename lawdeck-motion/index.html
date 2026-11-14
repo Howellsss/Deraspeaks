@@ -6,7 +6,7 @@
 <title>Lawdeck Brand Film</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=block" rel="stylesheet">
 <style>
   :root {
     --ink: #0b0b0c;
@@ -17,7 +17,7 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; background: #000; overflow: hidden; }
-  body { display: grid; place-items: center; font-family: Manrope, system-ui, sans-serif; color: var(--text); }
+  body { display: grid; place-items: center; font-family: Inter, system-ui, sans-serif; color: var(--text); }
 
   /* 16:9 stage, letterboxed. --u = 1% of stage width, so the film scales as one piece. */
   #stage { position: relative; width: min(100vw, 177.78vh); aspect-ratio: 16 / 9; background: var(--ink); overflow: hidden; }
@@ -30,15 +30,16 @@
   .txt { position: absolute; will-change: transform, opacity; }
   .w { display: inline-block; white-space: pre; will-change: transform, opacity, filter; }
   .center { left: 0; right: 0; text-align: center; }
-  .hero { font-size: calc(var(--u) * 3.6); font-weight: 600; letter-spacing: -0.03em; line-height: 1.12; }
-  .big { font-size: calc(var(--u) * 5.2); font-weight: 700; letter-spacing: -0.04em; }
+  .serif { font-family: Newsreader, Georgia, serif; }
+  .hero { font-family: Newsreader, Georgia, serif; font-size: calc(var(--u) * 4); font-weight: 400; letter-spacing: -0.02em; line-height: 1.12; }
+  .big { font-family: Newsreader, Georgia, serif; font-size: calc(var(--u) * 6); font-weight: 400; letter-spacing: -0.03em; }
   .col { left: 6%; width: 28%; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: calc(var(--u) * 1.4); }
   .col > .txt { position: relative; }
-  .eyebrow { font-size: calc(var(--u) * 0.9); font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--mute); }
-  .head { font-size: calc(var(--u) * 3.1); font-weight: 600; letter-spacing: -0.035em; line-height: 1.08; }
+  .eyebrow { font-size: calc(var(--u) * 0.85); font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: var(--mute); }
+  .head { font-family: Newsreader, Georgia, serif; font-size: calc(var(--u) * 3.5); font-weight: 400; letter-spacing: -0.025em; line-height: 1.05; }
   .body { font-size: calc(var(--u) * 1.15); font-weight: 400; line-height: 1.55; color: var(--mute); }
-  .pillar { font-size: calc(var(--u) * 1.35); font-weight: 600; letter-spacing: -0.01em; text-align: center; width: 24%; }
-  .pillar small { display: block; margin-top: calc(var(--u) * 0.5); font-size: calc(var(--u) * 0.95); font-weight: 400; color: var(--mute); line-height: 1.5; }
+  .pillar { font-family: Newsreader, Georgia, serif; font-size: calc(var(--u) * 1.8); font-weight: 400; letter-spacing: -0.01em; text-align: center; width: 24%; }
+  .pillar small { font-family: Inter, system-ui, sans-serif; display: block; margin-top: calc(var(--u) * 0.5); font-size: calc(var(--u) * 0.95); font-weight: 400; color: var(--mute); line-height: 1.5; }
 
   /* End card */
   #end { background: var(--paper); opacity: 0; display: grid; place-items: center; }
@@ -50,7 +51,7 @@
   /* Preview controls (hidden while rendering) */
   #ui { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); display: flex; align-items: center; gap: 12px;
         padding: 8px 14px; border-radius: 999px; background: rgba(20,20,22,0.72); backdrop-filter: blur(10px);
-        color: #ddd; font: 500 12px Manrope, system-ui, sans-serif; transition: opacity .4s; z-index: 5; }
+        color: #ddd; font: 500 12px Inter, system-ui, sans-serif; transition: opacity .4s; z-index: 5; }
   #ui button { all: unset; cursor: pointer; width: 22px; text-align: center; font-size: 14px; }
   #ui input { width: min(46vw, 420px); accent-color: #f3f1ec; }
   #ui span { width: 72px; text-align: right; font-variant-numeric: tabular-nums; }
@@ -98,7 +99,9 @@ const CLIPS = {
   chat:     params.get('chat')     || '',
 };
 const RENDER = params.has('render');
-const DUR = 75;
+const DUR = 93;
+const TR = 73;            // trust section starts here
+const SH = TR - 55.4;      // offset applied to everything after the product scenes
 if (RENDER) document.body.classList.add('render');
 
 /* ---------------- helpers ---------------- */
@@ -141,8 +144,10 @@ addEventListener('resize', resize); resize();
 
 /* ---------------- assets ---------------- */
 const loadImg = src => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
-const fontsReady = Promise.all(['400', '500', '600', '700', '800'].map(w => document.fonts.load(`${w} 20px Manrope`))).catch(() => {});
-const [markImg] = await Promise.all([loadImg('assets/mark.png'), fontsReady, ...[...document.images].map(i => i.decode().catch(() => {}))]);
+const fontsReady = Promise.all([...['400', '500', '600', '700'].map(w => document.fonts.load(`${w} 20px Inter`)), document.fonts.load('400 20px Newsreader'), document.fonts.load('500 20px Newsreader')]).catch(() => {});
+const [markImg, wordImg, wordInk] = await Promise.all([loadImg('assets/mark.png'), loadImg('assets/wordmark.png'), loadImg('assets/wordmark-ink.png'), fontsReady, ...[...document.images].map(i => i.decode().catch(() => {}))]);
+
+const markInv = (() => { const c = document.createElement('canvas'); c.width = markImg.width; c.height = markImg.height; const g = c.getContext('2d'); g.filter = 'invert(1)'; g.drawImage(markImg, 0, 0); return c; })();
 
 /* ---------------- paper ---------------- */
 function paperTexture() {
@@ -193,8 +198,8 @@ function heroState(t) {
     hero.position.set(lerp(0.5, 0, k), lerp(-2.4, 0.38, k) + Math.sin(t * 0.6) * 0.03 + away * 0.6, lerp(-3, 0.4, k) - away * 3.5);
     hero.rotation.set(lerp(0.55, 0.06, k) + Math.sin(t * 0.5) * 0.02, lerp(-0.95, -0.18, k) + away * 1.4, lerp(0.22, -0.04, k));
     hero.scale.setScalar(1 - io(seg(t, 7.2, 8.4)));
-  } else if (t > 62.2) {
-    const k = io(seg(t, 62.4, 64.9));
+  } else if (t > 62.2 + SH) {
+    const k = io(seg(t, 62.4 + SH, 64.9 + SH));
     hero.visible = true; hero.scale.setScalar(1);
     hero.position.set(lerp(0.3, 0, k), lerp(-0.2, 0, k), lerp(-7, 5.75, k));
     hero.rotation.set(lerp(-0.35, 0, k), lerp(0.9, 0, k), lerp(-0.25, 0, k));
@@ -205,10 +210,10 @@ function pagesState(t) {
   const emerge = io(seg(t, 6.0, 8.2));      // pages unfold from the hero page
   const stack = io(seg(t, 11.0, 12.9));     // they settle into one deck
   const scatter = io(seg(t, 13.4, 15.6));   // the deck becomes a depth field
-  const gather = io(seg(t, 61.2, 63.2));    // and folds back for the close
-  const dim = seg(t, 13.6, 15.6) * (1 - seg(t, 61.2, 62.2));
+  const gather = io(seg(t, 61.2 + SH, 63.2 + SH));    // and folds back for the close
+  const dim = seg(t, 13.6, 15.6) * (1 - seg(t, 61.2 + SH, 62.2 + SH));
   pageMat.color.setScalar(lerp(1, 0.1, dim));
-  pages.visible = t > 5.9 && t < 63.4;
+  pages.visible = t > 5.9 && t < 63.4 + SH;
   if (!pages.visible) return;
   for (let i = 0; i < N; i++) {
     const s = seeds[i];
@@ -230,7 +235,7 @@ function pagesState(t) {
     P.set(lerp(P.x, fx, sc), lerp(P.y, fy, sc), lerp(P.z, fz, sc));
     let rx = lerp(ex1, s.r1 * 0.8 + Math.sin(ft + s.d) * 0.3, sc), ry = lerp(ey1, s.r2 * 1.2 + ft, sc), rz = lerp(ez1, s.r3 * 0.6, sc);
     // D: gather into the centre for the close
-    const g = io(seg(t, 61.2 + s.d * 0.7, 62.6 + s.d * 0.7));
+    const g = io(seg(t, 61.2 + SH + s.d * 0.7, 62.6 + SH + s.d * 0.7));
     P.set(lerp(P.x, 0, g), lerp(P.y, 0, g), lerp(P.z, -6.5, g));
     rx = lerp(rx, 0, g); ry = lerp(ry, 0, g); rz = lerp(rz, 0, g);
     const scale = emerge * (1 - g * 0.85) * (st > 0 && scatter < 1 ? 1 : 1);
@@ -241,19 +246,25 @@ function pagesState(t) {
   void stack; void gather;
 }
 
-/* ---------------- interface panels ---------------- */
-const W = 1600, H = 1000, SW = 270, MX = SW + 40, MY = 56 + 34;
-const C = { bg: '#fbfaf7', side: '#f1efea', line: '#e4e1da', ink: '#0e0e0f', mute: '#6e6b66', faint: '#a7a39c', chip: '#eceae4', soft: '#f4f2ed' };
-const F = (s, w = 400) => `${w} ${s}px Manrope, system-ui, sans-serif`;
+/* ---------------- interface panels ----------------
+   Recreated from the Lawdeck app: warm paper UI, serif headings, Inter UI text.
+   The window is 1600 x 920 (the app's own proportions, slightly enlarged type for legibility on video). */
+const W = 1600, H = 920, SW = 252, MCX = SW + (W - SW) / 2;
+const LIGHT = { side: '#f4f2f0', bg: '#fbf9f7', card: '#ffffff', line: '#e6e3de', ink: '#161714', mute: '#7d7d7b', faint: '#b9b8b4', chip: '#efede9', btn: '#161714', btnText: '#ffffff', soft: '#f5f3ef' };
+const DARK  = { side: '#141414', bg: '#1a1a1a', card: '#252623', line: '#34342f', ink: '#edebe7', mute: '#91908b', faint: '#5e5d59', chip: '#2c2c29', btn: '#f1efeb', btnText: '#161714', soft: '#222220' };
+let C = LIGHT;
+const F  = (s, w = 400) => `${w} ${s}px Inter, system-ui, sans-serif`;
+const FS = (s, w = 400) => `${w} ${s}px Newsreader, Georgia, serif`;
 
 function rr(c, x, y, w, h, r) { c.beginPath(); c.roundRect(x, y, w, h, r); }
-function txt(c, s, x, y, size, w = 400, col = C.ink, ls = 0, align = 'left') {
-  c.font = F(size, w); c.fillStyle = col; c.letterSpacing = ls + 'px'; c.textAlign = align; c.fillText(s, x, y); c.letterSpacing = '0px'; c.textAlign = 'left';
+function txt(c, s, x, y, size, w = 400, col = C.ink, ls = 0, align = 'left', serif = false) {
+  c.font = serif ? FS(size, w) : F(size, w); c.fillStyle = col; c.letterSpacing = ls + 'px'; c.textAlign = align; c.fillText(s, x, y); c.letterSpacing = '0px'; c.textAlign = 'left';
 }
-function measure(c, s, size, w = 400, ls = 0) { c.font = F(size, w); c.letterSpacing = ls + 'px'; const m = c.measureText(s).width; c.letterSpacing = '0px'; return m; }
-/* Wrapped text that reveals character by character. [bracketed] words are drawn as fill-in fields. */
-function para(c, s, x, y, maxW, size, lh, w = 400, col = C.ink, reveal = 1) {
-  c.font = F(size, w);
+const stxt = (c, s, x, y, size, col = C.ink, align = 'left') => txt(c, s, x, y, size, 400, col, -0.3, align, true);
+function measure(c, s, size, w = 400, serif = false, ls = 0) { c.font = serif ? FS(size, w) : F(size, w); c.letterSpacing = ls + 'px'; const m = c.measureText(s).width; c.letterSpacing = '0px'; return m; }
+/* Wrapped text, revealed character by character. [Bracketed] words are drawn as fill-in fields. */
+function para(c, s, x, y, maxW, size, lh, w = 400, col = C.ink, reveal = 1, serif = false) {
+  c.font = serif ? FS(size, w) : F(size, w);
   const words = s.split(' ');
   let n = Math.floor(s.length * reveal), cx = x, cy = y, used = 0;
   const space = c.measureText(' ').width;
@@ -262,169 +273,246 @@ function para(c, s, x, y, maxW, size, lh, w = 400, col = C.ink, reveal = 1) {
     const ww = c.measureText(wd).width;
     if (cx + ww > x + maxW && cx > x) { cx = x; cy += lh; }
     const vis = wd.slice(0, Math.max(0, n - used));
-    if (/\[.*\]/.test(wd) || wd.startsWith('[')) {
-      c.fillStyle = '#e9e6de'; rr(c, cx - 3, cy - size * 0.92, c.measureText(vis).width + 6, size * 1.3, 4); c.fill();
-      c.fillStyle = C.mute;
+    if (wd.startsWith('[') || /\[/.test(wd)) {
+      c.fillStyle = C.chip; rr(c, cx - 3, cy - size * 0.9, c.measureText(vis).width + 6, size * 1.28, 4); c.fill(); c.fillStyle = C.mute;
     } else c.fillStyle = col;
     c.fillText(vis, cx, cy);
     used += wd.length + 1; cx += ww + space;
   }
-  return cy;
+  return { y: cy, x: cx };
 }
 function caret(c, x, y, size, t) { if (Math.floor(t * 2.2) % 2 === 0) { c.fillStyle = C.ink; c.fillRect(x + 2, y - size * 0.85, 2, size * 1.05); } }
-function chip(c, s, x, y, size = 15, fill = C.chip, col = C.ink, w = 600) {
-  const tw = measure(c, s, size, w); rr(c, x, y, tw + 26, size + 18, (size + 18) / 2); c.fillStyle = fill; c.fill();
-  txt(c, s, x + 13, y + size + 4, size, w, col); return tw + 26;
-}
-function check(c, x, y, r, on, col = C.ink) {
-  c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2);
-  if (on > 0) { c.fillStyle = col; c.globalAlpha *= 1; c.fill(); c.strokeStyle = '#fff'; c.lineWidth = 2.4; c.beginPath();
-    c.moveTo(x - r * 0.42, y + r * 0.02); c.lineTo(x - r * 0.1, y + r * 0.34); c.lineTo(x + r * 0.45, y - r * 0.32); c.stroke(); }
-  else { c.strokeStyle = C.faint; c.lineWidth = 2; c.stroke(); }
-}
-function card(c, x, y, w, h, r = 18, fill = '#fff') {
-  c.save(); c.shadowColor = 'rgba(30,25,15,0.08)'; c.shadowBlur = 24; c.shadowOffsetY = 6; rr(c, x, y, w, h, r); c.fillStyle = fill; c.fill(); c.restore();
+function card(c, x, y, w, h, r = 18, fill = C.card) {
+  c.save(); c.shadowColor = C === DARK ? 'rgba(0,0,0,0.3)' : 'rgba(40,30,20,0.06)'; c.shadowBlur = 22; c.shadowOffsetY = 5; rr(c, x, y, w, h, r); c.fillStyle = fill; c.fill(); c.restore();
   rr(c, x, y, w, h, r); c.strokeStyle = C.line; c.lineWidth = 1.5; c.stroke();
 }
-function label(c, s, x, y, col = C.mute) { txt(c, s, x, y, 13, 700, col, 2.4); }
-/* reveal helper: fade + rise */
-function pop(c, k, fn) { if (k <= 0) return; c.save(); c.globalAlpha *= eo(k); c.translate(0, (1 - eo(k)) * 14); fn(); c.restore(); }
-
-const ICONS = [
-  (c, x, y) => { c.beginPath(); c.arc(x + 8, y + 8, 7, 0, 7); c.moveTo(x + 13, y + 13); c.lineTo(x + 19, y + 19); c.stroke(); },
-  (c, x, y) => { c.beginPath(); c.moveTo(x, y + 2); c.lineTo(x + 9, y + 5); c.lineTo(x + 18, y + 2); c.lineTo(x + 18, y + 17); c.lineTo(x + 9, y + 20); c.lineTo(x, y + 17); c.closePath(); c.moveTo(x + 9, y + 5); c.lineTo(x + 9, y + 20); c.stroke(); },
-  (c, x, y) => { c.beginPath(); c.moveTo(x + 2, y + 18); c.lineTo(x + 5, y + 11); c.lineTo(x + 15, y + 1); c.lineTo(x + 19, y + 5); c.lineTo(x + 9, y + 15); c.closePath(); c.stroke(); },
-  (c, x, y) => { c.beginPath(); c.roundRect(x, y + 1, 19, 14, 5); c.moveTo(x + 5, y + 15); c.lineTo(x + 3, y + 20); c.lineTo(x + 10, y + 15); c.stroke(); },
-];
-const NAV = ['Research', 'Learn', 'Draft', 'Campus Chat'];
-
-function chrome(c, active) {
-  c.clearRect(0, 0, W, H);
-  rr(c, 0, 0, W, H, 30); c.clip();
-  c.fillStyle = C.bg; c.fillRect(0, 0, W, H);
-  c.fillStyle = '#f3f1ec'; c.fillRect(0, 0, W, 56); c.fillStyle = C.line; c.fillRect(0, 55, W, 1.5);
-  for (let i = 0; i < 3; i++) { c.fillStyle = '#d8d5ce'; c.beginPath(); c.arc(32 + i * 24, 28, 7, 0, 7); c.fill(); }
-  txt(c, 'Lawdeck', W / 2, 34, 15, 600, C.mute, 0, 'center');
-  c.fillStyle = C.side; c.fillRect(0, 56, SW, H - 56); c.fillStyle = C.line; c.fillRect(SW, 56, 1.5, H - 56);
-  c.drawImage(markImg, 28, 86, 38, 38 * markImg.height / markImg.width);
-  txt(c, 'Lawdeck', 78, 114, 23, 800, C.ink, -0.6);
-  NAV.forEach((n, i) => {
-    const y = 172 + i * 56, on = i === active;
-    if (on) { rr(c, 18, y - 6, SW - 36, 46, 12); c.fillStyle = C.ink; c.fill(); }
-    c.strokeStyle = on ? '#fff' : C.mute; c.lineWidth = 1.8; c.lineJoin = 'round'; c.lineCap = 'round';
-    ICONS[i](c, 36, y + 6);
-    txt(c, n, 70, y + 23, 17, on ? 600 : 500, on ? '#fff' : C.mute);
-  });
-  c.fillStyle = C.line; c.fillRect(24, H - 104, SW - 48, 1.5);
-  c.fillStyle = '#d9d5cc'; c.beginPath(); c.arc(48, H - 58, 18, 0, 7); c.fill();
-  txt(c, 'Y', 48, H - 52, 15, 700, C.ink, 0, 'center');
-  txt(c, 'My workspace', 78, H - 62, 15, 600); txt(c, 'Faculty of Law', 78, H - 41, 13, 500, C.mute);
+function chip(c, s, x, y, size = 14, fill = C.chip, col = C.ink, w = 500, h = null) {
+  const tw = measure(c, s, size, w), hh = h || size + 18; rr(c, x, y, tw + 26, hh, hh / 2); c.fillStyle = fill; c.fill();
+  txt(c, s, x + 13, y + hh / 2 + size * 0.36, size, w, col); return tw + 26;
 }
-function header(c, title, sub) { txt(c, title, MX, MY + 30, 32, 700, C.ink, -0.8); if (sub) txt(c, sub, MX, MY + 60, 16, 500, C.mute); }
+function outline(c, s, x, y, h, icon, size = 15) {
+  const tw = measure(c, s, size, 500), w = tw + (icon ? 58 : 32);
+  rr(c, x, y, w, h, 9); c.fillStyle = C.card; c.fill(); c.strokeStyle = C.line; c.lineWidth = 1.5; c.stroke();
+  if (icon) ico(c, icon, x + 16, y + h / 2 - 9, C.ink);
+  txt(c, s, x + (icon ? 44 : 16), y + h / 2 + size * 0.36, size, 500); return w;
+}
+function pill(c, s, x, y, h, size = 15, dark = true) {
+  const tw = measure(c, s, size, 500), w = tw + 46;
+  rr(c, x, y, w, h, h / 2); c.fillStyle = dark ? C.btn : C.card; c.fill();
+  if (!dark) { c.strokeStyle = C.line; c.lineWidth = 1.5; c.stroke(); }
+  txt(c, s, x + 23, y + h / 2 + size * 0.36, size, 500, dark ? C.btnText : C.ink); return w;
+}
+function check(c, x, y, r, col = C.ink, tick = '#fff') {
+  c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fillStyle = col; c.fill();
+  c.strokeStyle = tick; c.lineWidth = 2.2; c.lineCap = 'round'; c.beginPath();
+  c.moveTo(x - r * 0.42, y + r * 0.02); c.lineTo(x - r * 0.1, y + r * 0.34); c.lineTo(x + r * 0.45, y - r * 0.32); c.stroke();
+}
+function label(c, s, x, y, col = C.mute) { txt(c, s, x, y, 12.5, 500, col, 2.2); }
+function pop(c, k, fn) { if (k <= 0) return; c.save(); c.globalAlpha *= eo(k); c.translate(0, (1 - eo(k)) * 14); fn(); c.restore(); }
+function mark(c, x, y, s) { c.drawImage(C === DARK ? markInv : markImg, x, y, s, s * markImg.height / markImg.width); }
 
-/* 01 RESEARCH */
+/* Line icons, 18px box, matching the app's sidebar. */
+function ico(c, name, x, y, col = C.ink) {
+  c.save(); c.translate(x, y); c.strokeStyle = col; c.lineWidth = 1.6; c.lineJoin = 'round'; c.lineCap = 'round'; c.beginPath();
+  switch (name) {
+    case 'plus': c.moveTo(9, 3); c.lineTo(9, 15); c.moveTo(3, 9); c.lineTo(15, 9); break;
+    case 'search': c.arc(8, 8, 5.5, 0, 7); c.moveTo(12, 12); c.lineTo(16.5, 16.5); break;
+    case 'book': c.moveTo(1, 3); c.lineTo(7, 3); c.quadraticCurveTo(9, 3, 9, 5); c.lineTo(9, 16); c.quadraticCurveTo(9, 14, 7, 14); c.lineTo(1, 14); c.closePath();
+      c.moveTo(17, 3); c.lineTo(11, 3); c.quadraticCurveTo(9, 3, 9, 5); c.moveTo(9, 16); c.quadraticCurveTo(9, 14, 11, 14); c.lineTo(17, 14); c.lineTo(17, 3); break;
+    case 'mcq': c.roundRect(5, 1.5, 11.5, 11.5, 2); c.moveTo(2, 5); c.lineTo(2, 16.5); c.lineTo(13, 16.5); break;
+    case 'bookmark': c.moveTo(4, 1.5); c.lineTo(14, 1.5); c.lineTo(14, 16.5); c.lineTo(9, 12.5); c.lineTo(4, 16.5); c.closePath(); break;
+    case 'diary': c.roundRect(3, 1.5, 12, 15, 1.5); c.moveTo(6, 1.5); c.lineTo(6, 16.5); c.moveTo(9, 6); c.lineTo(12.5, 6); c.moveTo(9, 9); c.lineTo(12.5, 9); break;
+    case 'bars': c.moveTo(2, 16.5); c.lineTo(16.5, 16.5); c.moveTo(5, 13.5); c.lineTo(5, 9); c.moveTo(9, 13.5); c.lineTo(9, 4); c.moveTo(13, 13.5); c.lineTo(13, 7); break;
+    case 'folder': c.moveTo(1.5, 4); c.lineTo(7, 4); c.lineTo(9, 6); c.lineTo(16.5, 6); c.lineTo(16.5, 15); c.lineTo(1.5, 15); c.closePath(); break;
+    case 'doc': c.moveTo(4, 1.5); c.lineTo(11, 1.5); c.lineTo(15, 5.5); c.lineTo(15, 16.5); c.lineTo(4, 16.5); c.closePath(); c.moveTo(7, 9); c.lineTo(12, 9); c.moveTo(7, 12.5); c.lineTo(12, 12.5); break;
+    case 'upload': c.moveTo(9, 12); c.lineTo(9, 2); c.moveTo(5, 6); c.lineTo(9, 2); c.lineTo(13, 6); c.moveTo(2, 12); c.lineTo(2, 16); c.lineTo(16, 16); c.lineTo(16, 12); break;
+    case 'pen': c.moveTo(2.5, 15.5); c.lineTo(3.5, 11.5); c.lineTo(12.5, 2.5); c.lineTo(15.5, 5.5); c.lineTo(6.5, 14.5); c.closePath(); break;
+    case 'chat': c.arc(9, 8.5, 7, 0.6, Math.PI * 2 + 0.2); c.lineTo(15.5, 16); c.closePath(); break;
+    case 'scale': c.moveTo(9, 2); c.lineTo(9, 16); c.moveTo(5, 16); c.lineTo(13, 16); c.moveTo(3, 5); c.lineTo(15, 5); c.moveTo(3, 5); c.lineTo(1, 10); c.lineTo(5, 10); c.closePath(); c.moveTo(15, 5); c.lineTo(13, 10); c.lineTo(17, 10); c.closePath(); break;
+    case 'check': c.roundRect(2, 2, 14, 14, 2.5); c.moveTo(5.5, 9); c.lineTo(8, 11.5); c.lineTo(12.5, 6.5); break;
+    case 'mic': c.roundRect(6.5, 1.5, 5, 9, 2.5); c.moveTo(3.5, 8.5); c.quadraticCurveTo(3.5, 13.5, 9, 13.5); c.quadraticCurveTo(14.5, 13.5, 14.5, 8.5); c.moveTo(9, 13.5); c.lineTo(9, 16.5); break;
+    case 'wave': [[3, 7, 11], [6, 4, 14], [9, 6, 12], [12, 3, 15], [15, 7, 11]].forEach(([x, a, b]) => { c.moveTo(x, a); c.lineTo(x, b); }); break;
+    case 'up': c.moveTo(9, 15); c.lineTo(9, 3); c.moveTo(4, 8); c.lineTo(9, 3); c.lineTo(14, 8); break;
+    case 'panel': c.roundRect(1.5, 2.5, 15, 13, 2); c.moveTo(6.5, 2.5); c.lineTo(6.5, 15.5); break;
+    case 'logout': c.moveTo(7, 2.5); c.lineTo(2.5, 2.5); c.lineTo(2.5, 15.5); c.lineTo(7, 15.5); c.moveTo(8, 9); c.lineTo(16, 9); c.moveTo(13, 6); c.lineTo(16, 9); c.lineTo(13, 12); break;
+    case 'sun': c.arc(9, 9, 3.5, 0, 7); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; c.moveTo(9 + Math.cos(a) * 6, 9 + Math.sin(a) * 6); c.lineTo(9 + Math.cos(a) * 8, 9 + Math.sin(a) * 8); } break;
+    case 'moon': c.arc(9, 9, 7, 0.9, Math.PI * 2 - 0.9 + 0.1, false); c.quadraticCurveTo(8, 6, 13.5, 13.5); break;
+    case 'chev': c.moveTo(1, 1); c.lineTo(5, 5); c.lineTo(9, 1); break;
+    case 'brain': c.arc(9, 9, 7, 0, 7); c.moveTo(9, 4); c.lineTo(9, 9); c.lineTo(12.5, 11); break;
+  }
+  c.stroke(); c.restore();
+}
+const NAV = [['book', 'Courses'], ['mcq', 'MCQ'], ['bookmark', 'Briefs'], ['diary', 'Study Diary'], ['bars', 'My progress'], ['folder', 'Projects'], ['doc', 'Documents'], ['upload', 'My uploads'], ['pen', 'Drafting catalogue'], ['chat', 'Campus chat']];
+
+function chrome(c, active, theme = LIGHT) {
+  C = theme;
+  c.clearRect(0, 0, W, H);
+  rr(c, 0, 0, W, H, 24); c.clip();
+  c.fillStyle = C.bg; c.fillRect(0, 0, W, H);
+  c.fillStyle = C.side; c.fillRect(0, 0, SW, H); c.fillStyle = C.line; c.fillRect(SW, 0, 1.5, H);
+  mark(c, 18, 19, 27);
+  const wm = C === DARK ? wordImg : wordInk; c.drawImage(wm, 52, 23, 19 * wm.width / wm.height, 19);
+  ico(c, 'panel', SW - 40, 24, C.mute);
+  c.fillStyle = C.chip; c.beginPath(); c.arc(31, 81, 12, 0, 7); c.fill(); ico(c, 'plus', 22, 72, C.ink);
+  txt(c, 'New task', 54, 86, 15.5, 500);
+  ico(c, 'search', 22, 107, C.ink); txt(c, 'Search', 54, 122, 15.5, 500);
+  NAV.forEach(([ic, name], i) => {
+    const y = 158 + i * 37;
+    if (i === active) { rr(c, 10, y - 4, SW - 20, 34, 9); c.fillStyle = C.chip; c.fill(); }
+    ico(c, ic, 22, y + 4, C.ink); txt(c, name, 54, y + 19, 15.5, i === active ? 600 : 500);
+  });
+  txt(c, 'Recents', 22, 562, 13, 500, C.mute); ico(c, 'chev', 82, 555, C.mute);
+  txt(c, 'Today’s chats appear here.', 22, 590, 13.5, 400, C.mute);
+  c.fillStyle = C.line; c.fillRect(12, H - 76, SW - 24, 1.5);
+  c.fillStyle = C.chip; c.beginPath(); c.arc(36, H - 38, 17, 0, 7); c.fill();
+  txt(c, 'T', 36, H - 33, 14, 600, C.ink, 0, 'center');
+  txt(c, 'Tolu', 62, H - 42, 14.5, 500); txt(c, 'Law student', 62, H - 23, 12.5, 400, C.mute);
+  ico(c, 'logout', SW - 84, H - 47, C.mute);
+  c.beginPath(); c.arc(SW - 34, H - 38, 19, 0, 7); c.strokeStyle = C.line; c.lineWidth = 1.5; c.stroke();
+  ico(c, C === DARK ? 'sun' : 'moon', SW - 43, H - 47, C.ink);
+}
+
+/* 01 HOME + RESEARCH: ask from the home screen, get a cited answer */
 const Q1 = 'Can a minor be bound by a contract for necessaries?';
 const A1 = 'Generally, yes. A minor must pay a reasonable price for necessaries: goods and services suited to their condition in life and to their actual needs at the time of sale. The supplier carries the burden of proving the goods were necessaries.';
 const SRC = [
-  ['Nash v Inman', 'Court of Appeal  ·  [1908] 2 KB 1', 0.96],
-  ['Sale of Goods Act 1979, s 3', 'Statute  ·  Capacity to buy and sell', 0.91],
-  ['Chapple v Cooper', 'Exchequer  ·  (1844) 13 M & W 252', 0.84],
+  ['Nash v Inman', 'Court of Appeal · [1908] 2 KB 1', 0.96],
+  ['Sale of Goods Act, s 3', 'Statute · Capacity to buy and sell', 0.91],
+  ['Chapple v Cooper', 'Exchequer · (1844) 13 M & W 252', 0.84],
 ];
 function drawResearch(c, p, t) {
-  chrome(c, 0);
-  header(c, 'Research', 'Ask in plain language. Every answer is cited.');
-  const bx = MX, by = MY + 92, bw = W - MX - 40, bh = 66;
-  card(c, bx, by, bw, bh, 16);
-  c.strokeStyle = C.ink; c.lineWidth = 2; ICONS[0](c, bx + 24, by + 22);
-  const q = seg(p, 0.03, 0.24), qs = Q1.slice(0, Math.round(Q1.length * q));
-  txt(c, qs || ' ', bx + 62, by + 41, 21, 500);
-  if (p < 0.3) caret(c, bx + 62 + measure(c, qs, 21, 500), by + 41, 21, t);
-  chip(c, 'Contract law', bx + bw - 150, by + 15, 14);
-  const ay = by + bh + 52;
-  // status
-  pop(c, seg(p, 0.26, 0.3), () => {
-    const done = p > 0.37;
-    if (done) check(c, MX + 10, ay - 6, 10, 1); else { for (let i = 0; i < 3; i++) { c.fillStyle = C.ink; c.globalAlpha = 0.25 + 0.75 * ((Math.floor(t * 6) % 3) === i); c.beginPath(); c.arc(MX + 2 + i * 9, ay - 6, 3, 0, 7); c.fill(); } c.globalAlpha = 1; }
-    txt(c, done ? 'Found 3 authorities across cases and statute' : 'Searching cases, statutes and your notes', MX + 32, ay, 15, 600, C.mute);
-  });
-  // answer
-  const aw = 760, ry = ay + 40;
-  if (p > 0.37) {
-    card(c, MX, ry, aw, 430, 18);
-    label(c, 'ANSWER', MX + 30, ry + 44);
-    const end = para(c, A1, MX + 30, ry + 88, aw - 60, 21, 35, 400, C.ink, seg(p, 0.38, 0.72));
-    if (p < 0.72) caret(c, MX + 30, end, 0, t);
-    pop(c, seg(p, 0.72, 0.78), () => {
-      let x = MX + 30; ['[1] Nash v Inman', '[2] SGA 1979, s 3', '[3] Chapple v Cooper'].forEach(s => { x += chip(c, s, x, ry + 340, 14) + 10; });
-      txt(c, 'Verify against the full text before relying on it.', MX + 30, ry + 404, 13, 500, C.faint);
-    });
+  chrome(c, -1);
+  const hA = 1 - io(seg(p, 0.33, 0.42)), tA = io(seg(p, 0.38, 0.48));
+  if (hA > 0) {
+    c.save(); c.globalAlpha = hA; c.translate(0, -40 * (1 - hA));
+    const g = 'Good evening, Tolu', gw = measure(c, g, 50, 400, true), gx = MCX - (gw + 62) / 2;
+    mark(c, gx, 168, 46); stxt(c, g, gx + 64, 208, 50);
+    const bx = MCX - 450, by = 250, bw = 900, bh = 126;
+    card(c, bx, by, bw, bh, 22);
+    const q = seg(p, 0.05, 0.25), qs = Q1.slice(0, Math.round(Q1.length * q));
+    if (qs) { txt(c, qs, bx + 24, by + 42, 17); if (p < 0.3) caret(c, bx + 24 + measure(c, qs, 17), by + 42, 17, t); }
+    else txt(c, 'What are we working on?', bx + 24, by + 42, 17, 400, C.mute);
+    c.fillStyle = C.chip; c.beginPath(); c.arc(bx + 38, by + 90, 21, 0, 7); c.fill(); ico(c, 'plus', bx + 29, by + 81);
+    [['wave', 154], ['mic', 102]].forEach(([n, o]) => { c.fillStyle = C.chip; c.beginPath(); c.arc(bx + bw - o, by + 90, 21, 0, 7); c.fill(); ico(c, n, bx + bw - o - 9, by + 81); });
+    const press = 1 - 0.12 * Math.sin(Math.PI * seg(p, 0.28, 0.32));
+    c.save(); c.translate(bx + bw - 50, by + 90); c.scale(press, press);
+    c.fillStyle = q > 0 ? C.btn : C.chip; c.beginPath(); c.arc(0, 0, 21, 0, 7); c.fill(); ico(c, 'up', -9, -9, q > 0 ? C.btnText : C.mute); c.restore();
+    txt(c, 'All courses', bx + 14, by + bh + 40, 14, 400, C.mute); ico(c, 'chev', bx + 98, by + bh + 32, C.mute);
+    txt(c, 'Auto', bx + bw - 62, by + bh + 40, 14, 400, C.mute); ico(c, 'chev', bx + bw - 26, by + bh + 32, C.mute);
+    const chips = [['book', 'Learn'], ['pen', 'Draft'], ['check', 'MCQ'], ['scale', 'Brief a case']];
+    const widths = chips.map(([, s]) => measure(c, s, 15, 500) + 58), total = widths.reduce((a, b) => a + b, 0) + 10 * 3;
+    let x = MCX - total / 2; chips.forEach(([ic, s], i) => { outline(c, s, x, 432, 42, ic); x += widths[i] + 10; });
+    const mx = SW + 20, my = 512, mw = W - SW - 40;
+    card(c, mx, my, mw, 196, 18);
+    label(c, 'BEFORE YOU MOVE ON…', mx + 24, my + 40);
+    stxt(c, 'On Monday, you studied Sale of land. Let’s see what you still remember.', mx + 24, my + 80, 23);
+    txt(c, '1 question due · about 1 min', mx + 24, my + 114, 14.5, 400, C.mute);
+    const pw = pill(c, 'Start the memory challenge', mx + 24, my + 134, 46);
+    txt(c, 'or carry on with something new; it will wait.', mx + 24 + pw + 16, my + 163, 14.5, 400, C.mute);
+    c.restore();
   }
-  // sources
-  const sx = MX + aw + 34, sw = W - 40 - sx;
-  pop(c, seg(p, 0.36, 0.42), () => label(c, 'SOURCES', sx, ry + 4));
-  SRC.forEach(([title, meta, rel], i) => pop(c, seg(p, 0.42 + i * 0.07, 0.5 + i * 0.07), () => {
-    const y = ry + 26 + i * 136;
-    card(c, sx, y, sw, 120, 16);
-    c.fillStyle = C.ink; c.beginPath(); c.arc(sx + 32, y + 34, 13, 0, 7); c.fill();
-    txt(c, String(i + 1), sx + 32, y + 39, 13, 700, '#fff', 0, 'center');
-    txt(c, title, sx + 56, y + 40, 18, 700); txt(c, meta, sx + 24, y + 74, 14, 500, C.mute);
-    c.fillStyle = C.chip; rr(c, sx + 24, y + 92, sw - 120, 6, 3); c.fill();
-    c.fillStyle = C.ink; rr(c, sx + 24, y + 92, (sw - 120) * rel * eo(seg(p, 0.48 + i * 0.07, 0.62 + i * 0.07)), 6, 3); c.fill();
-    txt(c, Math.round(rel * 100) + '% match', sx + sw - 86, y + 99, 12, 600, C.mute);
-  }));
+  if (tA > 0) {
+    c.save(); c.globalAlpha = tA; c.translate(0, 30 * (1 - tA));
+    const cx0 = MCX - 430, cw = 860;
+    const uw = measure(c, Q1, 17) + 40; rr(c, cx0 + cw - uw, 50, uw, 50, 22); c.fillStyle = C.chip; c.fill(); txt(c, Q1, cx0 + cw - uw + 20, 81, 17);
+    mark(c, cx0, 138, 28); txt(c, 'Lawdeck', cx0 + 40, 158, 15, 600); chip(c, 'Auto', cx0 + 116, 137, 12, C.chip, C.mute);
+    const done = p > 0.5;
+    if (!done) { for (let i = 0; i < 3; i++) { c.globalAlpha = tA * (0.25 + 0.75 * ((Math.floor(t * 6) % 3) === i)); c.fillStyle = C.ink; c.beginPath(); c.arc(cx0 + 6 + i * 11, 206, 3.5, 0, 7); c.fill(); } c.globalAlpha = tA; txt(c, 'Searching cases, statutes and your notes', cx0 + 42, 211, 14.5, 400, C.mute); }
+    else {
+      const end = para(c, A1, cx0, 216, cw, 23, 35, 400, C.ink, seg(p, 0.5, 0.74), true);
+      if (p < 0.74) caret(c, end.x - 6, end.y, 23, t);
+    }
+    pop(c, seg(p, 0.6, 0.64), () => label(c, 'SOURCES', cx0, 398));
+    const sw = (cw - 32) / 3;
+    SRC.forEach(([title, meta, rel], i) => pop(c, seg(p, 0.62 + i * 0.05, 0.68 + i * 0.05), () => {
+      const x = cx0 + i * (sw + 16), y = 418;
+      card(c, x, y, sw, 132, 16);
+      c.fillStyle = C.ink; c.beginPath(); c.arc(x + 32, y + 34, 12, 0, 7); c.fill(); txt(c, String(i + 1), x + 32, y + 39, 12.5, 600, C.bg, 0, 'center');
+      txt(c, title, x + 54, y + 40, 16, 600); txt(c, meta, x + 20, y + 76, 13, 400, C.mute);
+      c.fillStyle = C.chip; rr(c, x + 20, y + 98, sw - 110, 5, 2.5); c.fill();
+      c.fillStyle = C.ink; rr(c, x + 20, y + 98, (sw - 110) * rel * eo(seg(p, 0.66 + i * 0.05, 0.8 + i * 0.05)), 5, 2.5); c.fill();
+      txt(c, Math.round(rel * 100) + '% match', x + sw - 80, y + 104, 12, 500, C.mute);
+    }));
+    pop(c, seg(p, 0.8, 0.86), () => txt(c, 'Each answer links to its authority. Verify against the full text before relying on it.', cx0, 590, 13.5, 400, C.mute));
+    card(c, cx0, H - 112, cw, 64, 20);
+    txt(c, 'Ask a follow-up', cx0 + 24, H - 73, 16, 400, C.mute);
+    c.fillStyle = C.chip; c.beginPath(); c.arc(cx0 + cw - 36, H - 80, 19, 0, 7); c.fill(); ico(c, 'up', cx0 + cw - 45, H - 89, C.mute);
+    c.restore();
+  }
 }
 
-/* 02 LEARN */
-const POINTS = ['Necessaries: suited to their condition in life', 'A reasonable price, not the contract price', 'The supplier must prove the goods were necessary'];
-const OPTS = ['A.  The clothes were never delivered', 'B.  He was already adequately supplied', 'C.  The price was unreasonable'];
+/* 02 LEARN: MCQ with progress */
+const OPTS = ['The clothes were never delivered', 'He was already adequately supplied', 'The price was unreasonable', 'The student was not a minor'];
 function drawLearn(c, p, t) {
   chrome(c, 1);
-  header(c, 'Learn', 'Contract Law   /   Capacity   /   Minors');
-  pop(c, seg(p, 0.0, 0.06), () => chip(c, '5-day streak', W - 190, MY + 8, 14, C.ink, '#fff'));
-  const lx = MX, ly = MY + 96, lw = 640, lh = H - ly - 40;
-  card(c, lx, ly, lw, lh, 20);
-  label(c, 'KEY PRINCIPLE', lx + 34, ly + 50);
-  txt(c, 'Contracts with minors', lx + 34, ly + 96, 30, 700, C.ink, -0.6);
-  para(c, 'A contract is generally not enforceable against a minor. The main exception is necessaries, for which a reasonable price must be paid.', lx + 34, ly + 142, lw - 68, 19, 31, 400, '#33312e', seg(p, 0.04, 0.2));
-  POINTS.forEach((s, i) => pop(c, seg(p, 0.22 + i * 0.08, 0.3 + i * 0.08), () => {
-    const y = ly + 262 + i * 64;
-    check(c, lx + 48, y - 6, 13, 1); txt(c, s, lx + 76, y, 18, 500);
+  txt(c, 'MCQ   /   Contract Law   /   Capacity', SW + 40, 52, 14, 400, C.mute);
+  chip(c, 'Memory challenge · 1 due', W - 236, 28, 13, C.chip, C.ink, 500);
+  const cx0 = MCX - 420, cw = 840;
+  label(c, 'QUESTION 3 OF 10', cx0, 116);
+  const sg = (cw - 9 * 6) / 10;
+  for (let i = 0; i < 10; i++) { c.fillStyle = C.chip; rr(c, cx0 + i * (sg + 6), 132, sg, 5, 2.5); c.fill(); }
+  for (let i = 0; i < 3; i++) { const k = i < 2 ? 1 : eo(seg(p, 0.66, 0.74)); c.fillStyle = C.ink; rr(c, cx0 + i * (sg + 6), 132, sg * k, 5, 2.5); c.fill(); }
+  para(c, 'In Nash v Inman, why did the tailor’s claim against the student fail?', cx0, 200, cw, 31, 41, 400, C.ink, seg(p, 0.02, 0.14), true);
+  const sel = p > 0.5, ok = p > 0.6;
+  OPTS.forEach((o, i) => pop(c, seg(p, 0.12 + i * 0.04, 0.2 + i * 0.04), () => {
+    const y = 286 + i * 74, on = i === 1 && sel, good = on && ok;
+    rr(c, cx0, y, cw, 62, 14); c.fillStyle = good ? C.btn : on ? C.chip : C.card; c.fill(); c.strokeStyle = on ? C.ink : C.line; c.lineWidth = 1.5; c.stroke();
+    const tc = good ? C.btnText : C.ink;
+    c.beginPath(); c.arc(cx0 + 34, y + 31, 14, 0, 7); c.strokeStyle = good ? C.btnText : C.line; c.stroke();
+    txt(c, 'ABCD'[i], cx0 + 34, y + 36, 13, 600, tc, 0, 'center');
+    txt(c, o, cx0 + 64, y + 37, 17, 500, tc);
+    if (good) check(c, cx0 + cw - 36, y + 31, 12, C.btnText, C.btn);
   }));
-  // progress
-  const pv = lerp(42, 68, io(seg(p, 0.7, 0.9)));
-  label(c, 'MODULE PROGRESS', lx + 34, ly + lh - 70);
-  txt(c, Math.round(pv) + '%', lx + lw - 34, ly + lh - 68, 16, 700, C.ink, 0, 'right');
-  c.fillStyle = C.chip; rr(c, lx + 34, ly + lh - 48, lw - 68, 10, 5); c.fill();
-  c.fillStyle = C.ink; rr(c, lx + 34, ly + lh - 48, (lw - 68) * pv / 100, 10, 5); c.fill();
-  // quiz
-  const qx = lx + lw + 30, qw = W - 40 - qx;
-  pop(c, seg(p, 0.3, 0.38), () => {
-    card(c, qx, ly, qw, lh, 20);
-    label(c, 'QUICK CHECK  ·  3 OF 10', qx + 32, ly + 50);
-    para(c, 'In Nash v Inman, why did the tailor’s claim against the student fail?', qx + 32, ly + 98, qw - 64, 23, 34, 700);
-    const sel = p > 0.55, ok = p > 0.64;
-    OPTS.forEach((o, i) => {
-      const y = ly + 196 + i * 78, on = i === 1 && sel;
-      rr(c, qx + 32, y, qw - 64, 62, 14);
-      c.fillStyle = on && ok ? C.ink : on ? C.chip : '#fff'; c.fill(); c.strokeStyle = on ? C.ink : C.line; c.lineWidth = 1.5; c.stroke();
-      txt(c, o, qx + 54, y + 38, 17, 600, on && ok ? '#fff' : C.ink);
-      if (on && ok) check(c, qx + qw - 66, y + 31, 12, 1, '#fff');
-    });
-    pop(c, seg(p, 0.66, 0.74), () => {
-      txt(c, 'Correct.', qx + 32, ly + 470, 18, 700);
-      para(c, 'Goods are not necessaries if the minor is already adequately supplied with them.', qx + 32, ly + 502, qw - 64, 17, 27, 400, C.mute);
-    });
-  });
-  // the cursor that picks the answer
-  if (p > 0.45 && p < 0.7) {
-    const k = io(seg(p, 0.45, 0.55)), cx = lerp(qx + qw - 40, qx + qw * 0.55, k), cy = lerp(ly + 480, ly + 196 + 78 + 36, k);
-    c.fillStyle = C.ink; c.strokeStyle = '#fff'; c.lineWidth = 2;
-    c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx, cy + 26); c.lineTo(cx + 7, cy + 20); c.lineTo(cx + 12, cy + 30); c.lineTo(cx + 17, cy + 28); c.lineTo(cx + 12, cy + 18); c.lineTo(cx + 21, cy + 18); c.closePath(); c.stroke(); c.fill();
+  if (p > 0.38 && p < 0.62) {
+    const k = io(seg(p, 0.38, 0.49)), px = lerp(cx0 + cw + 40, cx0 + 420, k), py = lerp(700, 286 + 74 + 36, k);
+    c.fillStyle = C.ink; c.strokeStyle = C.bg; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(px, py); c.lineTo(px, py + 26); c.lineTo(px + 7, py + 20); c.lineTo(px + 12, py + 30); c.lineTo(px + 17, py + 28); c.lineTo(px + 12, py + 18); c.lineTo(px + 21, py + 18); c.closePath(); c.stroke(); c.fill();
   }
+  pop(c, seg(p, 0.62, 0.7), () => {
+    card(c, cx0, 594, cw, 104, 16, C.soft);
+    stxt(c, 'Correct.', cx0 + 24, 634, 23);
+    txt(c, 'Goods are not necessaries if the minor is already adequately supplied with them.', cx0 + 24, 668, 15, 400, C.mute);
+    pill(c, 'Next question', cx0 + cw - 170, 624, 44, 14.5);
+  });
+  const pv = lerp(42, 68, io(seg(p, 0.74, 0.94)));
+  txt(c, 'My progress · Contract Law', cx0, 760, 14, 500, C.mute);
+  txt(c, Math.round(pv) + '% mastered', cx0 + cw, 760, 14, 600, C.ink, 0, 'right');
+  c.fillStyle = C.chip; rr(c, cx0, 776, cw, 8, 4); c.fill(); c.fillStyle = C.ink; rr(c, cx0, 776, cw * pv / 100, 8, 4); c.fill();
 }
 
-/* 03 DRAFT */
-const TEMPLATES = ['Tenancy agreement', 'Non-disclosure agreement', 'Letter of demand', 'Affidavit', 'Power of attorney'];
+/* 03 BRIEFS: brief a case */
+const BRIEF = [
+  ['FACTS', 'A Savile Row tailor sued Inman, a Cambridge undergraduate and a minor, for the price of clothing that included eleven fancy waistcoats.'],
+  ['ISSUE', 'Were the clothes necessaries, so that the minor was liable to pay for them?'],
+  ['HELD', 'No. His father had already supplied him with sufficient clothing, so the goods were not necessaries. The claim failed.'],
+  ['RATIO', 'The supplier must prove the goods suited the minor’s condition in life and his actual requirements at the time of sale.'],
+];
+function drawBrief(c, p, t) {
+  chrome(c, 2);
+  const x0 = SW + 44, cw = W - SW - 88;
+  chip(c, 'Case brief', x0, 40, 12.5, C.chip, C.ink, 500);
+  stxt(c, 'Nash v Inman', x0, 128, 44);
+  txt(c, 'Court of Appeal  ·  [1908] 2 KB 1  ·  Contract Law', x0, 162, 15, 400, C.mute);
+  pop(c, seg(p, 0.82, 0.9), () => {
+    const w2 = measure(c, 'Save to Briefs', 14.5, 500) + 46;
+    pill(c, 'Save to Briefs', x0 + cw - w2, 98, 44, 14.5);
+    const w1 = measure(c, 'Quiz me', 14.5, 500) + 46; pill(c, 'Quiz me', x0 + cw - w2 - w1 - 12, 98, 44, 14.5, false);
+  });
+  const gw = (cw - 24) / 2, gh = 300;
+  BRIEF.forEach(([h, b], i) => {
+    const a = 0.08 + i * 0.17, k = seg(p, a, a + 0.15);
+    pop(c, seg(p, a, a + 0.04), () => {
+      const x = x0 + (i % 2) * (gw + 24), y = 204 + Math.floor(i / 2) * (gh + 22);
+      card(c, x, y, gw, gh, 18);
+      label(c, h, x + 28, y + 44);
+      const e = para(c, b, x + 28, y + 92, gw - 56, 24, 36, 400, C.ink, k, true);
+      if (k > 0 && k < 1) caret(c, e.x - 6, e.y, 24, t);
+    });
+  });
+}
+
+/* 04 DRAFT: drafting catalogue */
+const TEMPLATES = [['AGREEMENTS', 0], ['Tenancy agreement', 1], ['Non-disclosure agreement', 1], ['Contract of sale', 1], ['NOTICES & COURT', 0], ['Letter of demand', 1], ['Affidavit', 1], ['Power of attorney', 1]];
 const CLAUSES = [
   ['1.  Parties', 'This Agreement is made between [Landlord] ("the Landlord") and [Tenant] ("the Tenant").'],
   ['2.  Premises', 'The Landlord lets to the Tenant the premises known as [Address] ("the Premises").'],
@@ -433,127 +521,113 @@ const CLAUSES = [
   ['5.  Repairs', 'The Landlord shall keep the structure and exterior of the Premises in good repair.'],
 ];
 function drawDraft(c, p, t) {
-  chrome(c, 2);
-  header(c, 'Draft', 'Tenancy agreement  ·  Draft 1  ·  Built from your research');
-  const ty = MY + 108;
-  label(c, 'TEMPLATES', MX, ty);
-  TEMPLATES.forEach((s, i) => {
-    const y = ty + 22 + i * 50, on = i === 0;
-    if (on) { rr(c, MX - 10, y, 232, 40, 10); c.fillStyle = C.chip; c.fill(); }
-    txt(c, s, MX + 6, y + 26, 15, on ? 700 : 500, on ? C.ink : C.mute);
+  chrome(c, 8);
+  const lx = SW + 30, lw = 250;
+  stxt(c, 'Drafting catalogue', lx, 66, 26);
+  rr(c, lx, 88, lw, 40, 10); c.fillStyle = C.card; c.fill(); c.strokeStyle = C.line; c.lineWidth = 1.5; c.stroke();
+  ico(c, 'search', lx + 12, 99, C.mute); txt(c, 'Search templates', lx + 40, 113, 14, 400, C.mute);
+  let y = 172;
+  TEMPLATES.forEach(([s, item], i) => {
+    if (!item) { label(c, s, lx, y + (i ? 14 : 0)); y += i ? 36 : 22; return; }
+    const on = s === 'Tenancy agreement';
+    if (on) { rr(c, lx - 8, y, lw + 16, 38, 9); c.fillStyle = C.chip; c.fill(); }
+    ico(c, 'doc', lx + 4, y + 10, on ? C.ink : C.mute); txt(c, s, lx + 32, y + 25, 15, on ? 600 : 400, on ? C.ink : C.mute); y += 44;
   });
-  // the document
-  const dx = MX + 250, dy = MY + 84, dw = 690, dh = H - dy - 30;
-  card(c, dx, dy, dw, dh, 10);
-  txt(c, 'TENANCY AGREEMENT', dx + dw / 2, dy + 64, 20, 800, C.ink, 4, 'center');
-  txt(c, 'This Agreement is dated [Date]', dx + dw / 2, dy + 96, 14, 500, C.faint, 0, 'center');
-  let y = dy + 150;
+  const dx = lx + lw + 34, dy = 40, dw = 640, dh = H - 80;
+  card(c, dx, dy, dw, dh, 8);
+  txt(c, 'TENANCY AGREEMENT', dx + dw / 2, dy + 64, 19, 700, C.ink, 4, 'center');
+  txt(c, 'This Agreement is dated [Date]', dx + dw / 2, dy + 96, 14, 400, C.faint, 0, 'center');
+  y = dy + 150;
   CLAUSES.forEach(([h, b], i) => {
-    const a = 0.08 + i * 0.12, k = seg(p, a, a + 0.1);
+    const a = 0.06 + i * 0.12, k = seg(p, a, a + 0.1);
     if (k <= 0) return;
-    pop(c, seg(p, a, a + 0.02), () => txt(c, h, dx + 54, y, 17, 700));
-    const end = para(c, b, dx + 54, y + 30, dw - 108, 16, 26, 400, '#2c2a27', k);
-    if (k < 1) caret(c, dx + 54, end, 0, t);
-    y = end + 52;
+    pop(c, seg(p, a, a + 0.02), () => txt(c, h, dx + 54, y, 16, 600));
+    const e = para(c, b, dx + 54, y + 30, dw - 108, 15.5, 25, 400, C.ink, k);
+    if (k < 1) caret(c, e.x - 6, e.y, 15.5, t);
+    y = e.y + 52;
   });
-  // review rail
-  const rx = dx + dw + 34, rw = W - 40 - rx;
-  label(c, 'REVIEW', rx, ty);
+  const rx = dx + dw + 30, rw = W - 40 - rx;
+  label(c, 'REVIEW', rx, 66);
   [['5 clauses drafted', 1], ['Defined terms consistent', 1], ['6 fields to complete', 0]].forEach(([s, ok], i) => pop(c, seg(p, 0.66 + i * 0.06, 0.72 + i * 0.06), () => {
-    const yy = ty + 28 + i * 84;
-    card(c, rx, yy, rw, 68, 14);
-    if (ok) check(c, rx + 30, yy + 34, 11, 1); else { c.fillStyle = C.faint; c.beginPath(); c.arc(rx + 30, yy + 34, 6, 0, 7); c.fill(); }
-    txt(c, s, rx + 52, yy + 40, 15, 600);
+    const yy = 88 + i * 80;
+    card(c, rx, yy, rw, 64, 14);
+    if (ok) check(c, rx + 28, yy + 32, 11, C.ink, C.bg); else { c.fillStyle = C.faint; c.beginPath(); c.arc(rx + 28, yy + 32, 6, 0, 7); c.fill(); }
+    txt(c, s, rx + 50, yy + 38, 15, 500);
   }));
   pop(c, seg(p, 0.86, 0.92), () => {
-    rr(c, rx, ty + 300, rw, 54, 14); c.fillStyle = C.ink; c.fill();
-    txt(c, 'Export to Word', rx + rw / 2, ty + 333, 16, 700, '#fff', 0, 'center');
-    txt(c, 'Ready for your review', rx + rw / 2, ty + 384, 14, 600, C.mute, 0, 'center');
+    rr(c, rx, 340, rw, 50, 25); c.fillStyle = C.btn; c.fill();
+    txt(c, 'Save to Documents', rx + rw / 2, 371, 15, 500, C.btnText, 0, 'center');
+    txt(c, 'Ready for your review', rx + rw / 2, 420, 13.5, 400, C.mute, 0, 'center');
   });
 }
 
-/* 04 CAMPUS CHAT */
-const CH = ['contract-law', 'moot-court', 'exam-prep', 'study-group-b'];
+/* 05 CAMPUS CHAT (dark theme) */
+const CH = ['contract-law', 'land-law', 'moot-court', 'exam-prep'];
 const MSGS = [
-  { who: 'Amaka O.', ini: 'AO', col: '#2b2a28', time: '10:02', text: 'Does anyone have notes from today’s lecture on capacity?', at: 0.04 },
-  { who: 'David K.', ini: 'DK', col: '#8a857c', time: '10:03', text: 'I missed the part on necessaries.', at: 0.13 },
-  { who: 'Tomi A.', ini: 'TA', col: '#bdb7ab', time: '10:04', text: '@Lawdeck can you summarise it for the group?', at: 0.22 },
+  { who: 'Amaka O.', ini: 'A', time: '10:02', text: 'Does anyone have notes from today’s lecture on capacity?', at: 0.04 },
+  { who: 'David K.', ini: 'D', time: '10:03', text: 'I missed the part on necessaries.', at: 0.13 },
+  { who: 'Tomi A.', ini: 'T', time: '10:04', text: '@Lawdeck can you summarise it for the group?', at: 0.22 },
 ];
 const BUL = ['Contracts are generally not enforceable against a minor.', 'Exception: necessaries, at a reasonable price.', 'Nash v Inman: not necessaries if already adequately supplied.'];
-function avatar(c, x, y, ini, col) {
-  c.fillStyle = col; c.beginPath(); c.arc(x, y, 20, 0, 7); c.fill();
-  txt(c, ini, x, y + 5, 13, 700, col === '#bdb7ab' ? C.ink : '#fff', 0, 'center');
-}
 function drawChat(c, p, t) {
-  chrome(c, 3);
-  // channel column
-  const cx0 = SW + 1.5, cw = 250;
-  c.fillStyle = '#f7f6f2'; c.fillRect(cx0, 56, cw, H - 56); c.fillStyle = C.line; c.fillRect(cx0 + cw, 56, 1.5, H - 56);
-  txt(c, 'Faculty of Law', cx0 + 26, MY + 30, 18, 700);
-  label(c, 'CHANNELS', cx0 + 26, MY + 82);
+  chrome(c, 9, DARK);
+  const cx0 = SW + 1.5, cw = 236;
+  c.fillStyle = '#171716'; c.fillRect(cx0, 0, cw, H); c.fillStyle = C.line; c.fillRect(cx0 + cw, 0, 1.5, H);
+  stxt(c, 'Campus chat', cx0 + 24, 62, 25);
+  txt(c, 'Faculty of Law', cx0 + 24, 88, 13.5, 400, C.mute);
+  label(c, 'CHANNELS', cx0 + 24, 138);
   CH.forEach((s, i) => {
-    const y = MY + 100 + i * 44, on = i === 0;
-    if (on) { rr(c, cx0 + 14, y, cw - 28, 36, 9); c.fillStyle = C.chip; c.fill(); }
-    txt(c, '# ' + s, cx0 + 28, y + 24, 15, on ? 700 : 500, on ? C.ink : C.mute);
-    if (i === 1 && p < 0.5) { c.fillStyle = C.ink; c.beginPath(); c.arc(cx0 + cw - 32, y + 18, 4, 0, 7); c.fill(); }
+    const y = 154 + i * 42, on = i === 0;
+    if (on) { rr(c, cx0 + 12, y, cw - 24, 36, 9); c.fillStyle = C.chip; c.fill(); }
+    txt(c, '# ' + s, cx0 + 26, y + 24, 15, on ? 600 : 400, on ? C.ink : C.mute);
+    if (i === 2 && p < 0.5) { c.fillStyle = C.ink; c.beginPath(); c.arc(cx0 + cw - 30, y + 18, 4, 0, 7); c.fill(); }
   });
-  label(c, 'DIRECT', cx0 + 26, MY + 310);
-  ['Amaka O.', 'David K.', 'Lawdeck Assistant'].forEach((s, i) => {
-    const y = MY + 340 + i * 42;
-    c.fillStyle = i === 2 ? C.ink : '#cfcac0'; c.beginPath(); c.arc(cx0 + 34, y - 5, 5, 0, 7); c.fill();
-    txt(c, s, cx0 + 50, y, 15, 500, C.mute);
-  });
-  // main
-  const mx = cx0 + cw + 34, mw = W - 40 - mx;
-  txt(c, '# contract-law', mx, MY + 30, 24, 700, C.ink, -0.4);
-  txt(c, '128 members  ·  Contract Law 200', mx, MY + 58, 14, 500, C.mute);
-  c.fillStyle = C.line; c.fillRect(mx, MY + 78, mw, 1.5);
-  let y = MY + 124;
+  label(c, 'DIRECT', cx0 + 24, 352);
+  ['Amaka O.', 'David K.', 'Study group B'].forEach((s, i) => txt(c, s, cx0 + 24, 386 + i * 38, 15, 400, C.mute));
+  const mx = cx0 + cw + 36, mw = W - 40 - mx;
+  txt(c, '# contract-law', mx, 56, 21, 600);
+  txt(c, '128 members  ·  Contract Law', mx, 82, 13.5, 400, C.mute);
+  c.fillStyle = C.line; c.fillRect(mx, 102, mw, 1.5);
+  let y = 150;
   MSGS.forEach(m => {
     const k = seg(p, m.at, m.at + 0.05);
     pop(c, k, () => {
-      avatar(c, mx + 20, y, m.ini, m.col);
-      txt(c, m.who, mx + 54, y - 4, 16, 700); txt(c, m.time, mx + 62 + measure(c, m.who, 16, 700), y - 4, 13, 500, C.faint);
+      c.fillStyle = C.chip; c.beginPath(); c.arc(mx + 20, y, 19, 0, 7); c.fill(); txt(c, m.ini, mx + 20, y + 5, 14, 600, C.ink, 0, 'center');
+      txt(c, m.who, mx + 54, y - 4, 15.5, 600); txt(c, m.time, mx + 62 + measure(c, m.who, 15.5, 600), y - 4, 12.5, 400, C.faint);
       if (m.text.startsWith('@Lawdeck')) {
-        const w = measure(c, '@Lawdeck', 17, 700); rr(c, mx + 51, y + 6, w + 8, 26, 6); c.fillStyle = C.chip; c.fill();
-        txt(c, '@Lawdeck', mx + 55, y + 25, 17, 700); txt(c, m.text.slice(8), mx + 59 + w, y + 25, 17, 400);
-      } else txt(c, m.text, mx + 54, y + 25, 17, 400, '#2c2a27');
+        const w = measure(c, '@Lawdeck', 16.5, 600); rr(c, mx + 51, y + 6, w + 8, 26, 6); c.fillStyle = C.chip; c.fill();
+        txt(c, '@Lawdeck', mx + 55, y + 25, 16.5, 600); txt(c, m.text.slice(8), mx + 59 + w, y + 25, 16.5);
+      } else txt(c, m.text, mx + 54, y + 25, 16.5);
     });
-    if (k > 0) y += 76;
+    if (k > 0) y += 74;
   });
-  // assistant typing, then reply
   if (p > 0.3) {
-    c.drawImage(markImg, mx, y - 20, 40, 40 * markImg.height / markImg.width);
-    txt(c, 'Lawdeck', mx + 54, y - 4, 16, 700);
-    chip(c, 'ASSISTANT', mx + 130, y - 22, 11, C.ink, '#fff', 700);
+    mark(c, mx + 2, y - 18, 36);
+    txt(c, 'Lawdeck', mx + 54, y - 4, 15.5, 600);
+    chip(c, 'ASSISTANT', mx + 128, y - 22, 10.5, C.chip, C.mute, 600);
     if (p < 0.4) {
       for (let i = 0; i < 3; i++) { c.globalAlpha = 0.25 + 0.75 * ((Math.floor(t * 6) % 3) === i); c.fillStyle = C.ink; c.beginPath(); c.arc(mx + 62 + i * 12, y + 20, 4, 0, 7); c.fill(); }
       c.globalAlpha = 1;
     } else {
-      const bw = mw - 54, bh = 228;
-      rr(c, mx + 54, y + 10, bw, bh, 16); c.fillStyle = C.soft; c.fill();
-      txt(c, 'Summary: Capacity, minors', mx + 80, y + 48, 17, 700);
+      const bw = mw - 54, bh = 226;
+      rr(c, mx + 54, y + 10, bw, bh, 16); c.fillStyle = C.card; c.fill(); c.strokeStyle = C.line; c.lineWidth = 1.5; c.stroke();
+      stxt(c, 'Summary: Capacity of minors', mx + 80, y + 50, 21);
       BUL.forEach((s, i) => pop(c, seg(p, 0.44 + i * 0.07, 0.5 + i * 0.07), () => {
         c.fillStyle = C.ink; c.beginPath(); c.arc(mx + 86, y + 84 + i * 36, 3.5, 0, 7); c.fill();
-        txt(c, s, mx + 102, y + 90 + i * 36, 16, 500, '#2c2a27');
+        txt(c, s, mx + 102, y + 90 + i * 36, 16);
       }));
-      pop(c, seg(p, 0.66, 0.72), () => { const x2 = mx + 80; const w1 = chip(c, '3 sources', x2, y + 186, 13, '#fff'); chip(c, 'Open in Learn', x2 + w1 + 10, y + 186, 13, '#fff'); });
-      pop(c, seg(p, 0.76, 0.82), () => {
-        const rx = mx + 54, ry2 = y + bh + 22;
-        const w1 = chip(c, '+12  helpful', rx, ry2, 13); chip(c, '4 replies', rx + w1 + 10, ry2, 13);
-      });
+      pop(c, seg(p, 0.66, 0.72), () => { const w1 = chip(c, '3 sources', mx + 80, y + 184, 12.5); chip(c, 'Save to Study Diary', mx + 90 + w1, y + 184, 12.5); });
+      pop(c, seg(p, 0.76, 0.82), () => { const w1 = chip(c, '+12 helpful', mx + 54, y + bh + 24, 12.5); chip(c, '4 replies', mx + 64 + w1, y + bh + 24, 12.5); });
     }
   }
-  // composer
-  const cy2 = H - 96;
-  card(c, mx, cy2, mw, 58, 14);
-  const reply = 'Thanks, adding this to my revision deck.';
+  card(c, mx, H - 96, mw, 60, 18);
+  const reply = 'Thanks, adding this to my revision.';
   const rk = seg(p, 0.84, 0.97), rs = reply.slice(0, Math.round(reply.length * rk));
-  if (rk > 0) { txt(c, rs, mx + 22, cy2 + 36, 16, 500); caret(c, mx + 22 + measure(c, rs, 16, 500), cy2 + 36, 16, t); }
-  else txt(c, 'Message #contract-law', mx + 22, cy2 + 36, 16, 500, C.faint);
+  if (rk > 0) { txt(c, rs, mx + 22, H - 59, 16); caret(c, mx + 22 + measure(c, rs, 16), H - 59, 16, t); }
+  else txt(c, 'Message #contract-law', mx + 22, H - 59, 16, 400, C.mute);
 }
 
-/* Panel objects: a 3D window with a soft floor shadow. */
+/* Panel objects: a floating app window with a soft shadow. */
 function shadowTex() {
   const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d');
   const gr = g.createRadialGradient(128, 128, 10, 128, 128, 128); gr.addColorStop(0, 'rgba(0,0,0,0.75)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
@@ -565,7 +639,6 @@ function makePanel(name, draw, t0, t1) {
   const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
   const ctx = cv.getContext('2d');
   const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-  tex.minFilter = THREE.LinearMipmapLinearFilter;
   const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, toneMapped: false });
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), mat);
   const sh = new THREE.Mesh(new THREE.PlaneGeometry(PW * 1.5, PH * 1.6), new THREE.MeshBasicMaterial({ map: SHADOW, transparent: true, depthWrite: false, opacity: 0.8 }));
@@ -576,7 +649,7 @@ function makePanel(name, draw, t0, t1) {
   return { name, draw, t0, t1, grp, mesh, sh, mat, ctx, tex, video, last: -1 };
 }
 function drawClip(c, v) {
-  c.clearRect(0, 0, W, H); c.save(); rr(c, 0, 0, W, H, 30); c.clip();
+  c.clearRect(0, 0, W, H); c.save(); rr(c, 0, 0, W, H, 24); c.clip();
   c.fillStyle = '#111'; c.fillRect(0, 0, W, H);
   if (v.readyState >= 2) { const s = Math.max(W / v.videoWidth, H / v.videoHeight); c.drawImage(v, (W - v.videoWidth * s) / 2, (H - v.videoHeight * s) / 2, v.videoWidth * s, v.videoHeight * s); }
   c.restore();
@@ -584,19 +657,20 @@ function drawClip(c, v) {
 const PANELS = [
   makePanel('research', drawResearch, 13.6, 24.6),
   makePanel('learn', drawLearn, 24.0, 34.6),
-  makePanel('draft', drawDraft, 34.0, 44.6),
-  makePanel('chat', drawChat, 44.0, 55.4),
+  makePanel('brief', drawBrief, 34.0, 43.6),
+  makePanel('draft', drawDraft, 43.0, 53.6),
+  makePanel('chat', drawChat, 53.0, 64.4),
 ];
-const GRID = [[-1.95, 1.08], [1.95, 1.08], [-1.95, -1.08], [1.95, -1.08]];
+const GRID = [[-2.55, 1.05], [0, 1.05], [2.55, 1.05], [-1.28, -1.05], [1.28, -1.05]];
 
 function panelsState(t) {
   PANELS.forEach((P_, i) => {
     const { t0, t1, grp } = P_;
     const enter = ex(seg(t, t0, t0 + 1.7)), leave = io(seg(t, t1 - 1.2, t1 + 0.4));
     const local = seg(t, t0 + 1.0, t1 - 1.3);
-    const trustIn = io(seg(t, 55.6 + i * 0.18, 57.4 + i * 0.18)), trustOut = io(seg(t, 60.6, 62.0));
+    const trustIn = io(seg(t, TR + 0.2 + i * 0.15, TR + 2.0 + i * 0.15)), trustOut = io(seg(t, TR + 5.2, TR + 6.6));
     let x, y, z, ry, rx, op, s = 1;
-    if (t < 55.4) {
+    if (t < TR) {
       x = lerp(6.5, 0.95, enter) + lerp(0, -7.5, leave) - local * 0.12;
       y = lerp(-0.5, -0.02, enter) + Math.sin(t * 0.35 + i) * 0.03;
       z = lerp(-3.5, 0, enter) + lerp(0, -2.5, leave) + local * 0.25;
@@ -606,32 +680,80 @@ function panelsState(t) {
     } else {
       const [gx, gy] = GRID[i];
       x = lerp(gx * 1.6, gx, trustIn); y = lerp(gy * 1.6, gy, trustIn) - 0.1; z = lerp(-6, -3.2, trustIn) - trustOut * 4;
-      ry = lerp(0.3 * Math.sign(gx), 0, trustIn); rx = 0; s = 0.94;
-      op = trustIn * lerp(1, 0.13, io(seg(t, 56.4, 57.6))) * (1 - trustOut);
+      ry = lerp(0.3 * Math.sign(gx || 1), 0, trustIn); rx = 0; s = 0.66;
+      op = trustIn * lerp(1, 0.13, io(seg(t, TR + 1.0, TR + 2.2))) * (1 - trustOut);
     }
     grp.position.set(x, y, z); grp.rotation.set(rx, ry, 0); grp.scale.setScalar(s);
     grp.visible = op > 0.001; P_.mat.opacity = op; P_.sh.material.opacity = op * 0.8;
     if (!grp.visible) return;
-    const p = t < 55.4 ? local : 1;
+    const p = t < TR ? local : 1;
     const key_ = P_.video ? t : Math.round(p * 600) / 600 + Math.floor(t * 6) / 1e4;
     if (key_ === P_.last) return;
     P_.last = key_;
     P_.ctx.save();
     if (P_.video) drawClip(P_.ctx, P_.video); else P_.draw(P_.ctx, p, t);
     P_.ctx.restore();
+    rr(P_.ctx, 1, 1, W - 2, H - 2, 24); P_.ctx.strokeStyle = 'rgba(255,255,255,0.14)'; P_.ctx.lineWidth = 2; P_.ctx.stroke();
     P_.tex.needsUpdate = true;
   });
 }
 async function seekClips(t) {
   await Promise.all(PANELS.filter(p => p.video).map(p => new Promise(res => {
     const v = p.video, d = v.duration || 0;
-    const target = Math.max(0, t - p.t0);
     if (!d || t < p.t0 - 0.5 || t > p.t1 + 0.5) return res();
-    const tt = Math.min(target, d - 0.05);
+    const tt = Math.min(Math.max(0, t - p.t0), d - 0.05);
     if (Math.abs(v.currentTime - tt) < 0.001) return res();
     v.addEventListener('seeked', () => res(), { once: true }); v.currentTime = tt;
     setTimeout(res, 2000);
   })));
+}
+
+/* ---------------- feature ribbon: everything else in the sidebar ---------------- */
+const FEATURES = [
+  ['book', 'Courses', 'Your modules, organised in one place.'],
+  ['mcq', 'MCQ', 'Practise questions with instant explanations.'],
+  ['bookmark', 'Briefs', 'Facts, issue, held and ratio for any case.'],
+  ['diary', 'Study Diary', 'A record of what you studied, and when.'],
+  ['brain', 'Memory challenge', 'Topics come back before you forget them.'],
+  ['bars', 'My progress', 'See how far you have come, course by course.'],
+  ['folder', 'Projects', 'Group your work by assignment or moot.'],
+  ['doc', 'Documents', 'Your drafts and notes, kept together.'],
+  ['upload', 'My uploads', 'Bring your own notes and readings.'],
+  ['pen', 'Drafting catalogue', 'Templates for the documents lawyers write.'],
+  ['chat', 'Campus chat', 'Your class and cohort, in one conversation.'],
+  ['search', 'Search', 'Find anything across your work.'],
+  ['mic', 'Voice', 'Ask out loud, hands free.'],
+  ['moon', 'Light and dark', 'Comfortable to study in, day or night.'],
+];
+const FW = 820, FH = 500, CW3 = 1.9, CH3 = CW3 * FH / FW;
+const feats = FEATURES.map(([ic, name, desc], i) => {
+  const cv = document.createElement('canvas'); cv.width = FW; cv.height = FH; const c = cv.getContext('2d');
+  C = (name === 'Light and dark' || name === 'Voice' || name === 'Campus chat') ? DARK : LIGHT;
+  rr(c, 0, 0, FW, FH, 34); c.fillStyle = C.bg; c.fill(); c.strokeStyle = C.line; c.lineWidth = 3; c.stroke();
+  rr(c, 52, 52, 96, 96, 22); c.fillStyle = C.chip; c.fill();
+  c.save(); c.translate(70, 70); c.scale(3.3, 3.3); ico(c, ic, 0, 0, C.ink); c.restore();
+  txt(c, String(i + 1).padStart(2, '0'), FW - 56, 92, 22, 500, C.faint, 2, 'right');
+  stxt(c, name, 52, 268, 66);
+  para(c, desc, 52, 346, FW - 104, 35, 48, 400, C.mute);
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, toneMapped: false, opacity: 0 });
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(CW3, CH3), mat); scene.add(m);
+  return { m, mat, row: i % 2, col: Math.floor(i / 2) };
+});
+C = LIGHT;
+const FT0 = 64.0, FT1 = TR + 0.4;
+function featuresState(t) {
+  const on = t > FT0 && t < FT1;
+  feats.forEach((f, i) => {
+    f.m.visible = on; if (!on) return;
+    const inn = ex(seg(t, FT0 + 0.3 + f.col * 0.12 + f.row * 0.1, FT0 + 1.6 + f.col * 0.12 + f.row * 0.1));
+    const out = io(seg(t, FT1 - 1.2 + f.col * 0.04, FT1 - 0.1));
+    const dir = f.row ? 1 : -1, drift = (t - FT0) * 0.32 * dir;
+    const x = (f.col - 3) * (CW3 + 0.22) + (f.row ? (CW3 + 0.22) / 2 : 0) + drift - dir * 1.1;
+    f.m.position.set(x, f.row ? -1.02 : 0.5, lerp(-5, -0.6, inn) - out * 3);
+    f.m.rotation.set(lerp(0.4, 0, inn), lerp(-0.5 * dir, 0, inn), 0);
+    f.mat.opacity = inn * (1 - out);
+  });
 }
 
 /* ---------------- kinetic type ---------------- */
@@ -672,19 +794,23 @@ const pillar = (n, name, head, body, a, b) => {
   T(head, a + 0.25, b, 'head', '', 0.06, col);
   T(body, a + 0.9, b, 'body', 'margin-top:calc(var(--u) * 0.4)', 0.025, col);
 };
-pillar('01', 'Research', 'Ask in plain<br>language.<br>Get cited<br>answers.', 'Cases, statutes and your own notes, searched together. Every answer links to its authority.', 14.6, 24.2);
-pillar('02', 'Learn', 'Understand<br>the principle,<br>not just<br>the answer.', 'Guided lessons, quick checks and progress you can see, built around your modules.', 25.0, 34.2);
-pillar('03', 'Draft', 'From research<br>to first draft<br>in minutes.', 'Start from a template, fill it from your research, and stay in control of every clause.', 35.0, 44.2);
-pillar('04', 'Campus Chat', 'Your class.<br>Your cohort.<br>One<br>conversation.', 'Channels for every course and moot team, with Lawdeck in the thread when you need it.', 45.0, 55.0);
+pillar('01', 'Research', 'Ask anything.<br>Get cited<br>answers.', 'Ask from the home screen. Lawdeck searches cases, statutes and your notes, and shows every authority it used.', 14.6, 24.2);
+pillar('02', 'Learn', 'Learn it.<br>Then keep it.', 'Courses and MCQs with instant explanations, and memory challenges that bring topics back before you forget them.', 25.0, 34.2);
+pillar('03', 'Briefs', 'Brief any case<br>in moments.', 'Facts, issue, held and ratio, saved to your Briefs and ready to quiz you on.', 35.0, 42.9);
+pillar('04', 'Draft', 'From the catalogue<br>to a first draft.', 'Pick a template from the Drafting catalogue, build it from your research, and review every clause.', 44.0, 52.9);
+pillar('05', 'Campus chat', 'Your class.<br>Your cohort.<br>One conversation.', 'Channels for every course and moot team, with Lawdeck in the thread when you need it.', 54.0, 63.6);
+// The rest of the sidebar
+T('And everything else your degree needs.', FT0 + 0.5, FT1 - 0.5, 'center hero', 'top:8.5%', 0.05);
 // Act 3: trust
-T('Built to be trusted.', 56.4, 61.3, 'center big', 'top:40%');
-T('Cited, always.<small>Every answer shows the authority it relies on.</small>', 57.6, 61.3, 'pillar', 'left:12%;top:60%');
-T('Your work, yours.<small>Your notes, drafts and chats stay private to you.</small>', 58.0, 61.3, 'pillar', 'left:38%;top:60%');
-T('You stay in control.<small>Lawdeck suggests. You review and decide.</small>', 58.4, 61.3, 'pillar', 'left:64%;top:60%');
+T('Built to be trusted.', TR + 1.0, TR + 5.9, 'center big', 'top:38%');
+T('Cited, always.<small>Every answer shows the authority it relies on.</small>', TR + 2.2, TR + 5.9, 'pillar', 'left:12%;top:60%');
+T('Your work, yours.<small>Your notes, drafts and chats stay private to you.</small>', TR + 2.6, TR + 5.9, 'pillar', 'left:38%;top:60%');
+T('You stay in control.<small>Lawdeck suggests. You review and decide.</small>', TR + 3.0, TR + 5.9, 'pillar', 'left:64%;top:60%');
 
 /* ---------------- end card ---------------- */
 const endMark = document.getElementById('endMark'), endWord = document.getElementById('endWord'), endTag = document.getElementById('endTag');
 function endState(t) {
+  t -= SH;
   endEl.style.opacity = seg(t, 64.5, 65.0).toFixed(3);
   vignette.style.opacity = (1 - seg(t, 64.5, 65.0) * 0.85).toFixed(3);
   const m = ex(seg(t, 65.2, 66.8)), w = io(seg(t, 66.0, 67.4)), g = eo(seg(t, 67.4, 68.6));
@@ -692,7 +818,7 @@ function endState(t) {
   endWord.style.clipPath = `inset(0 ${(100 - w * 100).toFixed(2)}% 0 0)`;
   endWord.style.opacity = w > 0 ? 1 : 0;
   endTag.style.opacity = g; endTag.style.transform = `translateY(${(1 - g) * 10}px)`;
-  const fade = seg(t, 73.6, 75);
+  const fade = seg(t, 73.6, 75.4);
   document.getElementById('endInner').style.opacity = 1 - fade;
 }
 
@@ -702,10 +828,10 @@ function cameraState(t) {
   let z = lerp(6.9, 6.2, push), x = Math.sin(t * 0.13) * 0.12, y = Math.sin(t * 0.11) * 0.06;
   const swirl = seg(t, 6, 13) * (1 - seg(t, 12, 14));
   x += Math.sin(t * 0.5) * 0.4 * swirl;
-  if (t > 62) { x *= 1 - seg(t, 62, 63); y *= 1 - seg(t, 62, 63); }
+  if (t > 62 + SH) { x *= 1 - seg(t, 62 + SH, 63 + SH); y *= 1 - seg(t, 62 + SH, 63 + SH); }
   camera.position.set(x, y, z);
   camera.lookAt(x * 0.3, y * 0.3, 0);
-  spot.intensity = lerp(0, 60, eo(seg(t, 0.2, 3))) * (1 - seg(t, 7, 9)) + 40 * seg(t, 62.4, 64);
+  spot.intensity = lerp(0, 60, eo(seg(t, 0.2, 3))) * (1 - seg(t, 7, 9)) + 40 * seg(t, 62.4 + SH, 64 + SH);
   spot.target.position.set(0, 0.3, 0);
 }
 
@@ -720,7 +846,7 @@ function grainState(frame) {
 
 /* ---------------- frame ---------------- */
 function frame(t) {
-  heroState(t); pagesState(t); panelsState(t); cameraState(t); typeState(t); endState(t);
+  heroState(t); pagesState(t); panelsState(t); featuresState(t); cameraState(t); typeState(t); endState(t);
   grainState(Math.floor(t * 24));
   renderer.render(scene, camera);
 }
