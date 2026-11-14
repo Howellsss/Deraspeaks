@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Places voice lines on their cues, ducks the score under them, and muxes with the picture.
-#   bash audio/mix.sh            (expects audio/01.wav ... audio/16.wav and out/lawdeck-1080p.mp4)
+#   bash audio/mix.sh            (expects audio/01.wav ... audio/18.wav and out/lawdeck-1080p.mp4)
 set -euo pipefail
 cd "$(dirname "$0")/.."
-CUES=(0.35 1.15 1.95 3.75 5.65 8.3 16.8 25.3 33.8 42.3 50.3 56.4 58.2 59.9 64.8 66.3)
+CUES=(1.2 4.6 12.4 16.6 18.9 20.0 21.1 22.2 23.3 25.6 34.1 42.6 51.1 63.85 72.6 78.9 84.6 90.25)
 inputs=(); filters=""; labels=""
 for i in "${!CUES[@]}"; do
   f=$(printf "audio/%02d.wav" $((i+1)))

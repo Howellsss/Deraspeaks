@@ -14,19 +14,23 @@ np.savez(os.path.join(M, 'voices.npz'), **voices)
 k = Kokoro(os.path.join(M, 'model.onnx'), os.path.join(M, 'voices.npz'))
 voice, out = sys.argv[1], sys.argv[2]
 LINES = [
- ("Too many cases.", 1.22), ("Too many pages.", 1.22), ("Not enough time.", 1.22),
- ("What if all of it lived in one place?", 1.0), ("Meet Lawdeck.", 0.95),
- ("Ask anything, and get answers cited to the cases and statutes behind them.", 1.05),
- ("Learn with courses and MCQs. Keep it with memory challenges that bring topics back before you forget.", 1.08),
- ("Brief any case in moments: facts, issue, held, ratio.", 1.0),
- ("Draft from a catalogue of templates, built on your own research.", 1.0),
- ("And bring your whole class together in Campus chat, with Lawdeck in the thread.", 1.05),
- ("Study Diary. Progress. Projects. Uploads. Voice. Day or night.", 1.05),
- ("Every answer, cited.", 0.95), ("Your work, private.", 0.95), ("You, in control.", 0.95),
- ("Lawdeck.", 0.9), ("Research. Learn. Draft.", 0.9),
+ ("What if your study partner never slept?", 0.9),
+ ("Never tired of your questions. There from your very first lecture, all the way to your final exam.", 0.92),
+ ("Meet Lawdeck. Your AI law school companion.", 0.9),
+ ("Built on five pillars.", 0.9),
+ ("Research.", 0.88), ("Learn.", 0.88), ("Draft.", 0.88), ("Remember.", 0.88), ("Communicate.", 0.88),
+ ("Research. Ask anything, in plain language, and get answers cited to the cases and statutes behind them.", 0.94),
+ ("Learn. Work through your courses and MCQs, with explanations that make each principle click.", 0.94),
+ ("Draft. Start from a catalogue of templates, and build your first draft on your own research.", 0.94),
+ ("Remember. Memory challenges bring back what you studied, right before you would forget it. So exam preparation starts on day one, not the week before.", 0.94),
+ ("Communicate. Bring your whole class together in Campus chat, with Lawdeck right there in the thread.", 0.94),
+ ("And your Study Diary, your progress, briefs, projects and uploads. All in one place.", 0.94),
+ ("Every answer is cited. Your work stays private. And you stay in control.", 0.92),
+ ("From day one, to exam day.", 0.88),
+ ("Lawdeck. Your law school companion.", 0.86),
 ]
 os.makedirs(out, exist_ok=True)
 for i, (text, sp) in enumerate(LINES, 1):
-    s, sr = k.create(text, voice=voice, speed=sp, lang='en-us')
+    s, sr = k.create(text.replace('Lawdeck', 'Law-deck'), voice=voice, speed=sp, lang='en-us')
     sf.write(os.path.join(out, f'{i:02d}.wav'), s, sr)
     print(f'{i:02d} {len(s)/sr:5.2f}s  {text}')

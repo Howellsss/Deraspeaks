@@ -1,19 +1,20 @@
 # Lawdeck brand film
 
-A 72-second motion piece built with three.js and cut to an original ~113 bpm score. Every 8.5-second product scene is exactly four bars, so each scene change lands on a downbeat.
+A 98-second motion piece built with three.js, introducing Lawdeck as an AI law school companion built on five pillars: Research, Learn, Draft, Remember and Communicate. It has an American male voice-over and is cut to an original score.
 
 | Time | Scene |
 |---|---|
-| 0–3s | **Hook.** "Too many cases. Too many pages. Not enough time." Each line slams in on an impact, with a burst of paper. |
-| 3–7.5s | The pages implode into one deck: "What if all of it lived in one place?" Then a flash and a hit on **"Meet Lawdeck."** The beat drops. |
-| 7.5–16s | **Ask.** Research: the home-screen composer, then a cited answer. The camera pushes into the sources. |
-| 16–24.5s | **Learn.** MCQ answered correctly, memory challenge, My progress. The camera pushes into the correct answer. |
-| 24.5–33s | **Brief.** Nash v Inman as facts, issue, held and ratio. |
-| 33–41.5s | **Draft.** Drafting catalogue, with a tenancy agreement drafted clause by clause. |
-| 41.5–50s | **Connect.** Campus chat (dark theme), with `@Lawdeck` in the thread. |
-| 50–56s | **Everything else.** Two rows of 14 feature cards fly in. |
-| 56–61.6s | **Trust**, one line at a time: Every answer, cited. Your work, private. You, in control. |
-| 61.6–72s | The pages gather, a page comes to camera, a beat of silence, then the logo lands on the hit. |
+| 0–12s | **Hook, slow.** A single page in the light: "What if your study partner never slept?" Pages drift past for "from your very first lecture to your final exam". |
+| 12–25s | The pages gather into one deck: "Meet Lawdeck. Your AI law school companion." Then "Built on five pillars", with the five words landing one by one. |
+| 25.5s | The beat drops (~113 bpm). Each pillar scene is a whole number of bars. |
+| 25.5–34s | **Research.** The home-screen composer, then a cited answer. The camera pushes into the sources. |
+| 34–42.5s | **Learn.** An MCQ answered correctly, with progress. |
+| 42.5–51s | **Draft.** Drafting catalogue, with a tenancy agreement drafted clause by clause. |
+| 51–64s | **Remember.** The "Before you move on…" memory challenge answered, beside the week's Study Diary: "exam preparation starts on day one". |
+| 64–72s | **Communicate.** Campus chat (dark theme), with `@Lawdeck` in the thread. |
+| 72–78.6s | Everything else, in one place: 14 feature cards. |
+| 78.6–87s | Trust (Every answer, cited. Your work, private. You, in control.), then "From day one, to exam day." |
+| 87–98s | A page comes to camera, then the logo, "Your law school companion." and the five pillars. |
 
 Every scene has a one-word title punch, a whip transition with motion blur, flashes and camera shake on the impacts.
 
@@ -31,7 +32,7 @@ npx serve .
 
 ```bash
 npm install
-node render.mjs                      # out/lawdeck.mp4, 1920x1080 at 30fps (about 30 min)
+node render.mjs                      # out/lawdeck.mp4, 1920x1080 at 30fps (about 45 min)
 node render.mjs --fps 60 --scale 2   # 3840x2160 at 60fps
 node render.mjs --stills 3,20,68     # single frames for checking
 ```
@@ -40,14 +41,14 @@ node render.mjs --stills 3,20,68     # single frames for checking
 
 - `audio/score.py` generates the original score and sound design (no samples): `python3 audio/score.py`, which writes `audio/score.wav`.
 - `audio/voiceover.md` is the voice-over script, with a cue time for each line.
-- `audio/mix.sh` places the recorded lines (`audio/01.wav` to `16.wav`) on their cues, ducks the music under the voice, and writes `out/lawdeck-final.mp4`.
+- `audio/mix.sh` places the recorded lines (`audio/01.wav` to `18.wav`) on their cues, ducks the music under the voice, and writes `out/lawdeck-final.mp4`.
 
 ## Using real screen recordings
 
 The five interface scenes are drawn in code. To replace any of them with a real Lawdeck recording, put the clip in `clips/` and pass it in. It plays inside the same floating window, from the start of that scene.
 
 ```bash
-node render.mjs --query "research=clips/research.mp4&learn=clips/learn.mp4&brief=clips/brief.mp4&draft=clips/draft.mp4&chat=clips/chat.mp4"
+node render.mjs --query "research=clips/research.mp4&learn=clips/learn.mp4&remember=clips/remember.mp4&draft=clips/draft.mp4&chat=clips/chat.mp4"
 ```
 
 The same parameters work in the browser preview, for example `index.html?chat=clips/chat.mp4`. Record at 16:10 if you can (the window is 1600×1000), with about 10 seconds per scene.

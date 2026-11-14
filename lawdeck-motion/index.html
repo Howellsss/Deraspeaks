@@ -31,6 +31,7 @@
   .w { display: inline-block; white-space: pre; will-change: transform, opacity, filter; }
   .center { left: 0; right: 0; text-align: center; }
   .serif { font-family: Newsreader, Georgia, serif; }
+  .hero, .big, .head, .pillars { text-shadow: 0 0 calc(var(--u) * 2.5) rgba(0,0,0,0.9), 0 0 calc(var(--u) * 0.8) rgba(0,0,0,0.7); }
   .hero { font-family: Newsreader, Georgia, serif; font-size: calc(var(--u) * 4); font-weight: 400; letter-spacing: -0.02em; line-height: 1.12; }
   .big { font-family: Newsreader, Georgia, serif; font-size: calc(var(--u) * 6); font-weight: 400; letter-spacing: -0.03em; }
   .punch { text-shadow: 0 0 calc(var(--u) * 3) rgba(0,0,0,0.85), 0 0 calc(var(--u) * 1) rgba(0,0,0,0.6); font-family: Newsreader, Georgia, serif; font-size: calc(var(--u) * 11); font-weight: 400; letter-spacing: -0.045em; line-height: 1; transform-origin: 50% 50%; }
@@ -49,7 +50,14 @@
   #endInner { display: flex; flex-direction: column; align-items: center; }
   #endMark { width: calc(var(--u) * 13); }
   #endWord { width: calc(var(--u) * 26); margin-top: calc(var(--u) * 2.2); }
-  #endTag { width: calc(var(--u) * 26); margin-top: calc(var(--u) * 1.4); }
+  #endTag { margin-top: calc(var(--u) * 1.6); text-align: center; color: #0e0e0f; }
+  .endSub { font-family: Newsreader, Georgia, serif; font-size: calc(var(--u) * 2.3); letter-spacing: -0.01em; }
+  .endPillars { margin-top: calc(var(--u) * 1.2); font-size: calc(var(--u) * 0.95); font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #55534f; }
+  .sub { font-size: calc(var(--u) * 2.3); color: var(--mute); }
+  .pillars { left: 0; right: 0; top: 47%; display: flex; justify-content: center; gap: calc(var(--u) * 3.4); }
+  .pitem { display: flex; flex-direction: column; align-items: center; gap: calc(var(--u) * 0.8); }
+  .pitem > .txt { position: relative; }
+  .pword { font-family: Newsreader, Georgia, serif; font-size: calc(var(--u) * 3.6); letter-spacing: -0.025em; }
 
   /* Preview controls (hidden while rendering) */
   #ui { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); display: flex; align-items: center; gap: 12px;
@@ -74,7 +82,7 @@
     <div id="endInner">
       <img id="endMark" src="assets/mark.png" alt="Lawdeck mark">
       <img id="endWord" src="assets/wordmark-ink.png" alt="Lawdeck">
-      <img id="endTag" src="assets/tagline-ink.png" alt="Research, Learn, Draft">
+      <div id="endTag"><div class="endSub">Your law school companion.</div><div class="endPillars">Research&nbsp;&nbsp;·&nbsp;&nbsp;Learn&nbsp;&nbsp;·&nbsp;&nbsp;Draft&nbsp;&nbsp;·&nbsp;&nbsp;Remember&nbsp;&nbsp;·&nbsp;&nbsp;Communicate</div></div>
     </div>
   </div>
   <div class="layer" id="flash"></div>
@@ -83,7 +91,7 @@
 </div>
 <div id="ui">
   <button id="play" aria-label="Play or pause">❚❚</button>
-  <input id="scrub" type="range" min="0" max="72" step="0.01" value="0" aria-label="Timeline">
+  <input id="scrub" type="range" min="0" max="98" step="0.01" value="0" aria-label="Timeline">
   <span id="clock">0.0s</span>
 </div>
 
@@ -99,12 +107,12 @@ const params = new URLSearchParams(location.search);
 const CLIPS = {
   research: params.get('research') || '',
   learn:    params.get('learn')    || '',
-  brief:    params.get('brief')    || '',
+  remember: params.get('remember') || '',
   draft:    params.get('draft')    || '',
   chat:     params.get('chat')     || '',
 };
 const RENDER = params.has('render');
-const DUR = 72;
+const DUR = 98;
 if (RENDER) document.body.classList.add('render');
 
 /* ---------------- helpers ---------------- */
@@ -185,26 +193,35 @@ const N = 150;
 const pageMat = new THREE.MeshStandardMaterial({ map: PAPER, roughness: 0.65, side: THREE.DoubleSide });
 const pages = new THREE.InstancedMesh(PAGE_GEO, pageMat, N);
 pages.frustumCulled = false; scene.add(pages);
-const seeds = Array.from({ length: N }, (_, i) => {
-  const a = rand() * Math.PI * 2, R = 2.2 + rand() * 5.5;
-  return {
-    k: i % 3, dx: Math.cos(a), dy: Math.sin(a) * 0.62, dz: rand() * 1.6 - 0.4, R,
-    r1: rand() * 2 - 1, r2: rand() * 2 - 1, r3: rand() * 2 - 1, d: rand(),
-    fx: (rand() - 0.5) * 20, fy: (rand() - 0.5) * 11, fz: -15 + rand() * 7, ord: i,
-  };
-});
+const seeds = Array.from({ length: N }, (_, i) => ({
+  a: rand() * Math.PI * 2, sp: 0.12 + rand() * 0.2, rad: 1.7 + rand() * 4.6, y: (rand() - 0.5) * 5.5, z: -9 + rand() * 10.5,
+  r1: rand() * 2 - 1, r2: rand() * 2 - 1, r3: rand() * 2 - 1, d: rand(),
+  fx: (rand() - 0.5) * 20, fy: (rand() - 0.5) * 11, fz: -15 + rand() * 7, ord: i,
+}));
 const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), E = new THREE.Euler(), P = new THREE.Vector3(), S = new THREE.Vector3();
+const vA = new THREE.Vector3(), vB = new THREE.Vector3();
 
-/* ---------------- timeline ---------------- */
-const HITS = [0.35, 1.15, 1.95];          // "Too many cases." / "Too many pages." / "Not enough time."
-const MEET = 5.6;                         // "Meet Lawdeck."
-const SC0 = 7.5, SCL = 8.5;               // five product scenes, 8.5 s each (four bars at ~113 bpm)
-const FT0 = SC0 + 5 * SCL;                // 50.0  feature ribbon
-const TR = FT0 + 6;                       // 56.0  trust
-const TE = TR + 5.6;                      // 61.6  close: pages gather, a page comes to camera, logo
+/* ---------------- timeline (set by the voice-over) ---------------- */
+const L1 = 1.2, L2 = 4.6, L2b = 7.9, MEET = 12.4, FIVE = 16.6;
+const PILL = [18.9, 20.0, 21.1, 22.2, 23.3];        // Research. Learn. Draft. Remember. Communicate.
+const BAR = 2.125;                                  // ~113 bpm
+const SC0 = 25.5;                                   // the beat drops into the five pillar scenes
+const LENS = [4, 4, 4, 6, 4].map(b => b * BAR);
+const STARTS = LENS.map((_, i) => SC0 + LENS.slice(0, i).reduce((a, b) => a + b, 0));
+const FT0 = STARTS[4] + LENS[4];                    // 72.25  everything else
+const TR = FT0 + 3 * BAR;                           // 78.6   trust
+const DAY = TR + 6.0;                               // 84.6   "From day one, to exam day."
+const TE = DAY + 2.4;                               // 87.0   pages gather, a page comes to camera
+const LOGO = TE + 3.0;                              // 90.0   the logo lands
 
 function heroState(t) {
-  if (t > TE + 0.6) {
+  if (t < 8) {
+    const k = eo(seg(t, 0, 4.6)), away = io(seg(t, 4.4, 7.2));
+    hero.visible = true;
+    hero.position.set(lerp(0.5, 0, k), lerp(-2.4, 0.38, k) + Math.sin(t * 0.6) * 0.03 + away * 0.6, lerp(-3, 0.4, k) - away * 3.5);
+    hero.rotation.set(lerp(0.55, 0.06, k) + Math.sin(t * 0.5) * 0.02, lerp(-0.95, -0.18, k) + away * 1.4, lerp(0.22, -0.04, k));
+    hero.scale.setScalar(1 - io(seg(t, 6.4, 7.8)));
+  } else if (t > TE + 0.6) {
     const k = io(seg(t, TE + 0.8, TE + 3.0));
     hero.visible = true; hero.scale.setScalar(1);
     hero.position.set(lerp(0.3, 0, k), lerp(-0.2, 0, k), lerp(-7, 5.75, k));
@@ -213,32 +230,28 @@ function heroState(t) {
 }
 
 function pagesState(t) {
-  const dim = seg(t, 7.4, 9.0) * (1 - seg(t, TE, TE + 0.8));
-  pageMat.color.setScalar(lerp(1, 0.1, dim) * lerp(0.55, 1, seg(t, 2.7, 3.6)));
-  pages.visible = t > HITS[0] - 0.05 && t < TE + 1.9;
+  const emerge = io(seg(t, 4.4, 6.8));
+  const dim = seg(t, 16.0, 18.0) * (1 - seg(t, TE, TE + 0.8));
+  pageMat.color.setScalar(lerp(1, 0.1, dim) * (1 - 0.45 * seg(t, 4.6, 6.0) * (1 - seg(t, 10.6, 12.2))));
+  pages.visible = t > 4.3 && t < TE + 1.9;
   if (!pages.visible) return;
-  const pulse = 1 + 0.07 * Math.exp(-Math.max(0, t - MEET) * 6) * (t >= MEET ? 1 : 0);
+  const pulse = t >= MEET ? 1 + 0.06 * Math.exp(-(t - MEET) * 5) : 1;
   for (let i = 0; i < N; i++) {
     const s = seeds[i];
-    // 1. burst outward from the centre on each hit
-    const tb = HITS[s.k], u = Math.max(0, t - tb), r = s.R * (1 - Math.exp(-u * 2.4));
-    let x = s.dx * r, y = s.dy * r, z = -0.6 + Math.min(3.2, s.dz * r * 0.55);
-    let rx = s.r1 * u * 1.6 + s.r2, ry = s.r2 * u * 1.3 + s.r3, rz = s.r3 * u;
-    let sc = t < tb ? 0 : ex(seg(t, tb, tb + 0.12));
-    // 2. implode into one deck
-    const st = io(seg(t, 2.75 + s.d * 0.3, 3.65 + s.d * 0.3));
-    x = lerp(x, s.ord * 0.0016 - 0.12, st); y = lerp(y, 0.25 + s.r1 * 0.004 + Math.sin(t * 1.4) * 0.02 * st, st); z = lerp(z, -0.4 - s.ord * 0.014, st);
-    rx = lerp(rx, 0.06 + s.r1 * 0.01, st); ry = lerp(ry, -0.18 + s.r2 * 0.015 + Math.sin(t * 0.7) * 0.05 * st, st); rz = lerp(rz, s.r3 * 0.03, st);
-    sc *= st > 0.5 ? pulse : 1;
-    // 3. scatter into the depth field
-    const sct = io(seg(t, 7.2 + s.d * 0.5, 8.5 + s.d * 0.5)), ft = t * 0.05;
-    x = lerp(x, s.fx + Math.sin(ft + s.d * 9) * 0.6, sct); y = lerp(y, s.fy + Math.cos(ft * 1.3 + s.d * 7) * 0.4, sct); z = lerp(z, s.fz, sct);
-    rx = lerp(rx, s.r1 * 0.8 + Math.sin(ft + s.d) * 0.3, sct); ry = lerp(ry, s.r2 * 1.2 + ft, sct); rz = lerp(rz, s.r3 * 0.6, sct);
-    // 4. gather for the close
+    const a = s.a + t * s.sp;
+    vA.set(Math.cos(a) * s.rad, s.y + Math.sin(t * 0.3 + s.d * 6) * 0.25, s.z + Math.sin(a) * 1.2);
+    E.set(t * 0.35 * s.r1 + s.r2, t * 0.3 * s.r2 + a, t * 0.2 * s.r3);
+    const st = io(seg(t, 10.4 + s.d * 0.5, 12.1 + s.d * 0.5));
+    vB.set(s.ord * 0.0016 - 0.12, 0.25 + s.r1 * 0.004, -0.4 - s.ord * 0.014);
+    P.copy(hero.position).lerp(vA, emerge).lerp(vB, st);
+    let rx = lerp(E.x, 0.06 + s.r1 * 0.01, st), ry = lerp(E.y, -0.18 + s.r2 * 0.015 + Math.sin(t * 0.6) * 0.04 * st, st), rz = lerp(E.z, s.r3 * 0.03, st);
+    const ft = t * 0.05, sc = io(seg(t, 15.8 + s.d * 0.9, 17.8 + s.d * 0.9));
+    P.set(lerp(P.x, s.fx + Math.sin(ft + s.d * 9) * 0.6, sc), lerp(P.y, s.fy + Math.cos(ft * 1.3 + s.d * 7) * 0.4, sc), lerp(P.z, s.fz, sc));
+    rx = lerp(rx, s.r1 * 0.8 + Math.sin(ft + s.d) * 0.3, sc); ry = lerp(ry, s.r2 * 1.2 + ft, sc); rz = lerp(rz, s.r3 * 0.6, sc);
     const g = io(seg(t, TE + s.d * 0.6, TE + 1.2 + s.d * 0.6));
-    x = lerp(x, 0, g); y = lerp(y, 0, g); z = lerp(z, -6.5, g); rx = lerp(rx, 0, g); ry = lerp(ry, 0, g); rz = lerp(rz, 0, g);
-    sc *= 1 - g * 0.85;
-    P.set(x, y, z); E.set(rx, ry, rz); Q.setFromEuler(E); S.setScalar(Math.max(sc, 0.0001));
+    P.set(lerp(P.x, 0, g), lerp(P.y, 0, g), lerp(P.z, -6.5, g)); rx = lerp(rx, 0, g); ry = lerp(ry, 0, g); rz = lerp(rz, 0, g);
+    const scale = emerge * (1 - g * 0.85) * (st > 0.5 && sc < 0.5 ? pulse : 1);
+    E.set(rx, ry, rz); Q.setFromEuler(E); S.setScalar(Math.max(scale, 0.0001));
     M.compose(P, Q, S); pages.setMatrixAt(i, M);
   }
   pages.instanceMatrix.needsUpdate = true;
@@ -626,6 +639,51 @@ function drawChat(c, p, t) {
 }
 
 
+/* REMEMBER: the memory challenge from the home screen, beside the week's Study Diary */
+const DIARY = [['Mon', 'Sale of land', 'Lecture notes · 45 min'], ['Tue', 'Capacity of minors', 'MCQ · 8 of 10'], ['Wed', 'Nash v Inman', 'Case brief'], ['Thu', 'Tenancy agreement', 'Draft 1']];
+function drawRemember(c, p, t) {
+  chrome(c, 3);
+  const x0 = SW + 44, cw = 760;
+  chip(c, 'Memory challenge', x0, 40, 12.5, C.chip, C.ink, 500);
+  stxt(c, 'Before you move on…', x0, 126, 42);
+  txt(c, 'On Monday, you studied Sale of land. Let’s see what you still remember.', x0, 162, 16, 400, C.mute);
+  card(c, x0, 198, cw, 580, 20);
+  label(c, 'QUESTION 1 OF 1  ·  ABOUT 1 MIN', x0 + 32, 246);
+  para(c, 'Name the three stages of a sale of land transaction.', x0 + 32, 304, cw - 64, 31, 41, 400, C.ink, seg(p, 0.02, 0.12), true);
+  rr(c, x0 + 32, 348, cw - 64, 110, 14); c.fillStyle = C.soft; c.fill(); c.strokeStyle = C.line; c.lineWidth = 1.5; c.stroke();
+  const ans = 'Pre-contract, contract, and completion.', k = seg(p, 0.14, 0.32), as = ans.slice(0, Math.round(ans.length * k));
+  if (k > 0) { txt(c, as, x0 + 54, 392, 18); if (p < 0.38) caret(c, x0 + 54 + measure(c, as, 18), 392, 18, t); }
+  else txt(c, 'Type your answer…', x0 + 54, 392, 18, 400, C.mute);
+  pop(c, seg(p, 0.32, 0.36), () => {
+    const press = 1 - 0.06 * Math.sin(Math.PI * seg(p, 0.38, 0.42));
+    c.save(); c.translate(x0 + 32, 484); c.scale(press, press); pill(c, 'Check my answer', 0, 0, 46, 15); c.restore();
+  });
+  pop(c, seg(p, 0.44, 0.52), () => {
+    card(c, x0 + 32, 560, cw - 64, 150, 16, C.soft);
+    check(c, x0 + 72, 610, 16, C.ink, C.bg);
+    stxt(c, 'You remembered.', x0 + 104, 620, 27);
+    txt(c, 'Pre-contract, contract, and post-contract (completion) stages.', x0 + 64, 670, 16, 400, C.mute);
+  });
+  const rx = x0 + cw + 36, rw = W - 40 - rx;
+  label(c, 'STUDY DIARY', rx, 222);
+  stxt(c, 'This week', rx, 262, 28);
+  DIARY.forEach(([d, title, meta], i) => pop(c, seg(p, 0.5 + i * 0.06, 0.58 + i * 0.06), () => {
+    const y = 290 + i * 96;
+    card(c, rx, y, rw, 82, 14);
+    c.fillStyle = C.chip; c.beginPath(); c.arc(rx + 40, y + 41, 22, 0, 7); c.fill();
+    txt(c, d, rx + 40, y + 46, 13, 600, C.ink, 0, 'center');
+    txt(c, title, rx + 78, y + 36, 16.5, 600); txt(c, meta, rx + 78, y + 60, 13.5, 400, C.mute);
+    if (i === 0 && p > 0.62) check(c, rx + rw - 34, y + 41, 12, C.ink, C.bg);
+  }));
+  pop(c, seg(p, 0.8, 0.88), () => {
+    const y = 690;
+    label(c, 'MY PROGRESS', rx, y);
+    const v = lerp(0.35, 0.62, io(seg(p, 0.82, 0.96)));
+    txt(c, 'Revision this week', rx, y + 36, 15, 500); txt(c, Math.round(v * 100) + '%', rx + rw, y + 36, 15, 600, C.ink, 0, 'right');
+    c.fillStyle = C.chip; rr(c, rx, y + 52, rw, 8, 4); c.fill(); c.fillStyle = C.ink; rr(c, rx, y + 52, rw * v, 8, 4); c.fill();
+  });
+}
+
 /* ---------------- product scenes ----------------
    Each scene: a one-word title punch, the window slams in, the eyebrow and headline land,
    the camera pushes into the key moment, then a whip to the next scene. */
@@ -637,11 +695,11 @@ function shadowTex() {
 const SHADOW = shadowTex();
 const PW = 3.6, PH = PW * H / W;
 const SCENES = [
-  { name: 'research', draw: drawResearch, word: 'Ask.',     n: '01', label: 'Research',    head: 'Ask anything.<br>Get cited answers.',          zoom: [MCX, 470], zs: 1.55 },
-  { name: 'learn',    draw: drawLearn,    word: 'Learn.',   n: '02', label: 'Learn',       head: 'Learn it.<br>Then keep it.',                   zoom: [MCX, 420], zs: 1.5 },
-  { name: 'brief',    draw: drawBrief,    word: 'Brief.',   n: '03', label: 'Briefs',      head: 'Brief any case<br>in moments.',                zoom: [MCX, 560], zs: 1.4 },
-  { name: 'draft',    draw: drawDraft,    word: 'Draft.',   n: '04', label: 'Draft',       head: 'From catalogue<br>to first draft.',            zoom: [880, 380], zs: 1.55 },
-  { name: 'chat',     draw: drawChat,     word: 'Connect.', n: '05', label: 'Campus chat', head: 'Your whole class.<br>One conversation.',       zoom: [940, 470], zs: 1.5 },
+  { name: 'research', draw: drawResearch, word: 'Research.',    n: '01', label: 'Research',    head: 'Ask anything.<br>Get cited answers.',        zoom: [MCX, 470], zs: 1.55 },
+  { name: 'learn',    draw: drawLearn,    word: 'Learn.',       n: '02', label: 'Learn',       head: 'Make every<br>principle click.',             zoom: [MCX, 420], zs: 1.5 },
+  { name: 'draft',    draw: drawDraft,    word: 'Draft.',       n: '03', label: 'Draft',       head: 'From catalogue<br>to first draft.',          zoom: [880, 380], zs: 1.55 },
+  { name: 'remember', draw: drawRemember, word: 'Remember.',    n: '04', label: 'Remember',    head: 'Exam prep starts<br>on day one.',            zoom: [700, 560], zs: 1.4 },
+  { name: 'chat',     draw: drawChat,     word: 'Communicate.', n: '05', label: 'Communicate', head: 'Your whole class.<br>One conversation.',     zoom: [940, 470], zs: 1.5 },
 ];
 const PANELS = SCENES.map((sc, k) => {
   const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
@@ -654,7 +712,7 @@ const PANELS = SCENES.map((sc, k) => {
   const grp = new THREE.Group(); grp.add(sh, mesh); scene.add(grp);
   let video = null;
   if (CLIPS[sc.name]) { video = document.createElement('video'); video.src = CLIPS[sc.name]; video.muted = true; video.playsInline = true; video.preload = 'auto'; }
-  return { ...sc, t0: SC0 + k * SCL, grp, sh, mat, ctx, tex, video, last: -1 };
+  return { ...sc, t0: STARTS[k], len: LENS[k], grp, sh, mat, ctx, tex, video, last: -1 };
 });
 function drawClip(c, v) {
   c.clearRect(0, 0, W, H); c.save(); rr(c, 0, 0, W, H, 24); c.clip();
@@ -663,21 +721,21 @@ function drawClip(c, v) {
   c.restore();
 }
 const GRID = [[-2.55, 1.05], [0, 1.05], [2.55, 1.05], [-1.28, -1.05], [1.28, -1.05]];
-const sceneLocal = (P_, t) => seg(t, P_.t0 + 0.9, P_.t0 + 7.9);
+const sceneLocal = (P_, t) => seg(t, P_.t0 + 0.9, P_.t0 + P_.len - 0.6);
 function panelsState(t) {
   PANELS.forEach((P_, i) => {
     const s0 = P_.t0, { grp } = P_;
     let x, y, z, ry, rx, op, s = 1;
     if (t < TR) {
-      const enter = ex(seg(t, s0 + 0.55, s0 + 1.45)), leave = io(seg(t, s0 + SCL - 0.5, s0 + SCL + 0.05));
-      const zk = io(seg(t, s0 + 4.2, s0 + 5.3)) * (1 - io(seg(t, s0 + 7.4, s0 + 8.05)));
+      const enter = ex(seg(t, s0 + 0.55, s0 + 1.45)), leave = io(seg(t, s0 + P_.len - 0.5, s0 + P_.len + 0.05));
+      const zk = io(seg(t, s0 + 4.2, s0 + 5.3)) * (1 - io(seg(t, s0 + P_.len - 1.1, s0 + P_.len - 0.45)));
       x = lerp(6, 0.95, enter) - leave * 9; y = -0.02 + Math.sin(t * 0.5 + i) * 0.02;
       z = lerp(-2.4, 0, enter) - leave * 0.6; ry = lerp(-0.7, -0.2, enter) * (1 - zk) + leave * 0.35; rx = lerp(0.18, 0.02, enter) * (1 - zk);
       // push into the key moment: grow around the detail point and pull it toward frame centre-right
       const dx = (P_.zoom[0] / W - 0.5) * PW, dy = (0.5 - P_.zoom[1] / H) * PH;
       s = lerp(1, P_.zs, zk);
       x += -dx * (s - 1) + (0.15 - (x + dx)) * zk * 0.55; y += -dy * (s - 1) + (-0.05 - (y + dy)) * zk * 0.55; z += zk * 0.35;
-      op = seg(t, s0 + 0.5, s0 + 0.75) * (1 - seg(t, s0 + SCL - 0.12, s0 + SCL + 0.05));
+      op = seg(t, s0 + 0.5, s0 + 0.75) * (1 - seg(t, s0 + P_.len - 0.12, s0 + P_.len + 0.05));
     } else {
       const trustIn = io(seg(t, TR + 0.1 + i * 0.12, TR + 1.6 + i * 0.12)), trustOut = io(seg(t, TE - 0.4, TE + 0.8));
       const [gx, gy] = GRID[i];
@@ -702,7 +760,7 @@ function panelsState(t) {
 async function seekClips(t) {
   await Promise.all(PANELS.filter(p => p.video).map(p => new Promise(res => {
     const v = p.video, d = v.duration || 0;
-    if (!d || t < p.t0 || t > p.t0 + SCL) return res();
+    if (!d || t < p.t0 || t > p.t0 + p.len) return res();
     const tt = Math.min(Math.max(0, t - p.t0 - 0.5), d - 0.05);
     if (Math.abs(v.currentTime - tt) < 0.001) return res();
     v.addEventListener('seeked', () => res(), { once: true }); v.currentTime = tt;
@@ -788,29 +846,36 @@ function typeState(t) {
     });
   }
 }
-// Cold open: the hook
-T('Too many cases.', HITS[0], HITS[1] - 0.02, 'center punch', 'top:38%', 0, typeLayer, true);
-T('Too many pages.', HITS[1], HITS[2] - 0.02, 'center punch', 'top:38%', 0, typeLayer, true);
-T('Not enough time.', HITS[2], 2.95, 'center punch', 'top:38%', 0, typeLayer, true);
-T('What if all of it lived<br>in one place?', 3.7, MEET - 0.05, 'center hero', 'top:70%', 0.05);
-T('Meet Lawdeck.', MEET, 7.3, 'center punch meet', 'top:68%', 0, typeLayer, true);
-// Product scenes
+// Opening: the hook, slow
+T('What if your study partner<br>never slept?', L1, L2 - 0.3, 'center hero', 'top:69%', 0.13);
+T('Never tired of your questions.', L2, L2b - 0.1, 'center hero', 'top:72%', 0.09);
+T('From your very first lecture<br>to your final exam.', L2b, MEET - 0.9, 'center hero', 'top:69%', 0.08);
+T('Meet Lawdeck.', MEET, FIVE - 0.5, 'center punch meet', 'top:60%', 0, typeLayer, true);
+T('Your AI law school companion.', MEET + 1.3, FIVE - 0.5, 'center hero sub', 'top:77%', 0.06);
+T('Built on five pillars.', FIVE, SC0 - 0.6, 'center hero', 'top:30%', 0.08);
+const row = document.createElement('div'); row.className = 'txt pillars'; typeLayer.appendChild(row);
+['Research', 'Learn', 'Draft', 'Remember', 'Communicate'].forEach((w, k) => {
+  const item = document.createElement('div'); item.className = 'pitem'; row.appendChild(item);
+  T('0' + (k + 1), PILL[k] - 0.1, SC0 - 0.6, 'eyebrow', '', 0, item);
+  T(w + '.', PILL[k], SC0 - 0.6, 'pword', '', 0, item);
+});
+// The five pillar scenes
 PANELS.forEach(P_ => {
-  T(P_.word, P_.t0 - 0.05, P_.t0 + 0.75, 'center punch', 'top:38%', 0, typeLayer, true);
+  T(P_.word, P_.t0 - 0.05, P_.t0 + 0.8, 'center punch', 'top:38%', 0, typeLayer, true);
   const col = document.createElement('div'); col.className = 'txt col'; typeLayer.appendChild(col);
   T(`${P_.n}&nbsp;&nbsp;/&nbsp;&nbsp;${P_.label}`, P_.t0 + 1.0, P_.t0 + 4.4, 'eyebrow', '', 0.03, col);
   T(P_.head, P_.t0 + 1.15, P_.t0 + 4.4, 'head', '', 0.07, col);
 });
 // Everything else
-T('And everything else your degree needs.', FT0 + 0.2, FT1 - 0.4, 'center hero', 'top:8.5%', 0.04);
+T('Everything else, in one place.', FT0 + 0.2, FT1 - 0.4, 'center hero', 'top:8.5%', 0.05);
 // Trust, one line at a time
-T('Every answer, cited.', TR + 0.4, TR + 2.2, 'center big', 'top:40%', 0.08);
-T('Your work, private.', TR + 2.2, TR + 3.9, 'center big', 'top:40%', 0.08);
-T('You, in control.', TR + 3.9, TE + 0.3, 'center big', 'top:40%', 0.08);
+T('Every answer, cited.', TR + 0.3, TR + 2.0, 'center big', 'top:40%', 0.08);
+T('Your work, private.', TR + 2.0, TR + 3.6, 'center big', 'top:40%', 0.08);
+T('You, in control.', TR + 3.6, DAY - 0.1, 'center big', 'top:40%', 0.08);
+T('From day one,<br>to exam day.', DAY, TE + 0.5, 'center big', 'top:33%', 0.1);
 
 /* ---------------- end card ---------------- */
 const endMark = document.getElementById('endMark'), endWord = document.getElementById('endWord'), endTag = document.getElementById('endTag');
-const LOGO = TE + 3.0;    // the logo lands here (on the hit)
 function endState(t) {
   const on = seg(t, LOGO - 0.4, LOGO - 0.05);
   endEl.style.opacity = on.toFixed(3);
@@ -825,28 +890,28 @@ function endState(t) {
 
 /* ---------------- flashes, shake, motion blur ---------------- */
 const flashEl = document.getElementById('flash');
-const FLASHES = [...HITS.map(h => [h, 0.22]), [MEET, 0.4], ...PANELS.map(p => [p.t0, 0.08]), [LOGO, 0.0]];
+const FLASHES = [[MEET, 0.3], ...PANELS.map(p => [p.t0, 0.08])];
 const impact = (t, list) => list.reduce((a, [h, s]) => a + (t >= h ? s * Math.exp(-(t - h) * 10) : 0), 0);
 function fxState(t) {
   flashEl.style.opacity = Math.min(1, impact(t, FLASHES)).toFixed(3);
   let b = 0;
   PANELS.forEach(P_ => {
-    b = Math.max(b, Math.sin(Math.PI * seg(t, P_.t0 + SCL - 0.5, P_.t0 + SCL + 0.05)) * 7, Math.sin(Math.PI * seg(t, P_.t0 + 0.55, P_.t0 + 1.0)) * 4);
+    b = Math.max(b, Math.sin(Math.PI * seg(t, P_.t0 + P_.len - 0.5, P_.t0 + P_.len + 0.05)) * 7, Math.sin(Math.PI * seg(t, P_.t0 + 0.55, P_.t0 + 1.0)) * 4);
   });
-  b = Math.max(b, Math.sin(Math.PI * seg(t, 7.2, 8.0)) * 4);
   canvas.style.filter = b > 0.05 ? `blur(${b.toFixed(2)}px)` : 'none';
 }
 
 /* ---------------- camera ---------------- */
 function cameraState(t) {
-  let z = 6.2 - 0.6 * io(seg(t, 3.0, 7.2)) + 0.6 * io(seg(t, 7.2, 8.4));
+  let z = lerp(6.9, 6.2, eo(seg(t, 0, 12)));
   let x = Math.sin(t * 0.13) * 0.12, y = Math.sin(t * 0.11) * 0.06;
-  const shake = impact(t, [...HITS.map(h => [h, 0.06]), [MEET, 0.05], ...PANELS.map(p => [p.t0 + 0.6, 0.025])]);
+  x += Math.sin(t * 0.4) * 0.35 * seg(t, 4.5, 7) * (1 - seg(t, 10, 12.4));
+  const shake = impact(t, [[MEET, 0.035], ...PANELS.map(p => [p.t0 + 0.6, 0.025])]);
   x += Math.sin(t * 91) * shake; y += Math.cos(t * 77) * shake;
   if (t > TE) { const k = 1 - seg(t, TE, TE + 1); x *= k; y *= k; }
   camera.position.set(x, y, z);
   camera.lookAt(x * 0.3, y * 0.3, 0);
-  spot.intensity = 40 * seg(t, TE + 0.8, TE + 2.4) + 30 * (1 - seg(t, 2.6, 3.6)) * seg(t, 0.2, 0.4);
+  spot.intensity = lerp(0, 60, eo(seg(t, 0.2, 3))) * (1 - seg(t, 6.5, 8.5)) + 40 * seg(t, TE + 0.8, TE + 2.4);
   spot.target.position.set(0, 0.3, 0);
 }
 

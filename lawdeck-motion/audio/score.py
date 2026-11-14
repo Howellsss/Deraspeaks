@@ -1,28 +1,28 @@
 """Original score and sound design for the Lawdeck film, generated from code (no samples).
 
-    python3 audio/score.py                -> audio/score.wav (72 s, 48 kHz stereo)
+    python3 audio/score.py                -> audio/score.wav (98 s, 48 kHz stereo)
 
-The grid is ~113 bpm: a bar is 2.125 s, so every 8.5 s product scene is exactly four bars
-and each scene change lands on a downbeat.
-  0.0 - 3.7   cold open: three impacts with paper bursts, a reverse swell into the deck
-  3.7 - 7.5   tension, ticking hats, riser; impact on "Meet Lawdeck"; drop at 7.5
-  7.5 - 50    groove: kick, snap, hats, sub, plucked arp; it builds scene by scene
-  50  - 56    feature ribbon: four on the floor, brightest point
-  56  - 61.6  trust: drums out, a heartbeat under each line
-  61.6- 64.6  riser, a beat of silence, then the logo hit and a D major resolve
+  0    - 25.5  slow open: pads and a quiet piano under "What if your study partner never slept?",
+               a warm swell on "Meet Lawdeck", a rising note on each of the five pillars, a riser
+  25.5 - 72.25 the beat drops (~113 bpm): one scene per pillar, each change on a downbeat
+  72.25- 78.6  everything else: four on the floor, brightest point
+  78.6 - 87    trust and "From day one, to exam day": drums out, heartbeat, warm chords
+  87   - 98    riser, a beat of silence, the logo hit and a D major resolve
 """
 import numpy as np, wave, os
 
 SR = 48000
-DUR = 72.0
+DUR = 98.0
 N = int(SR * DUR)
 T = np.arange(N) / SR
 rng = np.random.default_rng(11)
 L = np.zeros(N); R = np.zeros(N)
 
-BAR = 2.125; BEAT = BAR / 4; GRID0 = 7.5
-HITS = [0.35, 1.15, 1.95]; MEET = 5.6; SC0 = 7.5; SCL = 8.5
-FT0 = SC0 + 5 * SCL; TR = FT0 + 6; TE = TR + 5.6; LOGO = TE + 3.0
+BAR = 2.125; BEAT = BAR / 4
+MEET = 12.4; FIVE = 16.6; PILL = [18.9, 20.0, 21.1, 22.2, 23.3]
+SC0 = 25.5; LENS = [b * BAR for b in (4, 4, 4, 6, 4)]
+STARTS = [SC0 + sum(LENS[:i]) for i in range(5)]
+FT0 = STARTS[4] + LENS[4]; TR = FT0 + 3 * BAR; DAY = TR + 6.0; TE = DAY + 2.4; LOGO = TE + 3.0
 
 def hz(m): return 440 * 2 ** ((m - 69) / 12)
 def add(sig, t0, gain=1.0, pan=0.0):
@@ -92,63 +92,65 @@ def piano(m, t0, g=1.0, length=4.0, pan=0.0):
 PROG = [[38, 50, 53, 57, 64], [34, 46, 50, 53, 57], [41, 53, 57, 60, 64], [36, 48, 52, 55, 62]]  # Dm9 Bbmaj7 F C
 ARP = [0, 2, 3, 4, 3, 2, 1, 2]
 
-# ---------------- cold open ----------------
-for h, low in zip(HITS, (34, 32, 30)):
-    impact(h, 1.0, low)
-    whoosh(h - 0.05, 0.8, 1.2, 0, 3200)
-    for m in (26, 38, 45): piano(m, h, 0.9, 3)
-whoosh(2.6, 1.15, 1.3, 0, 2400, rev=True)              # implosion into the deck
-impact(3.72, 0.45, 40)
-pad([38, 50, 53, 57, 62], 3.7, 2.1, 0.7, 900)
-for k in range(int((MEET - 3.9) / (BEAT / 2))):         # ticking hats, accelerating feel
-    hat(3.9 + k * BEAT / 2, 0.5 + 0.5 * k / 14, 0.4 * (-1) ** k)
-riser(4.1, MEET, 0.9)
-impact(MEET, 1.1, 36)
-pad([38, 50, 57, 62, 65, 69], MEET, 1.9, 0.9, 1800)
-riser(MEET + 0.15, SC0, 1.1)
-for k in range(8): snap(SC0 - BEAT * 2 + k * BEAT / 4, 0.25 + 0.5 * k / 8)   # snare roll into the drop
+# ---------------- slow open ----------------
+OPEN = [(0.0, [38, 50, 57, 62, 64]), (4.4, [34, 46, 53, 57, 62]), (8.4, [41, 53, 57, 60, 64]), (12.4, [38, 50, 57, 62, 66, 69]), (16.6, [34, 46, 50, 57, 62]), (20.6, [36, 48, 55, 60, 64])]
+for i, (t0, notes) in enumerate(OPEN):
+    t1 = OPEN[i + 1][0] if i + 1 < len(OPEN) else SC0
+    pad(notes, max(0, t0 - 0.6), t1 - t0 + 0.6, 0.55 if t0 < 12 else 0.7, 900 if t0 < 12 else 1500)
+for t0, m in ((1.2, 69), (2.4, 64), (4.6, 69), (5.8, 65), (7.9, 72), (9.2, 69), (10.4, 67)):
+    piano(m, t0, 0.55, 4, 0.2)
+whoosh(4.3, 2.6, 0.7, -0.3, 1800)                      # pages leave the first page
+whoosh(10.2, 2.2, 0.8, 0.3, 2000, rev=True)            # and gather into one deck
+impact(MEET, 0.7, 38)
+for m, d in ((62, 0), (66, .05), (69, .1), (74, .16)): piano(m, MEET + d, 0.8, 5)
+for k in range(int((SC0 - FIVE) / (BEAT / 2))):        # quiet ticking from "five pillars"
+    hat(FIVE + k * BEAT / 2, 0.25 + 0.5 * k / 32, 0.4 * (-1) ** k)
+for k, (t0, m) in enumerate(zip(PILL, (62, 65, 69, 72, 74))):   # a rising note on each pillar
+    pluck(m + 12, t0, 1.6, 0.4 * (k - 2) / 2, 3.5); piano(m, t0, 0.7, 3); kick(t0, 0.35)
+riser(SC0 - 2.0, SC0, 1.0)
+for k in range(8): snap(SC0 - BEAT * 2 + k * BEAT / 4, 0.2 + 0.45 * k / 8)
 
-# ---------------- groove: product scenes and feature ribbon ----------------
-intensity = [(SC0, .72), (SC0 + 2 * SCL, .82), (SC0 + 4 * SCL, .92), (FT0, 1.0), (TR, 1.0)]
+# ---------------- groove: five pillars and everything else ----------------
+intensity = [(SC0, .72), (STARTS[2], .82), (STARTS[4], .92), (FT0, 1.0), (TR, 1.0)]
 bar_i = 0; t = SC0
 while t < TR - 0.01:
     lvl = level(intensity, t); chord = PROG[bar_i % 4]
-    sub(chord[0] - 12 + 12, t, BAR, lvl)
+    sub(chord[0], t, BAR, lvl)
     pad(chord[1:], t, BAR, 0.45 * lvl, 1000 + 900 * lvl)
-    four = t >= FT0 or (t >= SC0 + 3 * SCL)
+    four = t >= STARTS[3]
     for b in range(4):
         tb = t + b * BEAT
         if b in (0, 2) or four: kick(tb, lvl)
         if b in (1, 3): snap(tb, lvl * 0.9, 0.1)
         hat(tb + BEAT / 2, lvl, 0.35)
-        if t >= SC0 + 2 * SCL: hat(tb + BEAT / 4, lvl * 0.45, -0.35); hat(tb + 3 * BEAT / 4, lvl * 0.45, -0.35)
+        if t >= STARTS[2]: hat(tb + BEAT / 4, lvl * 0.45, -0.35); hat(tb + 3 * BEAT / 4, lvl * 0.45, -0.35)
     for k in range(8):
         n = chord[1 + ARP[k] % 4] + 12 + (12 if t >= FT0 and k % 2 else 0)
         pluck(n, t + k * BEAT / 2, lvl, 0.5 * np.sin(k), 6 if t < FT0 else 4.5)
     bar_i += 1; t += BAR
 
-for k in range(5):                                     # every scene: punch on the downbeat, whip at the end
-    s0 = SC0 + k * SCL
-    impact(s0, 0.55 if k else 1.0, 40)
+for k, s0 in enumerate(STARTS):
+    impact(s0, 1.0 if k == 0 else 0.55, 40)
     whoosh(s0 + 0.5, 0.7, 0.9, 0.6, 2800)
-    whoosh(s0 + SCL - 0.55, 0.6, 1.1, -0.6, 3600, rev=True)
+    whoosh(s0 + LENS[k] - 0.55, 0.6, 1.1, -0.6, 3600, rev=True)
 for k in range(7): whoosh(FT0 - 0.1 + k * 0.08, 0.5, 0.35, (-1) ** k * 0.7, 4000)
 
-# ---------------- trust: drums out, a heartbeat under each line ----------------
+# ---------------- trust, then "From day one, to exam day" ----------------
 impact(TR, 0.6, 38)
 pad([34, 46, 50, 53, 57, 62], TR, 2.0, 0.8, 1200)
 pad([41, 53, 57, 60, 64], TR + 1.9, 1.8, 0.8, 1200)
-pad([36, 48, 55, 60, 62, 64], TR + 3.6, 2.4, 0.8, 1300)
-for h in (TR + 0.4, TR + 2.2, TR + 3.9):
-    kick(h, 0.8); kick(h + 0.28, 0.45)
-    piano(74 if h < TR + 1 else 72 if h < TR + 3 else 69, h, 0.8, 3, 0.2)
+pad([36, 48, 55, 60, 62, 64], TR + 3.5, 2.6, 0.8, 1300)
+for h, m in ((TR + 0.3, 74), (TR + 2.0, 72), (TR + 3.6, 69)):
+    kick(h, 0.8); kick(h + 0.28, 0.45); piano(m, h, 0.8, 3, 0.2)
+pad([31, 43, 50, 55, 59, 62, 66], DAY, 2.6, 1.0, 1800)       # a warm G major lift
+for m, d in ((67, 0), (71, .08), (74, .16)): piano(m, DAY + d, 0.8, 4)
 
 # ---------------- close ----------------
 whoosh(TE - 0.2, 1.4, 1.2, 0, 2400)                    # pages gather
 riser(TE + 0.5, LOGO - 0.45, 1.2)
 whoosh(TE + 0.8, 2.0, 0.9, 0, 1600)                    # the page comes to camera
 impact(LOGO, 1.3, 33)
-pad([26, 38, 50, 54, 57, 62, 66, 69], LOGO, 6.5, 1.2, 2200)
+pad([26, 38, 50, 54, 57, 62, 66, 69], LOGO, 7.0, 1.2, 2200)
 for m, d in ((62, 0), (66, .06), (69, .12), (74, .2), (78, .3)): piano(m, LOGO + d, 1.0, 7)
 
 # ---------------- room, silence before the logo, master ----------------
@@ -159,7 +161,7 @@ gap = np.ones(N); a, b = int((LOGO - 0.42) * SR), int((LOGO - 0.02) * SR)
 gap[a:b] = np.linspace(1, 0, b - a) ** 0.5; gap[b:int(LOGO * SR)] = 0
 L *= gap; R *= gap
 out = np.stack([L, R], 1)
-out *= np.minimum(1, np.minimum(T / 0.02, (DUR - T) / 2.0))[:, None]
+out *= np.minimum(1, np.minimum(T / 0.6, (DUR - T) / 2.5))[:, None]
 out = np.tanh(out * 1.5) / 1.5
 out /= np.max(np.abs(out)) / 0.89
 path = os.path.join(os.path.dirname(__file__), 'score.wav')
