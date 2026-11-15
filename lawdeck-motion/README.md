@@ -1,11 +1,11 @@
 # Lawdeck brand film
 
-A 98-second motion piece built with three.js, introducing Lawdeck as an AI law school companion built on five pillars: Research, Learn, Draft, Remember and Communicate. It has an American male voice-over and is cut to an original score.
+A 98-second motion piece built with three.js, introducing Lawdeck as an AI law school study companion built on five pillars: Research, Learn, Draft, Remember and Communicate. It has an American male voice-over and is cut to an original score.
 
 | Time | Scene |
 |---|---|
 | 0–12s | **Hook, slow.** A single page in the light: "What if your study partner never slept?" Pages drift past for "from your very first lecture to your final exam". |
-| 12–25s | The pages gather into one deck: "Meet Lawdeck. Your AI law school companion." Then "Built on five pillars", with the five words landing one by one. |
+| 12–25s | The pages gather into one deck: "Meet Lawdeck. Your AI law school study companion." Then "Built on five pillars", with the five words landing one by one. |
 | 25.5s | The beat drops (~113 bpm). Each pillar scene is a whole number of bars. |
 | 25.5–34s | **Research.** The home-screen composer, then a cited answer. The camera pushes into the sources. |
 | 34–42.5s | **Learn.** An MCQ answered correctly, with progress. |
@@ -14,7 +14,7 @@ A 98-second motion piece built with three.js, introducing Lawdeck as an AI law s
 | 64–72s | **Communicate.** Campus chat (dark theme), with `@Lawdeck` in the thread. |
 | 72–78.6s | Everything else, in one place: 14 feature cards. |
 | 78.6–87s | Trust (Every answer, cited. Your work, private. You, in control.), then "From day one, to exam day." |
-| 87–98s | A page comes to camera, then the logo, "Your law school companion." and the five pillars. |
+| 87–98s | A page comes to camera, then the logo, "Your AI law school study companion." and the five pillars. |
 
 Every scene has a one-word title punch, a whip transition with motion blur, flashes and camera shake on the impacts.
 

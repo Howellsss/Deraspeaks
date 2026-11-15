@@ -16,7 +16,7 @@ voice, out = sys.argv[1], sys.argv[2]
 LINES = [
  ("What if your study partner never slept?", 0.9),
  ("Never tired of your questions. There from your very first lecture, all the way to your final exam.", 0.92),
- ("Meet Lawdeck. Your AI law school companion.", 0.9),
+ ("Meet Lawdeck. Your AI law school study companion.", 0.9),
  ("Built on five pillars.", 0.9),
  ("Research.", 0.88), ("Learn.", 0.88), ("Draft.", 0.88), ("Remember.", 0.88), ("Communicate.", 0.88),
  ("Research. Ask anything, in plain language, and get answers cited to the cases and statutes behind them.", 0.94),
@@ -27,7 +27,7 @@ LINES = [
  ("And your Study Diary, your progress, briefs, projects and uploads. All in one place.", 0.94),
  ("Every answer is cited. Your work stays private. And you stay in control.", 0.92),
  ("From day one, to exam day.", 0.88),
- ("Lawdeck. Your law school companion.", 0.86),
+ ("Lawdeck. Your AI law school study companion.", 0.88),
 ]
 os.makedirs(out, exist_ok=True)
 for i, (text, sp) in enumerate(LINES, 1):
