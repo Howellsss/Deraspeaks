@@ -214,6 +214,19 @@ const DAY = TR + 6.0;                               // 84.6   "From day one, to 
 const TE = DAY + 2.4;                               // 87.0   pages gather, a page comes to camera
 const LOGO = TE + 3.0;                              // 90.0   the logo lands
 
+/* The Lawdeck mark: the deck collapses into it on "Meet Lawdeck", then it releases the pages */
+const markTex = new THREE.CanvasTexture(markInv); markTex.colorSpace = THREE.SRGBColorSpace; markTex.anisotropy = 8;
+const markMat = new THREE.MeshBasicMaterial({ map: markTex, transparent: true, toneMapped: false, opacity: 0 });
+const markMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 1.2 * markImg.height / markImg.width), markMat);
+markMesh.position.set(0, 0.32, -0.2); scene.add(markMesh);
+function markState(t) {
+  const k = ex(seg(t, MEET - 0.08, MEET + 0.8)), out = io(seg(t, FIVE - 0.9, FIVE - 0.1));
+  markMat.opacity = Math.min(1, k * 1.4) * (1 - out);
+  markMesh.visible = markMat.opacity > 0.001;
+  markMesh.scale.setScalar(lerp(0.55, 1, k) * (1 + out * 0.25) * (1 + 0.012 * Math.sin(t * 2)));
+  markMesh.rotation.set(lerp(0.25, 0, k) + Math.sin(t * 0.7) * 0.03, lerp(-0.6, 0, k) + Math.sin(t * 0.5) * 0.05, 0);
+}
+
 function heroState(t) {
   if (t < 8) {
     const k = eo(seg(t, 0, 4.6)), away = io(seg(t, 4.4, 7.2));
@@ -235,7 +248,7 @@ function pagesState(t) {
   pageMat.color.setScalar(lerp(1, 0.1, dim) * (1 - 0.45 * seg(t, 4.6, 6.0) * (1 - seg(t, 10.6, 12.2))));
   pages.visible = t > 4.3 && t < TE + 1.9;
   if (!pages.visible) return;
-  const pulse = t >= MEET ? 1 + 0.06 * Math.exp(-(t - MEET) * 5) : 1;
+  const collapse = io(seg(t, MEET - 0.4, MEET));
   for (let i = 0; i < N; i++) {
     const s = seeds[i];
     const a = s.a + t * s.sp;
@@ -250,7 +263,8 @@ function pagesState(t) {
     rx = lerp(rx, s.r1 * 0.8 + Math.sin(ft + s.d) * 0.3, sc); ry = lerp(ry, s.r2 * 1.2 + ft, sc); rz = lerp(rz, s.r3 * 0.6, sc);
     const g = io(seg(t, TE + s.d * 0.6, TE + 1.2 + s.d * 0.6));
     P.set(lerp(P.x, 0, g), lerp(P.y, 0, g), lerp(P.z, -6.5, g)); rx = lerp(rx, 0, g); ry = lerp(ry, 0, g); rz = lerp(rz, 0, g);
-    const scale = emerge * (1 - g * 0.85) * (st > 0.5 && sc < 0.5 ? pulse : 1);
+    const back = io(seg(t, 15.8 + s.d * 0.9, 16.8 + s.d * 0.9));
+    const scale = emerge * (1 - g * 0.85) * ((1 - collapse) + collapse * back);
     E.set(rx, ry, rz); Q.setFromEuler(E); S.setScalar(Math.max(scale, 0.0001));
     M.compose(P, Q, S); pages.setMatrixAt(i, M);
   }
@@ -926,7 +940,7 @@ function grainState(frame) {
 
 /* ---------------- frame ---------------- */
 function frame(t) {
-  heroState(t); pagesState(t); panelsState(t); featuresState(t); cameraState(t); typeState(t); endState(t); fxState(t);
+  heroState(t); markState(t); pagesState(t); panelsState(t); featuresState(t); cameraState(t); typeState(t); endState(t); fxState(t);
   grainState(Math.floor(t * 24));
   renderer.render(scene, camera);
 }
